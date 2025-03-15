@@ -1,0 +1,11 @@
+*.elc
+
+/eln-cache
+
+/var
+
+/elpa
+
+/tree-sitter
+
+/env.el
