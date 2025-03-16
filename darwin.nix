@@ -104,6 +104,25 @@
       Clicking = true;
       Dragging = true;
     };
+    controlcenter = {
+      BatteryShowPercentage = true;
+      Sound = true;
+      Display = true;
+    };
+    CustomUserPreferences = {
+      "com.apple.symbolichotkeys" = {
+        AppleSymbolicHotKeys = {
+          # Disable 'Cmd + Space' for Spotlight Search
+          "64" = {
+            enabled = false;
+          };
+          # Disable 'Cmd + Alt + Space' for Finder search window
+          "65" = {
+            enabled = false;
+          };
+        };
+      };
+    };
     WindowManager.EnableStandardClickToShowDesktop = false;
   };
 
@@ -112,6 +131,11 @@
       touchIdAuth = true;
       reattach = true;
     };
+  };
+
+  system.keyboard = {
+    enableKeyMapping = true;
+    remapCapsLockToControl = true;
   };
 
 }
