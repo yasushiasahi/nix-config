@@ -1,8 +1,8 @@
 ;;; init --- My init.el  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2020  Naoya Yamashita
+;; Copyright (C) 2025 Yasushi Asahi
 
-;; Author: Naoya Yamashita <conao3@gmail.com>
+;; Author: Yasushi Asahi <asahi1600@gmail.com>
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -33,6 +33,15 @@
 
 (leaf *primitives
   :config
+  (leaf exec-path-from-shell
+	  :doc "Get environment variables such as $PATH from the shell"
+	  :url "https://github.com/purcell/exec-path-from-shell"
+	  :ensure t
+    :custom ((exec-path-from-shell-arguments . nil)
+             (exec-path-from-shell-variables . '("PATH")))
+    :config
+    (exec-path-from-shell-initialize))
+
   (leaf no-littering
     :doc "組み込みor外部に関わらず、パッケージが作り出す設定ファイルを整頓して、.config/emacs配下を綺麗に保つ"
     :url "https://github.com/emacscollective/no-littering"
@@ -123,49 +132,43 @@
 
   (leaf *font
     :config
-    ;; 言語環境を UTF-8 にします。coding system と input method のデフォルト設定が決まります。
-    (set-language-environment 'utf-8)
-    ;; coding system のデフォルト言語を指定します。
-    (set-default-coding-systems 'utf-8-unix)
-    ;; 自動認識テキストエンコーディングのリストを並び替えます。セットした言語がリストの先頭になります。
-    (prefer-coding-system 'japanese-shift-jis)
-    (prefer-coding-system 'utf-8)
-
+    (set-language-environment "Japanese")
+    (prefer-coding-system 'utf-8-unix)
     (add-to-list 'default-frame-alist
                  '(font . "Cica-14"))
     )
 
-  (leaf *mac-input-source
-    :defun (my-set-cursor-japanese-style my-set-cursor-abc-style)
-    :config
-    ;; https://github.com/takaxp/ns-inline-patch?tab=readme-ov-file#how-to-us
-    (when (and (memq window-system '(ns nil))
-               (fboundp 'mac-get-current-input-source))
-      (when (version< "27.0" emacs-version)
-        ;; Required for some cases when auto detection is failed or the locale is "en".
-        (custom-set-variables
-         '(mac-default-input-source "com.apple.inputmethod.Kotoeri.RomajiTyping.Japanese")))
-      (mac-input-method-mode 1))
+  ;; (leaf *mac-input-source
+  ;;   :defun (my-set-cursor-japanese-style my-set-cursor-abc-style)
+  ;;   :config
+  ;;   ;; https://github.com/takaxp/ns-inline-patch?tab=readme-ov-file#how-to-us
+  ;;   (when (and (memq window-system '(ns nil))
+  ;;              (fboundp 'mac-get-current-input-source))
+  ;;     (when (version< "27.0" emacs-version)
+  ;;       ;; Required for some cases when auto detection is failed or the locale is "en".
+  ;;       (custom-set-variables
+  ;;        '(mac-default-input-source "com.apple.inputmethod.Kotoeri.RomajiTyping.Japanese")))
+  ;;     (mac-input-method-mode 1))
 
-    (defun my-set-cursor-japanese-style ()
-      "カーソルを日本語入力時の見た目に変更する."
-      ;; (setf (alist-get 'cursor-type default-frame-alist) 'hbar)
-      (set-frame-parameter (window-frame) 'cursor-type 'hbar)
-      (setf (alist-get 'cursor-color default-frame-alist) "#CE7667"))
+  ;;   (defun my-set-cursor-japanese-style ()
+  ;;     "カーソルを日本語入力時の見た目に変更する."
+  ;;     ;; (setf (alist-get 'cursor-type default-frame-alist) 'hbar)
+  ;;     (set-frame-parameter (window-frame) 'cursor-type 'hbar)
+  ;;     (setf (alist-get 'cursor-color default-frame-alist) "#CE7667"))
 
-    (defun my-set-cursor-abc-style ()
-      "カーソルを英語の見た目に変更する."
-      ;; (setf (alist-get 'cursor-type default-frame-alist) 'box)
-      (set-frame-parameter (window-frame) 'cursor-type 'box)
-      (setf (alist-get 'cursor-color default-frame-alist) "#888dbc"))
+  ;;   (defun my-set-cursor-abc-style ()
+  ;;     "カーソルを英語の見た目に変更する."
+  ;;     ;; (setf (alist-get 'cursor-type default-frame-alist) 'box)
+  ;;     (set-frame-parameter (window-frame) 'cursor-type 'box)
+  ;;     (setf (alist-get 'cursor-color default-frame-alist) "#888dbc"))
 
-    (add-hook 'input-method-deactivate-hook 'my-set-cursor-abc-style)
-    (add-hook 'input-method-activate-hook 'my-set-cursor-japanese-style)
+  ;;   (add-hook 'input-method-deactivate-hook 'my-set-cursor-abc-style)
+  ;;   (add-hook 'input-method-activate-hook 'my-set-cursor-japanese-style)
 
-    (if (mac-ime-active-p)
-        (my-set-cursor-japanese-style)
-      (my-set-cursor-abc-style))
-    )
+  ;;   (if (mac-ime-active-p)
+  ;;       (my-set-cursor-japanese-style)
+  ;;     (my-set-cursor-abc-style))
+  ;;   )
   )
 
 (leaf *looks
@@ -184,6 +187,7 @@
     :ensure t
     :require
     :config
+    ; (nerd-icons-install-fonts t)
     (leaf nerd-icons-dired
       :doc "Shows icons for each file in dired mode"
       :url "https://github.com/rainstormstudio/nerd-icons-dired"
@@ -211,8 +215,8 @@
       "eglotのcurrent serverを表示する"
       :fetch
       (when-let ((_  (fboundp 'jsonrpc--process))
-	         (_  (fboundp 'eglot-current-server))
-	         (current-server (eglot-current-server)))
+	               (_  (fboundp 'eglot-current-server))
+	               (current-server (eglot-current-server)))
         (nth 4 (process-command (jsonrpc--process current-server)))))
     ;; (if (and (fboundp 'jsonrpc--process)
     ;;          (fboundp 'eglot-current-server))
@@ -233,7 +237,7 @@
           :parser 'json-read
           :success (cl-function
                     (lambda (&key data &allow-other-keys)
-		      (let* ((item (aref data 0))
+		                  (let* ((item (aref data 0))
                              (meigen (alist-get 'meigen item))
                              (auther (alist-get 'auther item)))
                         (message "%s\nby %s" meigen auther))))))
@@ -425,6 +429,12 @@ The DWIM behaviour of this command is as follows:
                                  :engines (list (gt-google-engine) (gt-deepl-engine :key my/deepl-api-key))
                                  :render (gt-buffer-render)))
     )
+
+  (leaf avy
+	  :doc "Jump to arbitrary positions in visible text and select text quickly"
+	  :url "https://github.com/abo-abo/avy"
+	  :ensure t
+    :bind (("C-s" . avy-goto-char-timer)))
   )
 
 (leaf *git
@@ -938,28 +948,30 @@ The DWIM behaviour of this command is as follows:
           (mapcar #'car treesit-language-source-alist))
     )
 
+
+  (leaf macrostep
+    :doc "マクロを展開する。leafがどう実行されるのか確認できる。"
+    :ensure t)
+
+  (leaf leaf-convert
+    :doc "Convert many format to leaf format"
+    :commands leaf-convert-insert-template
+    :ensure t)
+
+  (leaf leaf-tree
+    :ensure t
+    :custom (imenu-list-sizeleaf-tree-click-group-to-hide . t))
+
+  (leaf aggressive-indent
+    :doc "Minor mode to aggressively keep your code always indented."
+    :url "https://github.com/Malabarba/aggressive-indent-mode"
+    :ensure t
+    :hook (emacs-lisp-mode-hook))
+
   (leaf elisp-mode
     :doc "Emacs Lisp mode"
     :hook ((emacs-lisp-mode-hook . my/setup-emacs-lisp-mode))
     :config
-    (leaf macrostep
-      :doc "マクロを展開する。leafがどう実行されるのか確認できる。"
-      :ensure t)
-
-    (leaf leaf-convert
-      :doc "Convert many format to leaf format"
-      :commands leaf-convert-insert-template
-      :ensure t)
-
-    (leaf leaf-tree
-      :ensure t
-      :custom (imenu-list-sizeleaf-tree-click-group-to-hide . t))
-
-    (leaf aggressive-indent
-      :doc "Minor mode to aggressively keep your code always indented."
-      :url "https://github.com/Malabarba/aggressive-indent-mode"
-      :ensure t
-      :hook (emacs-lisp-mode-hook))
 
     (defun my/setup-emacs-lisp-mode ()
       "保存前に行末のスペースを削除"

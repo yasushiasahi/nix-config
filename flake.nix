@@ -1,57 +1,49 @@
 {
-  description = "nix configuration";
+  description = "Home Manager configuration of asahi";
 
   inputs = {
+    # Specify the source of Home Manager and Nixpkgs.
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    nix-darwin = {
-      url = "github:LnL7/nix-darwin/master";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     home-manager = {
       url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
   outputs =
-    inputs@{
-      self,
+    {
+      nixpkgs,
       nix-darwin,
       home-manager,
-      nixpkgs,
+      self,
     }:
-
     let
-      username = "asahi";
       system = "aarch64-darwin";
-      configuration =
-        { ... }:
-        {
-          users.users.${username}.home = "/Users/${username}";
-        };
+      pkgs = nixpkgs.legacyPackages.${system};
     in
     {
-      # nix run nix-darwin -- switch --flake .#LP202405MAC120
-      darwinConfigurations."LP202405MAC120" = nix-darwin.lib.darwinSystem {
-        inherit system;
-        inherit (inputs.nixpkgs) lib;
-        specialArgs = {
-          inherit inputs;
-          inherit system;
-        };
-
-        modules = [
-          configuration
-          ./nix/nix-darwin/default.nix
-          home-manager.darwinModules.home-manager
-          {
-            home-manager.backupFileExtension = "nix-bk";
-            home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = { inherit username; };
-            home-manager.users."${username}" = import ./nix/home-manager/default.nix;
-          }
-        ];
-
+      # Build darwin flake using:
+      # $ darwin-rebuild build --flake .#simple
+      darwinConfigurations.darwin = nix-darwin.lib.darwinSystem {
+        modules = [ ./darwin.nix ];
+        specialArgs = { inherit self; };
       };
+
+      homeConfigurations.home = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+
+        # Specify your home configuration modules here, for example,
+        # the path to your home.nix.
+        modules = [ ./home.nix ];
+
+        # Optionally use extraSpecialArgs
+        # to pass through arguments to home.nix
+        # extraSpecialArgs = {};
+      };
+
     };
 }

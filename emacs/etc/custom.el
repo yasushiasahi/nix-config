@@ -11,13 +11,23 @@
  '(inhibit-startup-screen t)
  '(inhibit-x-resources t t)
  '(initial-scratch-message nil)
- '(mac-default-input-source "com.apple.inputmethod.Kotoeri.RomajiTyping.Japanese" t)
  '(native-comp-async-report-warnings-errors 'silent)
+ '(package-selected-packages
+	 '(aggressive-indent apheleia astro-ts-mode consult corfu diff-hl
+											 eglot-booster embark exec-path-from-shell
+											 go-translate jtsx leaf-convert leaf-tree
+											 lsp-mode macrostep magit marginalia mini-echo
+											 nerd-icons nerd-icons-completion
+											 nerd-icons-corfu nerd-icons-dired nix-ts-mode
+											 no-littering open-junk-file orderless pulsar
+											 puni rainbow-delimiters request restart-emacs
+											 solarized-theme string-inflection tempel
+											 tempel-collection transient undo-fu vertico
+											 visual-replace vundo wgrep which-key))
+ '(package-vc-selected-packages
+	 '((eglot-booster :url "https://github.com/jdtsmith/eglot-booster")))
  '(read-process-output-max (* 1024 1024) t)
  '(ring-bell-function 'ignore)
- '(safe-local-variable-values
-	 '((lsp-enabled-clients ts-ls tailwindcss) (eval apheleia-mode)
-		 (eval lsp-deferred) (eval eglot-ensure)))
  '(scroll-conservatively 1)
  '(scroll-preserve-screen-position t)
  '(truncate-lines t)
