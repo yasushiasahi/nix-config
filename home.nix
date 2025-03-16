@@ -202,6 +202,7 @@
     # exec-shell-from-pathを早くするため。
     initExtraFirst = ''
       eval "$(/opt/homebrew/bin/brew shellenv)"
+      npm completion
     '';
     # initExtraBeforeCompInit =
     # initExtra =
