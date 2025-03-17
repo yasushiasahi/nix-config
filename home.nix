@@ -224,6 +224,15 @@
           sha256 = "sha256-o8IQszQ4/PLX1FlUvJpowR2Tev59N8lI20VymZ+Hp4w=";
         };
       }
+      {
+        name = "zsh-npm-scripts-autocomplete";
+        src = pkgs.fetchFromGitHub {
+          owner = "grigorii-zander";
+          repo = "zsh-npm-scripts-autocomplete";
+          rev = "5d145e13150acf5dbb01dac6e57e57c357a47a4b";
+          sha256 = "sha256-Y34VXOU7b5z+R2SssCmbooVwrlmSxUxkObTV0YtsS50=";
+        };
+      }
     ];
     # profileExtra = .zprofile
     # sessionVariables  = [ HOGE = 'fuga' ]
