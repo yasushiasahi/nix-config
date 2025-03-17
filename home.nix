@@ -55,6 +55,9 @@
     pkgs.dockerfile-language-server-nodejs
     pkgs.vscode-langservers-extracted
 
+    # aws
+    pkgs.git-remote-codecommit
+
     # (pkgs.brewCasks.karabiner-elements.overrideAttrs (o: {
     #   nativeBuildInputs = o.nativeBuildInputs ++ [ pkgs.gnutar ];
     #   unpackPhase = "tar -xvzf $src";
@@ -131,6 +134,7 @@
     # });
   };
 
+  programs.awscli.enable = true;
   programs.jq.enable = true;
   programs.fd.enable = true;
   programs.bat.enable = true;
@@ -202,10 +206,13 @@
     # exec-shell-from-pathを早くするため。
     initExtraFirst = ''
       eval "$(/opt/homebrew/bin/brew shellenv)"
-      npm completion
     '';
-    # initExtraBeforeCompInit =
-    # initExtra =
+    initExtraBeforeCompInit = ''
+      autoload bashcompinit && bashcompinit
+    '';
+    initExtra = ''
+      complete -C '${pkgs.awscli2}/bin/aws_completer' aws
+    '';
     # loginExtra = .zlogin
     plugins = [
       {
