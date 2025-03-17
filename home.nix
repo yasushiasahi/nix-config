@@ -263,7 +263,14 @@
     ];
     userEmail = "asahi1600@gmail.com";
     userName = "yasushiasahi";
-    # extraConfig =
+    extraConfig = {
+      github = {
+        user = "yasushiasahi";
+      };
+      init = {
+        defaultBranch = "main";
+      };
+    };
   };
 
   programs.gh = {
