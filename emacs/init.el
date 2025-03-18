@@ -54,7 +54,7 @@
       (setq lock-file-name-transforms `((".*" ,dir t))))
 
     ;; Saved customizations
-    (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
+    (setq custom-file (no-littering-expand-var-file-name "custom.el"))
 
     (leaf recentf
       :doc "開いたファイルの履歴を保存しておく機能"
@@ -120,24 +120,14 @@
              (vundo-glyph-alist . vundo-unicode-symbols))
     :bind* ("C-M-/" . vundo))
 
-  ;; https://mise.jdx.dev/ide-integration.html#emacs
-  ;; なんかglobalの環境がうまいこと動かない
-  ;; (leaf mise
-  ;;   :doc "Support for `mise' cli"
-  ;;   :url "https://github.com/liuyinz/mise.el"
-  ;;   :ensure t
-  ;;   ; custom ((mise-debug . t))
-  ;;   :config
-  ;;   (add-hook 'after-init-hook #'global-mise-mode))
-
   (leaf *font
     :config
     (set-language-environment "Japanese")
     (prefer-coding-system 'utf-8-unix)
     (add-to-list 'default-frame-alist
-                 '(font . "Cica-14"))
-    )
+                 '(font . "Cica-14")))
 
+  ;; nixpkgs.emacsにoverrideでns-inline-patchを当ててもうまいこと行かない
   ;; (leaf *mac-input-source
   ;;   :defun (my-set-cursor-japanese-style my-set-cursor-abc-style)
   ;;   :config
@@ -727,7 +717,7 @@ The DWIM behaviour of this command is as follows:
     :doc "The Emacs Client for LSP servers"
     :tag "builtin"
     :defvar eglot-server-programs
-    :hook (((yaml-ts-mode-hook nix-ts-mode-hook) . eglot-ensure))
+    :hook (((yaml-ts-mode-hook nix-ts-mode-hook html-ts-mode-hook css-ts-mode-map) . eglot-ensure))
     :bind (:eglot-mode-map
            ("C-c d" . eldoc-box-help-at-point)
            ("M-g e" . consult-eglot-symbols))
@@ -1002,6 +992,10 @@ The DWIM behaviour of this command is as follows:
     (defun my-jtsx-bind-keys-to-jtsx-tsx-mode-map ()
       (my-jtsx-bind-keys-to-mode-map jtsx-tsx-mode-map))
     )
+
+  (leaf css-mode
+	  :doc "Major mode to edit CSS files"
+	  :custom ((css-indent-offset . 2)))
 
   (leaf astro-ts-mode
     :doc "No description available."
