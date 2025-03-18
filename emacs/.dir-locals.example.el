@@ -9,7 +9,11 @@
 																						"--tab-width=2" "--print-width=160" "--sort-html-attributes=code-guide")))
 								 (apheleia-mode-alist . ((php-ts-mode . prettier-blade)))
 								 (eval . (apheleia-mode))))
- (astro-ts-mode . ((eval . (eglot-ensure))
+ (astro-ts-mode . ((eglot-server-programs . ((astro-ts-mode . ("astro-ls" "--stdio"
+																															 :initializationOptions
+																															 (:typescript
+																																(:tsdk "/PATH/TO/typescript/lib"))))))
+									 (eval . (eglot-ensure))
 									 (eval . (apheleia-mode))))
  (jtsx-typescript-mode . ((eval . (eglot-ensure))
 													(eval . (apheleia-mode))))

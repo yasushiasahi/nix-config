@@ -731,13 +731,7 @@ The DWIM behaviour of this command is as follows:
     :bind (:eglot-mode-map
            ("C-c d" . eldoc-box-help-at-point)
            ("M-g e" . consult-eglot-symbols))
-    :push ((eglot-server-programs
-            . '(astro-ts-mode
-                . ("astro-ls" "--stdio"
-                   :initializationOptions
-                   (:typescript
-                    (:tsdk "/Users/asahi/.local/share/mise/installs/node/22.9.0/lib/node_modules/typescript/lib")))))
-           (eglot-server-programs . '(nix-ts-mode . ("nil"))))
+    :push ((eglot-server-programs . '(nix-ts-mode . ("nil"))))
     :setq-default ((eglot-workspace-configuration
                     . '(:yaml ( :format (:enable t)
                                 :validate t
@@ -761,28 +755,10 @@ The DWIM behaviour of this command is as follows:
                                           )
                                 :schemaStore (:enable t)))))
     :config
-
-    ;; (add-to-list 'eglot-server-programs
-    ;;              '(astro-ts-mode . ("astro-ls" "--stdio"
-    ;;                                 :initializationOptions
-    ;;                                 (:typescript (:tsdk
-    ;;     				          "/Users/asahi/.local/share/mise/installs/node/22.9.0/lib/node_modules/typescript/lib"
-    ;;     				          ;; "./node_modules/typescript/lib"
-    ;;     				          )))))
-    ;; (setq-default eglot-workspace-configuration
-    ;;               '(:yaml ( :format (:enable t)
-    ;;                         :validate t
-    ;;                         :hover t
-    ;;                         :completion t
-    ;;                         :schemas (
-    ;;                                   https://json.schemastore.org/github-workflow.json ["/.github/workflows/*.{yml,yaml}"]
-    ;;                                   https://json.schemastore.org/yamllint.json ["/*.yml"])
-    ;;                         :schemaStore (:enable t))
-    ;;                       ))
-
     (leaf eglot-booster
       :when (executable-find "emacs-lsp-booster")
       :vc (:url "https://github.com/jdtsmith/eglot-booster")
+      :custom ((eglot-booster-io-only . t))
       :global-minor-mode t)
 
     (leaf consult-eglot
