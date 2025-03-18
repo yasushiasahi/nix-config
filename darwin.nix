@@ -39,11 +39,16 @@
       "karabiner-elements"
       "logi-options+"
       "raycast"
-      "tailscale"
+      # "tailscale"
 
       # nixpkgsに無い
       "font-cica"
     ];
+    masApps = {
+      LINE = 539883307;
+      amazon-kindle = 302584613;
+      tailscale = 1475387142;
+    };
   };
 
   # List packages installed in system profile. To search by name, run:

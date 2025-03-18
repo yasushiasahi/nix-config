@@ -33,17 +33,22 @@
         specialArgs = { inherit self; };
       };
 
-      homeConfigurations.home = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations.home = import ./home {
+        inherit home-manager;
         inherit pkgs;
-
-        # Specify your home configuration modules here, for example,
-        # the path to your home.nix.
-        modules = [ ./home.nix ];
-
-        # Optionally use extraSpecialArgs
-        # to pass through arguments to home.nix
-        # extraSpecialArgs = {};
       };
 
     };
 }
+
+# home-manager.lib.homeManagerConfiguration {
+#         inherit pkgs;
+
+#         # Specify your home configuration modules here, for example,
+#         # the path to your home.nix.
+#         modules = [ ./home.nix ];
+
+#         # Optionally use extraSpecialArgs
+#         # to pass through arguments to home.nix
+#         # extraSpecialArgs = {};
+#       };
