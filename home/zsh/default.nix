@@ -20,7 +20,6 @@
     # envExtra = ".zshenvに加えたい何か加えたい時に書く"
     history = {
       ignoreAllDups = true;
-      path = ".config/zsh/.zsh_history";
       save = 10000;
       share = true;
       size = 10000;
