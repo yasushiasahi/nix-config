@@ -54,7 +54,7 @@
       (setq lock-file-name-transforms `((".*" ,dir t))))
 
     ;; Saved customizations
-    (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
+    (setq custom-file (no-littering-expand-var-file-name "custom.el"))
 
     (leaf recentf
       :doc "開いたファイルの履歴を保存しておく機能"
@@ -120,24 +120,14 @@
              (vundo-glyph-alist . vundo-unicode-symbols))
     :bind* ("C-M-/" . vundo))
 
-  ;; https://mise.jdx.dev/ide-integration.html#emacs
-  ;; なんかglobalの環境がうまいこと動かない
-  ;; (leaf mise
-  ;;   :doc "Support for `mise' cli"
-  ;;   :url "https://github.com/liuyinz/mise.el"
-  ;;   :ensure t
-  ;;   ; custom ((mise-debug . t))
-  ;;   :config
-  ;;   (add-hook 'after-init-hook #'global-mise-mode))
-
   (leaf *font
     :config
     (set-language-environment "Japanese")
     (prefer-coding-system 'utf-8-unix)
     (add-to-list 'default-frame-alist
-                 '(font . "Cica-14"))
-    )
+                 '(font . "Cica-14")))
 
+  ;; nixpkgs.emacsにoverrideでns-inline-patchを当ててもうまいこと行かない
   ;; (leaf *mac-input-source
   ;;   :defun (my-set-cursor-japanese-style my-set-cursor-abc-style)
   ;;   :config
@@ -727,17 +717,11 @@ The DWIM behaviour of this command is as follows:
     :doc "The Emacs Client for LSP servers"
     :tag "builtin"
     :defvar eglot-server-programs
-    :hook (((yaml-ts-mode-hook nix-ts-mode-hook) . eglot-ensure))
+    :hook (((yaml-ts-mode-hook nix-ts-mode-hook html-ts-mode-hook css-ts-mode-map) . eglot-ensure))
     :bind (:eglot-mode-map
            ("C-c d" . eldoc-box-help-at-point)
            ("M-g e" . consult-eglot-symbols))
-    :push ((eglot-server-programs
-            . '(astro-ts-mode
-                . ("astro-ls" "--stdio"
-                   :initializationOptions
-                   (:typescript
-                    (:tsdk "/Users/asahi/.local/share/mise/installs/node/22.9.0/lib/node_modules/typescript/lib")))))
-           (eglot-server-programs . '(nix-ts-mode . ("nil"))))
+    :push ((eglot-server-programs . '(nix-ts-mode . ("nil"))))
     :setq-default ((eglot-workspace-configuration
                     . '(:yaml ( :format (:enable t)
                                 :validate t
@@ -761,28 +745,10 @@ The DWIM behaviour of this command is as follows:
                                           )
                                 :schemaStore (:enable t)))))
     :config
-
-    ;; (add-to-list 'eglot-server-programs
-    ;;              '(astro-ts-mode . ("astro-ls" "--stdio"
-    ;;                                 :initializationOptions
-    ;;                                 (:typescript (:tsdk
-    ;;     				          "/Users/asahi/.local/share/mise/installs/node/22.9.0/lib/node_modules/typescript/lib"
-    ;;     				          ;; "./node_modules/typescript/lib"
-    ;;     				          )))))
-    ;; (setq-default eglot-workspace-configuration
-    ;;               '(:yaml ( :format (:enable t)
-    ;;                         :validate t
-    ;;                         :hover t
-    ;;                         :completion t
-    ;;                         :schemas (
-    ;;                                   https://json.schemastore.org/github-workflow.json ["/.github/workflows/*.{yml,yaml}"]
-    ;;                                   https://json.schemastore.org/yamllint.json ["/*.yml"])
-    ;;                         :schemaStore (:enable t))
-    ;;                       ))
-
     (leaf eglot-booster
       :when (executable-find "emacs-lsp-booster")
       :vc (:url "https://github.com/jdtsmith/eglot-booster")
+      :custom ((eglot-booster-io-only . t))
       :global-minor-mode t)
 
     (leaf consult-eglot
@@ -1026,6 +992,10 @@ The DWIM behaviour of this command is as follows:
     (defun my-jtsx-bind-keys-to-jtsx-tsx-mode-map ()
       (my-jtsx-bind-keys-to-mode-map jtsx-tsx-mode-map))
     )
+
+  (leaf css-mode
+	  :doc "Major mode to edit CSS files"
+	  :custom ((css-indent-offset . 2)))
 
   (leaf astro-ts-mode
     :doc "No description available."
