@@ -125,7 +125,7 @@
     (set-language-environment "Japanese")
     (prefer-coding-system 'utf-8-unix)
     (add-to-list 'default-frame-alist
-                 '(font . "Cica-14")))
+                 '(font . "HackGen35-13")))
 
   ;; nixpkgs.emacsにoverrideでns-inline-patchを当ててもうまいこと行かない
   ;; (leaf *mac-input-source

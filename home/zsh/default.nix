@@ -1,23 +1,17 @@
 { pkgs, ... }:
+let
+  initExtra = builtins.readFile ./init-extra.sh;
+in
 {
   programs.zsh = {
     enable = true;
     shellAliases = {
-      emacs = "${pkgs.emacs}/Applications/Emacs.app/Contents/MacOS/Emacs";
       rm = "trash";
     };
     autocd = true;
     autosuggestion.enable = true;
-    completionInit = ''
-      # aws cliの補完を効かせる。
-      # https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html#cli-command-completion-enable
-      autoload bashcompinit && bashcompinit
-      # デフォルトの設定
-      autoload -U compinit && compinit
-    '';
     defaultKeymap = "emacs";
     dotDir = ".config/zsh";
-    # envExtra = ".zshenvに加えたい何か加えたい時に書く"
     history = {
       ignoreAllDups = true;
       save = 10000;
@@ -28,10 +22,12 @@
     initExtraFirst = ''
       eval "$(/opt/homebrew/bin/brew shellenv)"
     '';
-    initExtra = ''
-      complete -C '${pkgs.awscli2}/bin/aws_completer' aws
-    '';
-    # loginExtra = .zlogin
+    initExtra = initExtra;
+    oh-my-zsh = {
+      enable = true;
+      plugins = [ "aws" ];
+      theme = "robbyrussell";
+    };
     plugins = [
       {
         name = "zsh-autocomplete";
@@ -51,17 +47,24 @@
           sha256 = "sha256-Y34VXOU7b5z+R2SssCmbooVwrlmSxUxkObTV0YtsS50=";
         };
       }
-
+      {
+        name = "enhancd";
+        file = "init.sh";
+        src = pkgs.fetchFromGitHub {
+          owner = "babarot";
+          repo = "enhancd";
+          rev = "5afb4eb6ba36c15821de6e39c0a7bb9d6b0ba415";
+          sha256 = "sha256-pKQbwiqE0KdmRDbHQcW18WfxyJSsKfymWt/TboY2iic=";
+        };
+      }
     ];
     syntaxHighlighting.enable = true;
     zsh-abbr = {
       enable = true;
       abbreviations = {
-        ll = "eza -alh --icons always --color always --git";
-        lt = "eza --tree --sort=type --reverse --git-ignore";
-        di = "nix flake init -t github:nix-community/nix-direnv ";
-        ds = "darwin-rebuild switch --flake .#darwin";
-        hs = "home-manager switch --flake .#home";
+        di = "nix flake init -t github:nix-community/nix-direnv";
+        ds = "darwin-rebuild switch --flake ~/ghq/github.com/yasushiasahi/nix-config#darwin";
+        hs = "home-manager switch --flake ~/ghq/github.com/yasushiasahi/nix-config#home";
       };
     };
   };

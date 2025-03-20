@@ -16,6 +16,8 @@
     pkgs.noto-fonts-color-emoji
     pkgs.noto-fonts-emoji-blob-bin
     pkgs.noto-fonts-monochrome-emoji
+    pkgs.hackgen-nf-font
+    pkgs.hackgen-font
     # nerdfontを入れたい nerd-icons.elでお勧めされているもの
     # https://github.com/rainstormstudio/nerd-icons.el?tab=readme-ov-file#installing-fonts
     pkgs.nerd-fonts.symbols-only
@@ -39,10 +41,6 @@
       "karabiner-elements"
       "logi-options+"
       "raycast"
-      # "tailscale"
-
-      # nixpkgsに無い
-      "font-cica"
     ];
     masApps = {
       LINE = 539883307;

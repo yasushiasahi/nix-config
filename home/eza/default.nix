@@ -1,19 +1,24 @@
-{ ... }:
-{
-  programs.eza = {
-    enable = true;
-    enableZshIntegration = true;
+{ makeAbbrConfig, ... }:
+let
+  abbrConfig = makeAbbrConfig {
+    ll = "eza -alh --icons always --color always --git";
+    lt = "eza --tree --sort=type --reverse --git-ignore";
   };
+in
+{
+  programs = {
+    eza = {
+      enable = true;
+      enableZshIntegration = true;
+      enableFishIntegration = true;
+    };
+  } // abbrConfig;
 
-  xdg = {
-    configFile = {
-      "eza/theme.yml" = {
-        source = ./theme.yml;
-      };
+  xdg.configFile = {
+    "eza/theme.yml" = {
+      source = ./theme.yml;
     };
   };
 
-  home.sessionVariables = {
-    EZA_CONFIG_DIR = "~/.config/eza";
-  };
+  home.sessionVariables.EZA_CONFIG_DIR = "$HOME/.config/eza";
 }
