@@ -4,6 +4,14 @@ let
     emacs = "${pkgs.emacs}/Applications/Emacs.app/Contents/MacOS/Emacs";
   };
 
+  emacs-mac = pkgs.emacs.overrideAttrs (old: {
+    patches = (old.patches or [ ]) ++ [ ./emacs-29.1-inline.patch ];
+    # LANG=en_JP.UTF-8 cannot be used, using en_US.UTF-8 instead.を抑制する。問題ないらしいけど。
+    env = (old.env or { }) // {
+      LANG = "en_US.UTF-8";
+    };
+  });
+
   eglot-booster =
     {
       melpaBuild,
@@ -21,45 +29,33 @@ let
       };
       packageRequires = [ emacs-lsp-booster ];
     };
+
+  emacs-mac-with-epkgs = pkgs.emacsWithPackagesFromUsePackage {
+    package = emacs-mac;
+    config = ./init.el;
+    override =
+      epkgs:
+      epkgs
+      // {
+        eglot-booster = pkgs.callPackage eglot-booster {
+          inherit (pkgs) fetchFromGitHub;
+          inherit (epkgs) melpaBuild;
+        };
+      };
+    extraEmacsPackages = epkgs: [
+      epkgs.treesit-grammars.with-all-grammars
+      # TODO astroのgrammarsも入れたいけど、grammarsのbuild方法がわからない。
+    ];
+  };
 in
 {
   programs = {
     emacs = {
       enable = true;
-      # TODO emacs ns-inline-patchを当てたい
-      # https://apribase.net/2024/06/21/emacs-as-daemon-for-mac/
-      # package = pkgs.emacs.overrideAttrs (old: {
-      #   patches = (old.patches or [ ]) ++ [
-      #     (pkgs.fetchpatch {
-      #       url = "https://raw.githubusercontent.com/takaxp/ns-inline-patch/master/emacs-29.1-inline.patch";
-      #       sha256 = "sha256-UQsYJ9+6XgB7NSCmup4RzDn3NlR8vMKsQGJPYYqsgmU=";
-      #     })
-      #   ];
-      # });
-      package = pkgs.emacsWithPackagesFromUsePackage {
-        package = pkgs.emacs.overrideAttrs (old: {
-          patches = (old.patches or [ ]) ++ [ ./ns-inline-patch/emacs-29.1-inline.patch ];
-        });
-        config = ./init.el;
-        override =
-          epkgs:
-          epkgs
-          // {
-            eglot-booster = pkgs.callPackage eglot-booster {
-              inherit (pkgs) fetchFromGitHub;
-              inherit (epkgs) melpaBuild;
-            };
-          };
-        extraEmacsPackages = epkgs: [
-          epkgs.treesit-grammars.with-all-grammars
-          # TODO astroのgrammarsも入れたいけど、grammarsのbuild方法がわからない。
-        ];
-      };
+      package = emacs-mac-with-epkgs;
     };
 
-    git.ignores = [
-      ".dir-locals.el"
-    ];
+    git.ignores = [ ".dir-locals.el" ];
   } // shellAlias;
 
   home.packages = [

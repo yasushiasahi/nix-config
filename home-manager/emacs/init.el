@@ -127,38 +127,38 @@
     (add-to-list 'default-frame-alist
                  '(font . "HackGen35-13")))
 
-  ;; nixpkgs.emacsにoverrideでns-inline-patchを当ててもうまいこと行かない
-  ;; (leaf *mac-input-source
-  ;;   :defun (my-set-cursor-japanese-style my-set-cursor-abc-style)
-  ;;   :config
-  ;;   ;; https://github.com/takaxp/ns-inline-patch?tab=readme-ov-file#how-to-us
-  ;;   (when (and (memq window-system '(ns nil))
-  ;;              (fboundp 'mac-get-current-input-source))
-  ;;     (when (version< "27.0" emacs-version)
-  ;;       ;; Required for some cases when auto detection is failed or the locale is "en".
-  ;;       (custom-set-variables
-  ;;        '(mac-default-input-source "com.apple.inputmethod.Kotoeri.RomajiTyping.Japanese")))
-  ;;     (mac-input-method-mode 1))
+  nixpkgs.emacsにoverrideでns-inline-patchを当ててもうまいこと行かない
+  (leaf *mac-input-source
+    :defun (my-set-cursor-japanese-style my-set-cursor-abc-style)
+    :config
+    ;; https://github.com/takaxp/ns-inline-patch?tab=readme-ov-file#how-to-us
+    (when (and (memq window-system '(ns nil))
+               (fboundp 'mac-get-current-input-source))
+      (when (version< "27.0" emacs-version)
+        ;; Required for some cases when auto detection is failed or the locale is "en".
+        (custom-set-variables
+         '(mac-default-input-source "com.apple.inputmethod.Kotoeri.RomajiTyping.Japanese")))
+      (mac-input-method-mode 1))
 
-  ;;   (defun my-set-cursor-japanese-style ()
-  ;;     "カーソルを日本語入力時の見た目に変更する."
-  ;;     ;; (setf (alist-get 'cursor-type default-frame-alist) 'hbar)
-  ;;     (set-frame-parameter (window-frame) 'cursor-type 'hbar)
-  ;;     (setf (alist-get 'cursor-color default-frame-alist) "#CE7667"))
+    (defun my-set-cursor-japanese-style ()
+      "カーソルを日本語入力時の見た目に変更する."
+      ;; (setf (alist-get 'cursor-type default-frame-alist) 'hbar)
+      (set-frame-parameter (window-frame) 'cursor-type 'hbar)
+      (setf (alist-get 'cursor-color default-frame-alist) "#CE7667"))
 
-  ;;   (defun my-set-cursor-abc-style ()
-  ;;     "カーソルを英語の見た目に変更する."
-  ;;     ;; (setf (alist-get 'cursor-type default-frame-alist) 'box)
-  ;;     (set-frame-parameter (window-frame) 'cursor-type 'box)
-  ;;     (setf (alist-get 'cursor-color default-frame-alist) "#888dbc"))
+    (defun my-set-cursor-abc-style ()
+      "カーソルを英語の見た目に変更する."
+      ;; (setf (alist-get 'cursor-type default-frame-alist) 'box)
+      (set-frame-parameter (window-frame) 'cursor-type 'box)
+      (setf (alist-get 'cursor-color default-frame-alist) "#888dbc"))
 
-  ;;   (add-hook 'input-method-deactivate-hook 'my-set-cursor-abc-style)
-  ;;   (add-hook 'input-method-activate-hook 'my-set-cursor-japanese-style)
+    (add-hook 'input-method-deactivate-hook 'my-set-cursor-abc-style)
+    (add-hook 'input-method-activate-hook 'my-set-cursor-japanese-style)
 
-  ;;   (if (mac-ime-active-p)
-  ;;       (my-set-cursor-japanese-style)
-  ;;     (my-set-cursor-abc-style))
-  ;;   )
+    (if (mac-ime-active-p)
+        (my-set-cursor-japanese-style)
+      (my-set-cursor-abc-style))
+    )
   )
 
 (leaf *looks
