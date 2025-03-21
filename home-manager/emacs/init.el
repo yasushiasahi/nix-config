@@ -953,8 +953,7 @@ The DWIM behaviour of this command is as follows:
 
     (defun my/setup-emacs-lisp-mode ()
       "保存前に行末のスペースを削除"
-      (add-hook 'before-save-hook 'delete-trailing-whitespace nil 'make-it-local)
-      (add-hook 'after-save-hook 'emacs-lisp-native-compile nil 'make-it-local))
+      (add-hook 'before-save-hook 'delete-trailing-whitespace nil 'make-it-local))
     )
 
   (leaf jtsx
