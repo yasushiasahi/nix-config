@@ -2,27 +2,35 @@
 ;;; Commentary:
 ;;; Code:
 
-;; タイトルバーの設定
-(push '(ns-transparent-titlebar . t) default-frame-alist) ; 透過
-(push '(ns-appearance . dark) default-frame-alist)        ; ダークモード
-(setq ns-use-proxy-icon nil)                              ; アイコンを表示しない
-(setq frame-title-format nil)                             ; 文字を表示しない
 
-;; フレームサイズ
-(push '(width . (text-pixels . 960)) default-frame-alist)
-(push '(height . (text-pixels . 960)) default-frame-alist)
-
-;;; solarized-themeを見込むまで画面が白いのがカッコ悪いのでいきなりsolarized色を変える
-(push '(background-color . "#002b3a") default-frame-alist)
-(set-face-attribute 'mode-line t
-		    :foreground "#002b3a"
-		    :background "#002b3a"
-		    :underline "#002b3a"
-		    :overline "#002b3a")
-
+;;; 各種ツールの無効化。early-init.elでやるべき事の代表格１
 (menu-bar-mode -1)			; メニューバーを表示しない
 (tool-bar-mode -1)			; ツールバーを表示しない
 (scroll-bar-mode -1)			; スクロールバーを表示しない
+
+;;; default-frame（新規フレームの指定）。early-init.elでやるべき事の代表格２
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))  ; titlebar透過
+(add-to-list 'default-frame-alist '(ns-appearance . dark))				 ; titlebarダークモード
+(add-to-list 'default-frame-alist '(width . (text-pixels . 960)))	 ; フレームの横幅
+(add-to-list 'default-frame-alist '(height . (text-pixels . 960))) ; フレームの縦幅
+(add-to-list 'default-frame-alist '(font . "HackGen35-13"))				 ; フォント(フォント名-フォントサイズ)
+
+;; solarized-themeを読み込むまで画面が白いのがカッコ悪いのであらかじめsolarized色を変える
+;; 設定しなくてもちらつかなくなった。ちょっと様子見。
+;; (add-to-list 'default-frame-alist '(background-color . "#002b3a")) ; 背景色
+
+;;; .eln（ネイティブコンパイルのキャッシュ）を隅に追いやる。no-litteringのおすすめ設定そのまま
+;;; https://github.com/emacscollective/no-littering?tab=readme-ov-file#native-compilation-cache
+(when (and (fboundp 'startup-redirect-eln-cache)
+           (fboundp 'native-comp-available-p)
+           (native-comp-available-p))
+  (startup-redirect-eln-cache
+   (convert-standard-filename
+    (expand-file-name  "var/eln-cache/" user-emacs-directory))))
+
+;;; lsp-modeの最適化設定
+;;; https://emacs-lsp.github.io/lsp-mode/page/performance/#use-plists-for-deserialization
+(setenv "LSP_USE_PLISTS" "true")
 
 
 (custom-set-variables
@@ -34,7 +42,7 @@
  '(initial-scratch-message nil)		  ; *scratch*バッファのデフォルト文章を表示しない
  '(scroll-preserve-screen-position t)	  ; 画面がスクロールする時にカーソルを画面上の位置で固定する
  '(scroll-conservatively 1)		  ; 1行ずつスクロールする
-					; '(create-lockfiles nil)		  ; 編集中のファイルのロックファイル(.#~~)を作らない
+																				; '(create-lockfiles nil)		  ; 編集中のファイルのロックファイル(.#~~)を作らない
  '(delete-old-versions t)		  ; 古いバックアップファイルを確認なしで消す
  '(truncate-lines t)			  ; 行を折り返さない
  '(x-underline-at-descent-line t)	  ; アンダーラインの位置をいい感じにする。solarized-emacsで推奨されている https://github.com/bbatsov/solarized-emacs#underline-position-setting-for-x
@@ -43,21 +51,14 @@
  '(read-process-output-max (* 1024 1024))	     ; https://emacs-lsp.github.io/lsp-mode/page/performance/#increase-the-amount-of-data-which-emacs-reads-from-the-process
  '(frame-title-format "")                      ; titlebarを""にする（何も表示しない）
  '(ring-bell-function 'ignore)                 ; 警告音（ピープ音）をならさい
-					; '(make-backup-files nil)                      ; オープン時(編集前)のファイルをバックアップを作成しない
+																				; '(make-backup-files nil)                      ; オープン時(編集前)のファイルをバックアップを作成しない
  )
 
 
-;; no-littering配下にネイティブコンパイルのキャッシュを配置する
-;; https://github.com/emacscollective/no-littering?tab=readme-ov-file#native-compilation-cache
-(when (and (fboundp 'startup-redirect-eln-cache)
-           (fboundp 'native-comp-available-p)
-           (native-comp-available-p))
-  (startup-redirect-eln-cache
-   (convert-standard-filename
-    (expand-file-name  "var/eln-cache/" user-emacs-directory))))
 
-;; https://emacs-lsp.github.io/lsp-mode/page/performance/#use-plists-for-deserialization
-(setenv "LSP_USE_PLISTS" "true")
+
+
+
 
 (provide 'early-init)
 
