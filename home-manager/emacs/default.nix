@@ -39,12 +39,19 @@ in
     pkgs.nil
   ];
 
-  home.file = {
-    ".config/emacs/init.el".source = ./init.el;
-    ".config/emacs/early-init.el".source = ./early-init.el;
-    ".config/emacs/etc/templates".source = ./etc/templates;
-    ".config/emacs/etc/transient/values.el".source = ./etc/templates;
+  xdg.configFile = {
+    "emacs/init.el".source = ./init.el;
+    "emacs/early-init.el".source = ./early-init.el;
+    "emacs/etc/templates".source = ./etc/templates;
+    "emacs/etc/transient/values.el".source = ./etc/templates;
   };
+
+  # home.file = {
+  #   ".config/emacs/init.el".source = ./init.el;
+  #   ".config/emacs/early-init.el".source = ./early-init.el;
+  #   ".config/emacs/etc/templates".source = ./etc/templates;
+  #   ".config/emacs/etc/transient/values.el".source = ./etc/templates;
+  # };
 
   # home.file = {
   #   ".emacs.d/init.el".source = ./init.el;
