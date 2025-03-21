@@ -12,6 +12,10 @@
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    emacs-overlay = {
+      url = "github:nix-community/emacs-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -19,11 +23,16 @@
       nixpkgs,
       nix-darwin,
       home-manager,
+      emacs-overlay,
       self,
     }:
     let
       system = "aarch64-darwin";
-      pkgs = nixpkgs.legacyPackages.${system};
+      # pkgs = nixpkgs.legacyPackages.${system};
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [ emacs-overlay.overlay ];
+      };
     in
     {
       # Build darwin flake using:
@@ -34,8 +43,7 @@
       };
 
       homeConfigurations.home = import ./home-manager {
-        inherit home-manager;
-        inherit pkgs;
+        inherit pkgs home-manager;
       };
 
       templates = {

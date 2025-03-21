@@ -3,6 +3,24 @@ let
   shellAlias = mkAlias {
     emacs = "${pkgs.emacs}/Applications/Emacs.app/Contents/MacOS/Emacs";
   };
+
+  eglot-booster =
+    {
+      melpaBuild,
+      fetchFromGitHub,
+      emacs-lsp-booster,
+    }:
+    melpaBuild {
+      pname = "eglot-booster";
+      version = "0-unstable-2024-10-29";
+      src = fetchFromGitHub {
+        owner = "jdtsmith";
+        repo = "eglot-booster";
+        rev = "e6daa6bcaf4aceee29c8a5a949b43eb1b89900ed";
+        hash = "sha256-PLfaXELkdX5NZcSmR1s/kgmU16ODF8bn56nfTh9g6bs=";
+      };
+      packageRequires = [ emacs-lsp-booster ];
+    };
 in
 {
   programs = {
@@ -18,6 +36,23 @@ in
       #     })
       #   ];
       # });
+      package = pkgs.emacsWithPackagesFromUsePackage {
+        package = pkgs.emacs;
+        config = ./init.el;
+        override =
+          epkgs:
+          epkgs
+          // {
+            eglot-booster = pkgs.callPackage eglot-booster {
+              inherit (pkgs) fetchFromGitHub;
+              inherit (epkgs) melpaBuild;
+            };
+          };
+        extraEmacsPackages = epkgs: [
+          epkgs.treesit-grammars.with-all-grammars
+          # TODO astroのgrammarsも入れたいけど、grammarsのbuild方法がわからない。
+        ];
+      };
     };
 
     git.ignores = [
@@ -45,29 +80,6 @@ in
     "emacs/etc/templates".source = ./etc/templates;
     "emacs/etc/transient/values.el".source = ./etc/transient/values.el;
   };
-
-  # home.file = {
-  #   ".config/emacs/init.el".source = ./init.el;
-  #   ".config/emacs/early-init.el".source = ./early-init.el;
-  #   ".config/emacs/etc/templates".source = ./etc/templates;
-  #   ".config/emacs/etc/transient/values.el".source = ./etc/templates;
-  # };
-
-  # home.file = {
-  #   ".emacs.d/init.el".source = ./init.el;
-  #   ".emacs.d/early-init.el".source = ./early-init.el;
-  #   ".emacs.d/etc/templates".source = ./etc/templates;
-  #   ".emacs.d/etc/transient/values.el".source = ./etc/templates;
-  # };
-
-  # xdg = {
-  #   configFile = {
-  #     "emacs/init.el".source = ./init.el;
-  #     "emacs/early-init.el".source = ./early-init.el;
-  #     "emacs/etc/templates".source = ./etc/templates;
-  #     "emacs/etc/transient/values.el".source = ./etc/templates;
-  #   };
-  # };
 
   # TODO emacs demon? client? service
   # 設定するべきなのか？するとして何を設定するべきなのか不明。
