@@ -72,6 +72,10 @@ in
     pkgs.nil
   ];
 
+  # cliからemacsを起動した時にLANGがないと警告が出る。
+  # https://apribase.net/2024/07/26/emacs-language-environment-mac/#langen_jputf-8-cannot-be-used-using-en_usutf-8-instead
+  home.sessionVariables.LANG = "en_US.UTF-8";
+
   xdg.configFile = {
     "emacs/init.el".source = ./init.el;
     "emacs/early-init.el".source = ./early-init.el;
