@@ -37,7 +37,9 @@ in
       #   ];
       # });
       package = pkgs.emacsWithPackagesFromUsePackage {
-        package = pkgs.emacs;
+        package = pkgs.emacs.overrideAttrs (old: {
+          patches = (old.patches or [ ]) ++ [ ./ns-inline-patch/emacs-29.1-inline.patch ];
+        });
         config = ./init.el;
         override =
           epkgs:
