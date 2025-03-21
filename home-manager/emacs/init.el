@@ -808,7 +808,7 @@ The DWIM behaviour of this command is as follows:
     (leaf lsp-tailwindcss
       :doc "A lsp-mode client for tailwindcss"
       :url "https://github.com/merrickluo/lsp-tailwindcss"
-      :require t
+      :ensure t
       :custom ((lsp-tailwindcss-server-version . "0.14.4")
                (lsp-tailwindcss-major-modes '(jtsx-jsx-mode jtsx-tsx-mode astro-ts-mode html-ts-mode))
                (lsp-tailwindcss-skip-config-check . t))

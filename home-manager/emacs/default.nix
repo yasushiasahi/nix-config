@@ -39,14 +39,28 @@ in
     pkgs.nil
   ];
 
-  xdg = {
-    configFile = {
-      "emacs/init.el".source = ./init.el;
-      "emacs/early-init.el".source = ./early-init.el;
-      "emacs/etc/templates".source = ./etc/templates;
-      "emacs/etc/transient/values.el".source = ./etc/templates;
-    };
+  home.file = {
+    ".config/emacs/init.el".source = ./init.el;
+    ".config/emacs/early-init.el".source = ./early-init.el;
+    ".config/emacs/etc/templates".source = ./etc/templates;
+    ".config/emacs/etc/transient/values.el".source = ./etc/templates;
   };
+
+  # home.file = {
+  #   ".emacs.d/init.el".source = ./init.el;
+  #   ".emacs.d/early-init.el".source = ./early-init.el;
+  #   ".emacs.d/etc/templates".source = ./etc/templates;
+  #   ".emacs.d/etc/transient/values.el".source = ./etc/templates;
+  # };
+
+  # xdg = {
+  #   configFile = {
+  #     "emacs/init.el".source = ./init.el;
+  #     "emacs/early-init.el".source = ./early-init.el;
+  #     "emacs/etc/templates".source = ./etc/templates;
+  #     "emacs/etc/transient/values.el".source = ./etc/templates;
+  #   };
+  # };
 
   # TODO emacs demon? client? service
   # 設定するべきなのか？するとして何を設定するべきなのか不明。
