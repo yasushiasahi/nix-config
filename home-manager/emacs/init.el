@@ -810,7 +810,7 @@ The DWIM behaviour of this command is as follows:
       :url "https://github.com/merrickluo/lsp-tailwindcss"
       :ensure t
       :custom ((lsp-tailwindcss-server-version . "0.14.4")
-               (lsp-tailwindcss-major-modes '(jtsx-jsx-mode jtsx-tsx-mode astro-ts-mode html-ts-mode))
+               (lsp-tailwindcss-major-modes . '(jtsx-jsx-mode jtsx-tsx-mode astro-ts-mode html-ts-mode))
                (lsp-tailwindcss-skip-config-check . t))
       :defun (lsp-workspace-root
               lsp-tailwindcss--has-config-file
@@ -818,12 +818,7 @@ The DWIM behaviour of this command is as follows:
               make-lsp-client
               lsp-stdio-connection
               lsp-tailwindcss--activate-p
-              lsp-tailwindcss--initialization-options
-              lsp-tailwindcss--company-dash-hack
-              ignore
-              lsp-package-ensure
-              ht
-              my/lsp-tailwindcss--activate-p)
+              lsp-tailwindcss--initialization-options)
       :config
       ;; nixで入れたtailwindcss-language-serverを適用できるオプションがないので、本体を参考に自分で定義する。
       (lsp-register-client (make-lsp-client

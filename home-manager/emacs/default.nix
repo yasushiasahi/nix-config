@@ -43,7 +43,7 @@ in
     "emacs/init.el".source = ./init.el;
     "emacs/early-init.el".source = ./early-init.el;
     "emacs/etc/templates".source = ./etc/templates;
-    "emacs/etc/transient/values.el".source = ./etc/templates;
+    "emacs/etc/transient/values.el".source = ./etc/transient/values.el;
   };
 
   # home.file = {
