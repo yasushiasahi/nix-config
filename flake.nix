@@ -29,11 +29,11 @@
       # Build darwin flake using:
       # $ darwin-rebuild build --flake .#simple
       darwinConfigurations.darwin = nix-darwin.lib.darwinSystem {
-        modules = [ ./darwin.nix ];
+        modules = [ ./nix-darwin ];
         specialArgs = { inherit self; };
       };
 
-      homeConfigurations.home = import ./home {
+      homeConfigurations.home = import ./home-manager {
         inherit home-manager;
         inherit pkgs;
       };

@@ -11,7 +11,7 @@ in
     autocd = true;
     autosuggestion = {
       enable = true;
-      highlight = "fg=#586e75";
+      highlight = "fg=#585858";
     };
     defaultKeymap = "emacs";
     dotDir = ".config/zsh";
