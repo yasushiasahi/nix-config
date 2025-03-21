@@ -254,17 +254,17 @@
     :custom ((mac-option-modifier . 'meta)     ; optionキーをmetaとして扱う
              (mac-command-modifier . 'super))  ; commandキーをsuperとして扱う
     :bind (("s-v" . yank)
-	   ("s-c" . kill-ring-save)
-	   ("s-x" . kill-region)))
+	         ("s-c" . kill-ring-save)
+	         ("s-x" . kill-region)))
 
   (defun my/beginning-of-line-text-or-line ()
     "行の最初の文字の位置に移動。すでに最初の文字だったら行頭に移動。"
     (interactive)
     (let ((curr-point (point))		        ; コマンド実行前のカーソル位置
-	  (curr-column (current-column))) ; コマンド実行前の行番号
+	        (curr-column (current-column))) ; コマンド実行前の行番号
       (back-to-indentation)		            ; 一旦行の最初の文字の位置に移動
       (when (and (/= curr-column 0)	      ; 元々行頭にいなかった
-	         (<= curr-point (point))) ; 最初の文字の位置よりも前にいた
+	               (<= curr-point (point))) ; 最初の文字の位置よりも前にいた
         (beginning-of-line))))            ; その場合は行頭に移動
   (define-key global-map (kbd "C-a") #'my/beginning-of-line-text-or-line)
 
@@ -307,28 +307,28 @@ The DWIM behaviour of this command is as follows:
     (transient-define-prefix my/transient-window-operation ()
       "Window Operation"
       :transient-suffix     'transient--do-stay
-      :transient-non-suffix 'transient--do-warn
+      :transient-non-suffix 'transient--do-exit
       [:class transient-columns
-	      ["Move"
+	            ["Move"
                ("p" "↑" windmove-up)
-	       ("n" "↓" windmove-down)
-	       ("b" "←" windmove-left)
-	       ("f" "→" windmove-right)]
-	      ["Ajust"
+	             ("n" "↓" windmove-down)
+	             ("b" "←" windmove-left)
+	             ("f" "→" windmove-right)]
+	            ["Ajust"
                ("<up>" "↑" shrink-window)
-	       ("<down>" "↓" enlarge-window)
+	             ("<down>" "↓" enlarge-window)
                ("<left>" "←" shrink-window-horizontally)
-	       ("<right>" "→" enlarge-window-horizontally)]
-	      ["Split"
-	       ("\\" "vertical" split-window-right)
-	       ("-" "horizontal" split-window-below)
+	             ("<right>" "→" enlarge-window-horizontally)]
+	            ["Split"
+	             ("\\" "vertical" split-window-right)
+	             ("-" "horizontal" split-window-below)
                ("s" "swap" window-swap-states)
-	       ("e" "balance" balance-windows)]
-	      ["Ohter"
-	       ("0" "delete" delete-window)
+	             ("e" "balance" balance-windows)]
+	            ["Ohter"
+	             ("0" "delete" delete-window)
                ("q" "delete" delete-window)
-	       ("1" "only" delete-other-windows)
-	       ("t" "maxmaiz" toggle-frame-maximized)]])
+	             ("1" "only" delete-other-windows)
+	             ("t" "maxmaiz" toggle-frame-maximized)]])
     (put 'my/transient-window-operation 'interactive-only nil)
 
     (defun my/transient-window-operation-with-pulse ()
@@ -353,11 +353,10 @@ The DWIM behaviour of this command is as follows:
       :config
       (transient-define-prefix my/transient-string-inflection ()
         "Window Operation"
-        :transient-suffix     'transient--do-stay
-        :transient-non-suffix 'transient--do-warn
+        :transient-suffix     'transient--do-exit
         [:class transient-columns
-	        ["Single word"
-	         ("u" "EMACS" upcase-word)
+	              ["Single word"
+	               ("u" "EMACS" upcase-word)
                  ("d" "emacs" downcase-word)
                  ("c" "Emacs" capitalize-word)]
                 ["Mulchple Words"
@@ -367,7 +366,7 @@ The DWIM behaviour of this command is as follows:
                  ("p" "Foo_Bar" string-inflection-capital-underscore)
                  ("s" "FOO_BAR" string-inflection-upcase)
                  ("k" "foo-bar" string-inflection-kebab-case)]
-	        ["Cycle"
+	              ["Cycle"
                  ("a" "cycle" string-inflection-all-cycle)]])
       )
     )
@@ -797,6 +796,7 @@ The DWIM behaviour of this command is as follows:
              (lsp-lens-enable . nil) ; rustのときはtにしたい
              (lsp-modeline-code-actions-enable . nil)
              (lsp-apply-edits-after-file-operations . nil) ; https://www.reddit.com/r/emacs/comments/1b0ppls/anyone_using_lspmode_with_tsls_having_trouble/
+             (lsp-disabled-clients . (tailwindcss))
              ;; eslint
              (lsp-eslint-server-command . '("vscode-eslint-language-server" "--stdio"))
              )
@@ -808,16 +808,16 @@ The DWIM behaviour of this command is as follows:
     (leaf lsp-tailwindcss
       :doc "A lsp-mode client for tailwindcss"
       :url "https://github.com/merrickluo/lsp-tailwindcss"
-      :ensure t
-      :custom ((lsp-tailwindcss-server-version . "0.14.4"))
-      ;; :setq-default ((my/lsp-tailwindcss-major-modes . '(jtsx-jsx-mode jtsx-tsx-mode html-ts-mode)))
-      ;; :defvar (my/lsp-tailwindcss-major-modes)
+      :require t
+      :custom ((lsp-tailwindcss-server-version . "0.14.4")
+               (lsp-tailwindcss-major-modes '(jtsx-jsx-mode jtsx-tsx-mode astro-ts-mode html-ts-mode))
+               (lsp-tailwindcss-skip-config-check . t))
       :defun (lsp-workspace-root
               lsp-tailwindcss--has-config-file
               lsp-register-client
               make-lsp-client
               lsp-stdio-connection
-              lsp-tailwindcss-add-on-mode
+              lsp-tailwindcss--activate-p
               lsp-tailwindcss--initialization-options
               lsp-tailwindcss--company-dash-hack
               ignore
@@ -825,32 +825,16 @@ The DWIM behaviour of this command is as follows:
               ht
               my/lsp-tailwindcss--activate-p)
       :config
-
-      ;; 本来はcustom変数のlsp-tailwindcss-major-modesにメジャーモードを指定するが、
-      ;; 本体の関数はnilを返して欲しいので、別途定義する。
-      (defun my/lsp-tailwindcss--activate-p (&rest _args)
-        "Check if tailwindcss language server can/should start."
-        (let ((lsp-tailwindcss-major-modes '(jtsx-jsx-mode
-                                             jtsx-tsx-mode
-                                             astro-ts-mode
-                                             html-ts-mode)))
-          (and (lsp-workspace-root)
-               (apply #'provided-mode-derived-p major-mode lsp-tailwindcss-major-modes)
-               (lsp-tailwindcss--has-config-file))))
-
       ;; nixで入れたtailwindcss-language-serverを適用できるオプションがないので、本体を参考に自分で定義する。
-      (lsp-register-client
-       (make-lsp-client
-        :new-connection (lsp-stdio-connection
-                         (lambda ()
-                           `("tailwindcss-language-server" "--stdio")))
-        :activation-fn #'my/lsp-tailwindcss--activate-p
-        :server-id 'my/tailwindcss
-        :priority -1
-        :add-on? t
-        :initialization-options #'lsp-tailwindcss--initialization-options
-        :notification-handlers (ht ("@/tailwindCSS/projectInitialized" #'ignore)
-                                   ("@/tailwindCSS/projectsDestroyed" #'ignore)))))
+      (lsp-register-client (make-lsp-client
+                            :new-connection (lsp-stdio-connection
+                                             (lambda ()
+                                               `("tailwindcss-language-server" "--stdio")))
+                            :activation-fn #'lsp-tailwindcss--activate-p
+                            :server-id 'my/tailwindcss
+                            :priority -1
+                            :add-on? t
+                            :initialization-options #'lsp-tailwindcss--initialization-options)))
 
     (leaf lsp-snippet
       :doc "lsp-modeとtempelのインテグレーション"
