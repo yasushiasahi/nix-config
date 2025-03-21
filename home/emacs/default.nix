@@ -1,6 +1,6 @@
-{ pkgs, makeAliasConfig, ... }:
+{ pkgs, mkAlias, ... }:
 let
-  shellAlias = makeAliasConfig {
+  shellAlias = mkAlias {
     emacs = "${pkgs.emacs}/Applications/Emacs.app/Contents/MacOS/Emacs";
   };
 in

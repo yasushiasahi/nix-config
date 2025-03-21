@@ -1,6 +1,6 @@
-{ makeAbbrConfig, ... }:
+{ mkAbbr, ... }:
 let
-  abbr = makeAbbrConfig {
+  abbr = mkAbbr {
     gst = "git status";
     gsw = "git switch";
     gswc = "git switch -c";

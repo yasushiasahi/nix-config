@@ -62,9 +62,7 @@ in
     zsh-abbr = {
       enable = true;
       abbreviations = {
-        di = "nix flake init -t github:nix-community/nix-direnv";
-        ds = "darwin-rebuild switch --flake ~/ghq/github.com/yasushiasahi/nix-config#darwin";
-        hs = "home-manager switch --flake ~/ghq/github.com/yasushiasahi/nix-config#home";
+
       };
     };
   };

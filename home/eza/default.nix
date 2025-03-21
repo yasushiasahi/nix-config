@@ -1,6 +1,6 @@
-{ makeAbbrConfig, ... }:
+{ mkAbbr, ... }:
 let
-  abbrConfig = makeAbbrConfig {
+  abbrConfig = mkAbbr {
     ll = "eza -alh --icons always --color always --git";
     lt = "eza --tree --sort=type --reverse --git-ignore";
   };

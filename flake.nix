@@ -1,5 +1,5 @@
 {
-  description = "Home Manager configuration of asahi";
+  description = "My Nix config for Mac OS";
 
   inputs = {
     # Specify the source of Home Manager and Nixpkgs.
@@ -38,17 +38,12 @@
         inherit pkgs;
       };
 
+      templates = {
+        dir-locals = {
+          path = ./templates/dir-locals;
+          description = "開発環境セットアップファイルのテンプレート";
+        };
+      };
+
     };
 }
-
-# home-manager.lib.homeManagerConfiguration {
-#         inherit pkgs;
-
-#         # Specify your home configuration modules here, for example,
-#         # the path to your home.nix.
-#         modules = [ ./home.nix ];
-
-#         # Optionally use extraSpecialArgs
-#         # to pass through arguments to home.nix
-#         # extraSpecialArgs = {};
-#       };

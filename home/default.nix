@@ -3,12 +3,12 @@
   home-manager,
 }:
 let
-  makeAliasConfig = aliasSets: {
-    zsh.shellAliases = aliasSets;
-    fish.shellAliases = aliasSets;
+  mkAlias = sets: {
+    zsh.shellAliases = sets;
+    fish.shellAliases = sets;
   };
-  makeAbbrConfig = aliasSets: {
-    zsh.zsh-abbr.abbreviations = aliasSets;
+  mkAbbr = sets: {
+    zsh.zsh-abbr.abbreviations = sets;
   };
 
   miscModule = {
@@ -53,12 +53,6 @@ let
 
     ];
 
-    # Let Home Manager install and manage itself.
-    programs.home-manager.enable = true;
-
-    # zsh-abbr pluginを入れるのに必要
-    nixpkgs.config.allowUnfree = true;
-
     # XDG_*の環境変数を設定する
     xdg.enable = true;
   };
@@ -73,6 +67,7 @@ home-manager.lib.homeManagerConfiguration {
     ./emacs
     ./zsh
     ./git
+    ./nix
     ./alacritty
     # ./ghostty nixpkg版が壊れているよう
     ./tmux
@@ -90,8 +85,8 @@ home-manager.lib.homeManagerConfiguration {
   # Optionally use extraSpecialArgs
   # to pass through arguments to home.nix
   extraSpecialArgs = {
-    inherit makeAliasConfig;
-    inherit makeAbbrConfig;
+    inherit mkAlias;
+    inherit mkAbbr;
   };
 
 }
