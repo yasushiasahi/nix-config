@@ -656,15 +656,13 @@ The DWIM behaviour of this command is as follows:
     :init
     (setq prefix-help-command #'embark-prefix-help-command)
     ;; (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
-    (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
-    :config
-    (leaf embark-consult
-      :doc "Consult integration for Embark"
-      :url "https://github.com/oantolin/embark"
-      :ensure t
-      :hook (embark-collect-mode-hook . consult-preview-at-point-mode)
-      )
-    )
+    (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly))
+
+  (leaf embark-consult
+    :doc "Consult integration for Embark"
+    :url "https://github.com/oantolin/embark"
+    :ensure t
+    :hook (embark-collect-mode-hook . consult-preview-at-point-mode))
 
   (leaf wgrep
     :doc "Writable grep buffer"
