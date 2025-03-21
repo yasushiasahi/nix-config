@@ -797,25 +797,60 @@ The DWIM behaviour of this command is as follows:
              (lsp-lens-enable . nil) ; rustのときはtにしたい
              (lsp-modeline-code-actions-enable . nil)
              (lsp-apply-edits-after-file-operations . nil) ; https://www.reddit.com/r/emacs/comments/1b0ppls/anyone_using_lspmode_with_tsls_having_trouble/
+             ;; eslint
+             (lsp-eslint-server-command . '("vscode-eslint-language-server" "--stdio"))
              )
     :init
     (defun my/lsp-mode-setup-completion ()
       (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
             '(orderless)))
     :config
-    (leaf lsp-ui
-      :doc "UI modules for lsp-mode"
-      :url "https://github.com/emacs-lsp/lsp-ui"
-      :ensure t
-      :custom ((lsp-ui-peek-enable . nil)
-               (lsp-ui-imenu-enable . nil)
-               (lsp-ui-sideline-enable . nil)))
-
     (leaf lsp-tailwindcss
       :doc "A lsp-mode client for tailwindcss"
       :url "https://github.com/merrickluo/lsp-tailwindcss"
       :ensure t
-      :custom ((lsp-tailwindcss-add-on-mode . t)))
+      :custom ((lsp-tailwindcss-server-version . "0.14.4"))
+      ;; :setq-default ((my/lsp-tailwindcss-major-modes . '(jtsx-jsx-mode jtsx-tsx-mode html-ts-mode)))
+      ;; :defvar (my/lsp-tailwindcss-major-modes)
+      :defun (lsp-workspace-root
+              lsp-tailwindcss--has-config-file
+              lsp-register-client
+              make-lsp-client
+              lsp-stdio-connection
+              lsp-tailwindcss-add-on-mode
+              lsp-tailwindcss--initialization-options
+              lsp-tailwindcss--company-dash-hack
+              ignore
+              lsp-package-ensure
+              ht
+              my/lsp-tailwindcss--activate-p)
+      :config
+
+      ;; 本来はcustom変数のlsp-tailwindcss-major-modesにメジャーモードを指定するが、
+      ;; 本体の関数はnilを返して欲しいので、別途定義する。
+      (defun my/lsp-tailwindcss--activate-p (&rest _args)
+        "Check if tailwindcss language server can/should start."
+        (let ((lsp-tailwindcss-major-modes '(jtsx-jsx-mode
+                                             jtsx-tsx-mode
+                                             astro-ts-mode
+                                             html-ts-mode)))
+          (and (lsp-workspace-root)
+               (apply #'provided-mode-derived-p major-mode lsp-tailwindcss-major-modes)
+               (lsp-tailwindcss--has-config-file))))
+
+      ;; nixで入れたtailwindcss-language-serverを適用できるオプションがないので、本体を参考に自分で定義する。
+      (lsp-register-client
+       (make-lsp-client
+        :new-connection (lsp-stdio-connection
+                         (lambda ()
+                           `("tailwindcss-language-server" "--stdio")))
+        :activation-fn #'my/lsp-tailwindcss--activate-p
+        :server-id 'my/tailwindcss
+        :priority -1
+        :add-on? t
+        :initialization-options #'lsp-tailwindcss--initialization-options
+        :notification-handlers (ht ("@/tailwindCSS/projectInitialized" #'ignore)
+                                   ("@/tailwindCSS/projectsDestroyed" #'ignore)))))
 
     (leaf lsp-snippet
       :doc "lsp-modeとtempelのインテグレーション"
