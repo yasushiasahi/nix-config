@@ -9,7 +9,10 @@ in
       rm = "trash";
     };
     autocd = true;
-    autosuggestion.enable = true;
+    autosuggestion = {
+      enable = true;
+      highlight = "fg=#586e75";
+    };
     defaultKeymap = "emacs";
     dotDir = ".config/zsh";
     history = {
