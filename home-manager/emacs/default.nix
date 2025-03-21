@@ -39,15 +39,14 @@ in
     pkgs.nil
   ];
 
-  # TODO init.elなどの配置
-  # xdg = {
-  #   configFile = {
-  #     emacs = {
-  #       source = ??
-  #       recursive = true;
-  #     };
-  #   };
-  # };
+  xdg = {
+    configFile = {
+      "emacs/init.el".source = ./init.el;
+      "emacs/early-init.el".source = ./early-init.el;
+      "emacs/etc/templates".source = ./etc/templates;
+      "emacs/etc/transient/values.el".source = ./etc/templates;
+    };
+  };
 
   # TODO emacs demon? client? service
   # 設定するべきなのか？するとして何を設定するべきなのか不明。
