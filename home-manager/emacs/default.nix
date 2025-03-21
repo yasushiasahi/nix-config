@@ -29,6 +29,7 @@ in
     pkgs.emacs-lsp-booster
 
     # lsp
+    pkgs.nodePackages.typescript
     pkgs.nodePackages.typescript-language-server
     pkgs.astro-language-server
     pkgs.yaml-language-server

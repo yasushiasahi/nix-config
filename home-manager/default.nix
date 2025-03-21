@@ -47,10 +47,6 @@ let
       pkgs.nodejs_22
       pkgs.yarn
       pkgs.pnpm
-      pkgs.nodePackages.prettier
-      pkgs.nodePackages.npm-check-updates
-      # pkgs.nodePackages.typescript
-
     ];
 
     # XDG_*の環境変数を設定する
