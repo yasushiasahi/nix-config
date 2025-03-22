@@ -127,7 +127,6 @@
     (add-to-list 'default-frame-alist
                  '(font . "HackGen35-13")))
 
-  nixpkgs.emacsにoverrideでns-inline-patchを当ててもうまいこと行かない
   (leaf *mac-input-source
     :defun (my-set-cursor-japanese-style my-set-cursor-abc-style)
     :config
