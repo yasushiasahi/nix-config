@@ -58,7 +58,7 @@ let
     ];
   };
 
-  tangle = pkgs.org-babel.tangleOrgBabel { languages = [ "emacs-lisp" ]; };
+  tangle = pkgs.tangleOrgBabel { languages = [ "emacs-lisp" ]; };
 in
 {
   programs = {

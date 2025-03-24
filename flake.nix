@@ -36,7 +36,7 @@
         overlays = [
           emacs-overlay.overlay
           (_: _: {
-            org-babel.tangleOrgBabel = org-babel.lib.tangleOrgBabel;
+            tangleOrgBabel = org-babel.lib.tangleOrgBabel;
           })
         ];
       };
