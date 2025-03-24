@@ -16,6 +16,7 @@
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    org-babel.url = "github:emacs-twist/org-babel";
   };
 
   outputs =
@@ -24,6 +25,7 @@
       nix-darwin,
       home-manager,
       emacs-overlay,
+      org-babel,
       self,
     }:
     let
@@ -31,7 +33,12 @@
       # pkgs = nixpkgs.legacyPackages.${system};
       pkgs = import nixpkgs {
         inherit system;
-        overlays = [ emacs-overlay.overlay ];
+        overlays = [
+          emacs-overlay.overlay
+          (_: _: {
+            org-babel.tangleOrgBabel = org-babel.lib.tangleOrgBabel;
+          })
+        ];
       };
     in
     {

@@ -30,7 +30,8 @@ let
 
   emacs-mac-with-epkgs = pkgs.emacsWithPackagesFromUsePackage {
     package = emacs-mac;
-    config = ./init.el;
+    config = ./init.org;
+
     override =
       epkgs:
       epkgs
@@ -56,6 +57,8 @@ let
       # TODO astroのgrammarsも入れたいけど、grammarsのbuild方法がわからない。
     ];
   };
+
+  tangle = pkgs.org-babel.tangleOrgBabel { languages = [ "emacs-lisp" ]; };
 in
 {
   programs = {
@@ -86,7 +89,7 @@ in
   home.sessionVariables.LANG = "en_US.UTF-8";
 
   xdg.configFile = {
-    "emacs/init.el".source = ./init.el;
+    "emacs/init.el".text = tangle (builtins.readFile ./init.org);
     "emacs/early-init.el".source = ./early-init.el;
     "emacs/etc/templates".source = ./etc/templates;
     "emacs/etc/transient/values.el".source = ./etc/transient/values.el;
