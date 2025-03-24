@@ -1,0 +1,66 @@
+#+TITLE: early-init.el - My Configurations for GNU Emacs
+#+AUTHOR: Yasushi Asahi
+#+EMAIL: asahi1600@gmail.com
+* early-init.el
+** Header
+#+begin_src emacs-lisp :tangle
+  ;;; early-init.el --- My early-init.el  -*- lexical-binding: t; -*-
+  ;;; Commentary:
+  ;;; Code:
+#+end_src
+** 新規フレームの設定
+*** タイトルバーの透過
+macの場合グレーのタイトルバーが投下されて、後述themaのバックグラウンドと同じ色になる
+#+begin_src emacs-lisp :tangle
+  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+#+end_src
+*** ダークモード
+ツールバーの見た目に関わると思うけど、そもそも非表示するするからほぼほぼ意味ない
+#+begin_src emacs-lisp :tangle
+  (add-to-list 'default-frame-alist '(ns-appearance . dark))
+#+end_src
+*** フレームのサイズ
+macbook air 13でええ感じな数字えあって、特段意味のある数字ではない。
+#+begin_src emacs-lisp :tangle
+  (add-to-list 'default-frame-alist '(width . (text-pixels . 960))) ;横幅
+  (add-to-list 'default-frame-alist '(height . (text-pixels . 960))) ;縦幅
+#+end_src
+*** フォント
+~"{フォント名}-{フォントサイズ}"~の形式でフォントを指定する
+[[https://apribase.net/2024/07/06/emacs-default-frame-alist/][起動シーケンスを考慮して Emacs のフォント設定関数を正しく使い分ける]]を参考にしている
+#+begin_src emacs-lisp :tangle
+  (add-to-list 'default-frame-alist '(font . "HackGen35-13"))
+#+end_src
+** GUIの無効化
+*** メニューバー非表示
+#+begin_src emacs-lisp :tangle
+  (menu-bar-mode -1)
+#+end_src
+*** ツールバーを非表示
+#+begin_src emacs-lisp :tangle
+  (tool-bar-mode -1)
+#+end_src
+*** スクロールバーを非表示
+#+begin_src emacs-lisp :tangle
+  (scroll-bar-mode -1)
+#+end_src
+** ネイティブコンパイルキャッシュの保存先
+emacsにpackageをinstallすると~open-junk-file-xxxxxxxx-xxxxxxxx.eln~のようなキャッシュファイルを
+user-emacs-directoryに作成する。その出力先ディレクトリを変更して、.gitignoreで管理しやすくする。
+[[https://github.com/emacscollective/no-littering?tab=readme-ov-file#native-compilation-cache][no-littering#Native compilation cache]]のガイドの通りの記載。
+#+begin_src emacs-lisp :tangle
+  (when (and (fboundp 'startup-redirect-eln-cache)
+             (fboundp 'native-comp-available-p)
+             (native-comp-available-p))
+    (startup-redirect-eln-cache
+     (convert-standard-filename
+      (expand-file-name  "var/eln-cache/" user-emacs-directory))))
+#+end_src
+** lsp-modeのパフォーマンスチューニング
+emacsのjson?のパースにはplistとhash-tableという二つの方法があるらしく、lsp-mode曰くplistの方が早いらしい。
+lsp-modeのガイドラインの通りに記載。
+[[Performance - LSP Mode - LSP support for Emacs#Use plists for deserialization.][https://emacs-lsp.github.io/lsp-mode/page/performance/#use-plists-for-deserialization]]
+#+begin_src emacs-lisp :tangle
+  (setenv "LSP_USE_PLISTS" "true")
+#+end_src
+
