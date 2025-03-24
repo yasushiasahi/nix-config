@@ -16,7 +16,6 @@ let
     {
       melpaBuild,
       fetchFromGitHub,
-      emacs-lsp-booster,
     }:
     melpaBuild {
       pname = "eglot-booster";
@@ -27,7 +26,6 @@ let
         rev = "e6daa6bcaf4aceee29c8a5a949b43eb1b89900ed";
         hash = "sha256-PLfaXELkdX5NZcSmR1s/kgmU16ODF8bn56nfTh9g6bs=";
       };
-      packageRequires = [ emacs-lsp-booster ];
     };
 
   emacs-mac-with-epkgs = pkgs.emacsWithPackagesFromUsePackage {
@@ -41,6 +39,17 @@ let
           inherit (pkgs) fetchFromGitHub;
           inherit (epkgs) melpaBuild;
         };
+        # lsp-modeのplists解析を有効にする。そのままだと、hash-tableになる。
+        # https://emacs-lsp.github.io/lsp-mode/page/performance/#use-plists-for-deserialization
+        lsp-mode = epkgs.lsp-mode.overrideAttrs (
+          f: p: {
+            buildPhase =
+              ''
+                export LSP_USE_PLISTS=true
+              ''
+              + p.buildPhase;
+          }
+        );
       };
     extraEmacsPackages = epkgs: [
       epkgs.treesit-grammars.with-all-grammars

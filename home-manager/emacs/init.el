@@ -709,6 +709,16 @@ The DWIM behaviour of this command is as follows:
 
 (leaf *lsp
   :config
+  (leaf eldoc-box
+    :doc "Display documentation in childframe"
+    :url "https://github.com/casouri/eldoc-box"
+    :ensure t
+    :defun (eldoc-box-prettify-ts-errors)
+    :custom ((eldoc-box-clear-with-C-g . t))
+    :config
+    ;; TODO typescript以外のプロジェクトの時にこれ有効にしちゃダメよね
+    (add-hook 'eldoc-box-buffer-setup-hook #'eldoc-box-prettify-ts-errors 0 t))
+
   (leaf eglot
     :doc "The Emacs Client for LSP servers"
     :tag "builtin"
@@ -762,16 +772,6 @@ The DWIM behaviour of this command is as follows:
       :config
       (advice-add #'eglot-signature-eldoc-function
                   :override #'eglot-signature-eldoc-talkative))
-
-    (leaf eldoc-box
-      :doc "Display documentation in childframe"
-      :url "https://github.com/casouri/eldoc-box"
-      :ensure t
-      :defun (eldoc-box-prettify-ts-errors)
-      :custom ((eldoc-box-clear-with-C-g . t))
-      :config
-      ;; TODO typescript以外のプロジェクトの時にこれ有効にしちゃダメよね
-      (add-hook 'eldoc-box-buffer-setup-hook #'eldoc-box-prettify-ts-errors 0 t))
     )
 
   (leaf lsp-mode
@@ -781,9 +781,12 @@ The DWIM behaviour of this command is as follows:
     :defvar (lsp-use-plists)
     :hook ((lsp-mode-hook . lsp-enable-which-key-integration)
            (lsp-completion-mode-hook . my/lsp-mode-setup-completion))
+    :bind (:lsp-mode-map
+           ("C-c d" . eldoc-box-help-at-point))
     :custom ((lsp-keymap-prefix . "C-c l")
              (lsp-diagnostics-provider . :flymake)
              (lsp-completion-provider . :none)
+             (lsp-enable-snippet . nil)
              (lsp-headerline-breadcrumb-enable . nil)
              (lsp-enable-dap-auto-configure . nil)
              (lsp-enable-folding . nil)
@@ -829,13 +832,13 @@ The DWIM behaviour of this command is as follows:
                             :add-on? t
                             :initialization-options #'lsp-tailwindcss--initialization-options)))
 
-    (leaf lsp-snippet
-      :doc "lsp-modeとtempelのインテグレーション"
-      :vc (:url "https://github.com/svaante/lsp-snippet")
-      :defun (lsp-snippet-tempel-lsp-mode-init)
-      :config
-      (when (featurep 'lsp-mode)
-        (lsp-snippet-tempel-lsp-mode-init)))
+    ;; (leaf lsp-snippet
+    ;;   :doc "lsp-modeとtempelのインテグレーション"
+    ;;   :vc (:url "https://github.com/svaante/lsp-snippet")
+    ;;   :defun (lsp-snippet-tempel-lsp-mode-init)
+    ;;   :config
+    ;;   (when (featurep 'lsp-mode)
+    ;;     (lsp-snippet-tempel-lsp-mode-init)))
 
     (leaf *emacs-lsp-booster
       :defun (lsp-booster--advice-json-parse lsp-booster--advice-final-command)
