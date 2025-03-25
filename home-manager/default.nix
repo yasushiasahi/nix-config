@@ -34,9 +34,6 @@ let
       pkgs.darwin.trash
       pkgs.jq # programs.jq.enableでもいけるけど、設定することないのでこっち
 
-      #nix
-      pkgs.nixfmt-rfc-style
-
       # docker
       pkgs.colima
       pkgs.docker

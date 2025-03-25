@@ -82,6 +82,10 @@ in
     pkgs.dockerfile-language-server-nodejs
     pkgs.vscode-langservers-extracted
     pkgs.nil
+
+    #formatter
+    pkgs.nodePackages.prettier
+    pkgs.nixfmt-rfc-style
   ];
 
   # cliからemacsを起動した時にLANGがないと警告が出る。
