@@ -1,4 +1,4 @@
-#+TITLE: early-init.el - My Configurations for GNU Emacs
+#+TITLE: early-init.el - Yasushi Asahi's Configurations for GNU Emacs
 #+AUTHOR: Yasushi Asahi
 #+EMAIL: asahi1600@gmail.com
 #+STARTUP: content
@@ -7,60 +7,79 @@
 early-init.elに何を書くべきかについて非常に参考になった。感謝。
 [[https://apribase.net/2024/07/05/emacs-startup-sequence/][Emacs の31+3個の起動シーケンスに合わせて正しく GUI やフォントの設定をする]]
 ** Header
-#+begin_src emacs-lisp :tangle
+#+begin_src emacs-lisp :tangle yes
   ;;; early-init.el --- My early-init.el  -*- lexical-binding: t; -*-
   ;;; Commentary:
   ;;; Code:
 #+end_src
+** 起動処理のデバッグ有効化
+early-init.elやinit.elを含む起動処理中のエラーのデバッグ情報を見れるようになる。
+設定しないとlogだけが残る形になり、問題の把握が困難。
+#+begin_src emacs-lisp :tangle yes
+  (setq debug-on-error t)
+#+end_src
 ** 新規フレームの設定
 early-init.elでやるべき事の代表格①
+*** フレームリサイズの無効化
+デフォルトではフォントとかを変更する時、行数とカラム数が変わらないようにEmacsが自動でフレームのサイズを変更する。
+必要無いし、パフォーマンスがちょっとよくなるらしいので抑制する。
+#+begin_src emacs-lisp :tangle yes  
+  (setq frame-inhibit-implied-resize t)
+#+end_src
 *** タイトルバーの透過
-macの場合グレーのタイトルバーが投下されて、後述themaのバックグラウンドと同じ色になる
-#+begin_src emacs-lisp :tangle
+macの場合グレーのタイトルバーが透過されてthemaの背景と同じ色になる。
+#+begin_src emacs-lisp :tangle yes
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 #+end_src
 *** ダークモード
-ツールバーの見た目に関わると思うけど、そもそも非表示するするからほぼほぼ意味ない
-#+begin_src emacs-lisp :tangle
+ツールバー、メニューバーの見た目に関わると思うけど、そもそも非表示するするからほぼほぼ意味ないと思っている。
+#+begin_src emacs-lisp :tangle yes
   (add-to-list 'default-frame-alist '(ns-appearance . dark))
 #+end_src
 *** フレームのサイズ
-macbook air 13でええ感じな数字えあって、特段意味のある数字ではない。
-#+begin_src emacs-lisp :tangle
+macbook air 13inchでええ感じな数字であって、特段意味のある設定ではない。
+#+begin_src emacs-lisp :tangle yes
   (add-to-list 'default-frame-alist '(width . (text-pixels . 960))) ;横幅
   (add-to-list 'default-frame-alist '(height . (text-pixels . 960))) ;縦幅
 #+end_src
 *** フォント
 ~"{フォント名}-{フォントサイズ}"~の形式でフォントを指定する
 [[https://apribase.net/2024/07/06/emacs-default-frame-alist/][起動シーケンスを考慮して Emacs のフォント設定関数を正しく使い分ける]]を参考にしている
-#+begin_src emacs-lisp :tangle
+#+begin_src emacs-lisp :tangle yes
   (add-to-list 'default-frame-alist '(font . "HackGen35-13"))
 #+end_src
-
 ** GUIの無効化
 early-init.elでやるべき事の代表格②
 *** メニューバー非表示
-#+begin_src emacs-lisp :tangle
+#+begin_src emacs-lisp :tangle yes
   (menu-bar-mode -1)
 #+end_src
 *** ツールバーを非表示
-#+begin_src emacs-lisp :tangle
+#+begin_src emacs-lisp :tangle yes
   (tool-bar-mode -1)
 #+end_src
 *** スクロールバーを非表示
-#+begin_src emacs-lisp :tangle
+#+begin_src emacs-lisp :tangle yes
   (scroll-bar-mode -1)
 #+end_src
-
+*** 確認ダイアログを表示しない
+長らくemacsのdialog-boxとやらを拝見していないのではたしてどんな物なのか忘れてしまったが、この値がnon-nilの場合に出現するして確認を要求してくる。
+nilにした場合、エコーエリアにyes or noのプロンプトが表示され、そこで応対する形になる。
+ファイル選択時に表示されるuse-file-dialog（これも記憶がない）については、
+"If `use-dialog-box' is nil, that disables the use of a file dialog, regardless of the value of this variable."
+とのことなので設定不要なはず。
+#+begin_src emacs-lisp :tangle yes  
+  (setq use-dialog-box nil)
+#+end_src
 ** ネイティブコンパイル関連
-大いに参考にさせていただいた。[[https://apribase.net/2024/07/09/emacs-eln-cache/][Emacs の eln-cache ディレクトリを正しく変更する]]
-takeokunnさんも似たような設定をされている。[[https://emacs.takeokunn.org/#org5adb123#outline-container-org5e54ed7][Configurations for GNU Emacs]]
+[[https://apribase.net/2024/07/09/emacs-eln-cache/][Emacs の eln-cache ディレクトリを正しく変更する]]を大いに参考にさせていただいた。
+takeokunnさんも似たような設定をされている[[https://emacs.takeokunn.org/#org5adb123#outline-container-org5e54ed7][Configurations for GNU Emacs]]。
 多分ひとつ目以外はearly-init.elに書く必要はないけど、native comp関連はここにまとめてしまう。
 *** キャッシュファイル(*.elc)の保存先ディレクトリを変更
 emacsにpackageをinstallすると~open-junk-file-xxxxxxxx-xxxxxxxx.eln~のようなキャッシュファイルをuser-emacs-directory(例えば$HOME/.config/emacs/)直下に作成する。
 その出力先を任意のディレクトリを変更して、.gitignoreで管理しやすくする。ここではno-litteringの推奨に合わせている。
 [[https://github.com/emacscollective/no-littering?tab=readme-ov-file#native-compilation-cache][no-littering#Native compilation cache]]のガイドの通りの記載。
-#+begin_src emacs-lisp :tangle
+#+begin_src emacs-lisp :tangle yes
   (when (and (fboundp 'startup-redirect-eln-cache)
              (fboundp 'native-comp-available-p)
              (native-comp-available-p))
@@ -69,7 +88,7 @@ emacsにpackageをinstallすると~open-junk-file-xxxxxxxx-xxxxxxxx.eln~のよ�
       (expand-file-name  "var/eln-cache/" user-emacs-directory))))
 #+end_src
 *** 挙動の調整
-- native-comp-speed 'comp
+- native-comp-speed
   - ネイティブコンパイル時の最適化レベルを-1~3の間で設定する
   - 3が最も最適化度合いが高い。"Warning: with 3, the compiler is free to perform dangerous optimizations."とのこと。
 - native-comp-async-jobs-number
@@ -78,7 +97,7 @@ emacsにpackageをinstallすると~open-junk-file-xxxxxxxx-xxxxxxxx.eln~のよ�
   - こういうのは自分のマシンのcpu数と同じに設定するのが吉な印象
 - native-comp-always-compile
   - 無条件で（再）コンパイルする
-#+begin_src emacs-lisp :tangle
+#+begin_src emacs-lisp :tangle yes
   (with-eval-after-load 'comp
   	(setopt native-comp-speed 3))
   
@@ -88,15 +107,56 @@ emacsにpackageをinstallすると~open-junk-file-xxxxxxxx-xxxxxxxx.eln~のよ�
 #+end_src
 *** 警告を抑制
 ネイティブコンパイル時に必要のない警告が大量に出るので、それを抑制
-#+begin_src emacs-lisp :tangle
+#+begin_src emacs-lisp :tangle yes
   (with-eval-after-load 'warnings
   	(setopt warning-suppress-types '((comp))))
 #+end_src
-** lsp-modeのパフォーマンスチューニング
-emacsのjson?のパースにはplistとhash-tableという二つの方法があるらしく、lsp-mode曰くplistの方が早いらしい。
-lsp-modeのガイドラインの通りに記載。
+** パフォーマンスチューニング（主にlsp-mode）
 [[https://emacs-lsp.github.io/lsp-mode/page/performance/#use-plists-for-deserialization][Performance-LSP_Mode-LSP_support_for_Emacs]]
-#+begin_src emacs-lisp :tangle
+*** ガベージコレクション
+この閾値をあげる事によりGCが走る回数が減るのでパフォーマンスが上がるというやつ。
+本当はプロファイルを設定して、gc-cons-thresholdの数値を変えながら最適な値を探す必要があるんだが、やらずにキメ撃ちしている。
+#+begin_src emacs-lisp :tangle yes  
+  (setq gc-cons-threshold (* 10 128 1024 1024))
+  (setq garbage-collection-messages nil)
+#+end_src
+*** プロセスから一度に読み込むデータのサイズ
+#+begin_src emacs-lisp :tangle yes  
+  (setq read-process-output-max (* 8 1024 1024))
+#+end_src
+*** plistを使う
+emacsのjson?のパースにはplistとhash-tableという二つの方法があるらしく、lsp-mode曰くplistの方が早いらしい。lsp-modeのガイドラインの通りに記載。
+#+begin_src emacs-lisp :tangle yes
   (setenv "LSP_USE_PLISTS" "true")
 #+end_src
+** 起動時の挙動無効化
+*** スタートアップスクリーン非表示
+#+begin_src emacs-lisp :tangle yes
+  (setopt inhibit-startup-screen t)
+#+end_src
+*** scratchバッファーの挨拶文無効
+#+begin_src emacs-lisp :tangle yes
+  (setopt initial-scratch-message nil)
+#+end_src
+*** バッファメニューの表示を無効化
+#+begin_src emacs-lisp :tangle yes
+  (setopt inhibit-startup-buffer-menu nil)
+#+end_src
 
+
+
+** 元の設定の残骸
+# (custom-set-variables
+#  '(inhibit-x-resources t)                 ; Xリソースを使用しない
+#  '(inhibit-startup-echo-area-message t)	  ; 起動時にエコーエリアに挨拶文を表示しない
+#  '(scroll-preserve-screen-position t)	  ; 画面がスクロールする時にカーソルを画面上の位置で固定する
+#  '(scroll-conservatively 1)		  ; 1行ずつスクロールする
+# 																				; '(create-lockfiles nil)		  ; 編集中のファイルのロックファイル(.#~~)を作らない
+#  '(delete-old-versions t)		  ; 古いバックアップファイルを確認なしで消す
+#  '(truncate-lines t)			  ; 行を折り返さない
+#  '(x-underline-at-descent-line t)	  ; アンダーラインの位置をいい感じにする。solarized-emacsで推奨されている https://github.com/bbatsov/solarized-emacs#underline-position-setting-for-x
+#  '(native-comp-async-report-warnings-errors 'silent) ; ネイティブコンパイルのwarningsをbufferに記録するがポップアップはさせない。
+#  '(frame-title-format "")                      ; titlebarを""にする（何も表示しない）
+#  '(ring-bell-function 'ignore)                 ; 警告音（ピープ音）をならさい
+# 																				; '(make-backup-files nil)                      ; オープン時(編集前)のファイルをバックアップを作成しない
+#  )

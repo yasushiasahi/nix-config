@@ -90,7 +90,7 @@ in
 
   xdg.configFile = {
     "emacs/init.el".text = tangle (builtins.readFile ./init.org);
-    "emacs/early-init.el".source = ./early-init.el;
+    "emacs/early-init.el".text = tangle (builtins.readFile ./early-init.org);
     "emacs/etc/templates".source = ./etc/templates;
     "emacs/etc/transient/values.el".source = ./etc/transient/values.el;
   };
