@@ -906,6 +906,11 @@
               (mapcar #'car treesit-language-source-alist)))
       )
 
+  	(leaf org
+      :doc "Outline-based notes management and organizer"
+      :tag "builtin"
+      :custom ((org-startup-truncated . nil))
+      :push ((org-structure-template-alist . '("," . "src emacs-lisp :tangle yes"))))
 
     (leaf macrostep
       :doc "マクロを展開する。leafがどう実行されるのか確認できる。"
