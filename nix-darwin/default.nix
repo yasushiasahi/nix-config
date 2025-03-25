@@ -88,6 +88,7 @@
       autohide = true;
       tilesize = 16;
       static-only = true;
+      show-recents = false;
       show-process-indicators = false;
       wvous-bl-corner = 1;
       wvous-br-corner = 1;
