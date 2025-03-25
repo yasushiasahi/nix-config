@@ -1,8 +1,7 @@
 #+TITLE: early-init.el - Yasushi Asahi's Configurations for GNU Emacs
 #+AUTHOR: Yasushi Asahi
 #+EMAIL: asahi1600@gmail.com
-#+STARTUP: content
-#+STARTUP: fold
+#+STARTUP: content indent
 * early-init.el
 early-init.elに何を書くべきかについて非常に参考になった。感謝。
 [[https://apribase.net/2024/07/05/emacs-startup-sequence/][Emacs の31+3個の起動シーケンスに合わせて正しく GUI やフォントの設定をする]]
@@ -20,6 +19,11 @@ early-init.elやinit.elを含む起動処理中のエラーのデバッグ情報
 #+end_src
 ** 新規フレームの設定
 early-init.elでやるべき事の代表格①
+*** pixel単位でフレームをリサイズする
+デフォルトではframeサイズはフォントサイズ単位で調整されるため、macでemacsのframeを最大化しようとしても画面サイズがフォントサイズで割り切れない限り、frameと画面の端に隙間ができる。この設定でpixelで調整してくれるようになる。
+#+begin_src emacs-lisp :tangle yes
+  (setq frame-resize-pixelwise t)
+#+end_src
 *** フレームリサイズの無効化
 デフォルトではフォントとかを変更する時、行数とカラム数が変わらないようにEmacsが自動でフレームのサイズを変更する。
 必要無いし、パフォーマンスがちょっとよくなるらしいので抑制する。
