@@ -1,7 +1,11 @@
 #+TITLE: early-init.el - My Configurations for GNU Emacs
 #+AUTHOR: Yasushi Asahi
 #+EMAIL: asahi1600@gmail.com
+#+STARTUP: content
+#+STARTUP: fold
 * early-init.el
+early-init.elに何を書くべきかについて非常に参考になった。感謝。
+[[https://apribase.net/2024/07/05/emacs-startup-sequence/][Emacs の31+3個の起動シーケンスに合わせて正しく GUI やフォントの設定をする]]
 ** Header
 #+begin_src emacs-lisp :tangle
   ;;; early-init.el --- My early-init.el  -*- lexical-binding: t; -*-
@@ -9,6 +13,7 @@
   ;;; Code:
 #+end_src
 ** 新規フレームの設定
+early-init.elでやるべき事の代表格①
 *** タイトルバーの透過
 macの場合グレーのタイトルバーが投下されて、後述themaのバックグラウンドと同じ色になる
 #+begin_src emacs-lisp :tangle
@@ -31,7 +36,9 @@ macbook air 13でええ感じな数字えあって、特段意味のある数字
 #+begin_src emacs-lisp :tangle
   (add-to-list 'default-frame-alist '(font . "HackGen35-13"))
 #+end_src
+
 ** GUIの無効化
+early-init.elでやるべき事の代表格②
 *** メニューバー非表示
 #+begin_src emacs-lisp :tangle
   (menu-bar-mode -1)
@@ -44,9 +51,14 @@ macbook air 13でええ感じな数字えあって、特段意味のある数字
 #+begin_src emacs-lisp :tangle
   (scroll-bar-mode -1)
 #+end_src
-** ネイティブコンパイルキャッシュの保存先
-emacsにpackageをinstallすると~open-junk-file-xxxxxxxx-xxxxxxxx.eln~のようなキャッシュファイルを
-user-emacs-directoryに作成する。その出力先ディレクトリを変更して、.gitignoreで管理しやすくする。
+
+** ネイティブコンパイル関連
+大いに参考にさせていただいた。[[https://apribase.net/2024/07/09/emacs-eln-cache/][Emacs の eln-cache ディレクトリを正しく変更する]]
+takeokunnさんも似たような設定をされている。[[https://emacs.takeokunn.org/#org5adb123#outline-container-org5e54ed7][Configurations for GNU Emacs]]
+多分ひとつ目以外はearly-init.elに書く必要はないけど、native comp関連はここにまとめてしまう。
+*** キャッシュファイル(*.elc)の保存先ディレクトリを変更
+emacsにpackageをinstallすると~open-junk-file-xxxxxxxx-xxxxxxxx.eln~のようなキャッシュファイルをuser-emacs-directory(例えば$HOME/.config/emacs/)直下に作成する。
+その出力先を任意のディレクトリを変更して、.gitignoreで管理しやすくする。ここではno-litteringの推奨に合わせている。
 [[https://github.com/emacscollective/no-littering?tab=readme-ov-file#native-compilation-cache][no-littering#Native compilation cache]]のガイドの通りの記載。
 #+begin_src emacs-lisp :tangle
   (when (and (fboundp 'startup-redirect-eln-cache)
@@ -56,10 +68,34 @@ user-emacs-directoryに作成する。その出力先ディレクトリを変更
      (convert-standard-filename
       (expand-file-name  "var/eln-cache/" user-emacs-directory))))
 #+end_src
+*** 挙動の調整
+- native-comp-speed 'comp
+  - ネイティブコンパイル時の最適化レベルを-1~3の間で設定する
+  - 3が最も最適化度合いが高い。"Warning: with 3, the compiler is free to perform dangerous optimizations."とのこと。
+- native-comp-async-jobs-number
+  - ネイティブコンパイルの実行に何スレット使うかの設定
+  - デフォルトは0でマシンのcpu数の半分を使うらしい
+  - こういうのは自分のマシンのcpu数と同じに設定するのが吉な印象
+- native-comp-always-compile
+  - 無条件で（再）コンパイルする
+#+begin_src emacs-lisp :tangle
+  (with-eval-after-load 'comp
+  	(setopt native-comp-speed 3))
+  
+  (with-eval-after-load 'comp-run
+  	(setopt native-comp-async-jobs-number 8)  	
+  	(setopt native-comp-always-compile t))
+#+end_src
+*** 警告を抑制
+ネイティブコンパイル時に必要のない警告が大量に出るので、それを抑制
+#+begin_src emacs-lisp :tangle
+  (with-eval-after-load 'warnings
+  	(setopt warning-suppress-types '((comp))))
+#+end_src
 ** lsp-modeのパフォーマンスチューニング
 emacsのjson?のパースにはplistとhash-tableという二つの方法があるらしく、lsp-mode曰くplistの方が早いらしい。
 lsp-modeのガイドラインの通りに記載。
-[[Performance - LSP Mode - LSP support for Emacs#Use plists for deserialization.][https://emacs-lsp.github.io/lsp-mode/page/performance/#use-plists-for-deserialization]]
+[[https://emacs-lsp.github.io/lsp-mode/page/performance/#use-plists-for-deserialization][Performance-LSP_Mode-LSP_support_for_Emacs]]
 #+begin_src emacs-lisp :tangle
   (setenv "LSP_USE_PLISTS" "true")
 #+end_src
