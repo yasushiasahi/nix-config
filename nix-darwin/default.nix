@@ -79,52 +79,86 @@
 
   system.defaults = {
     NSGlobalDomain = {
+      # メニューバーオートはいど
       _HIHideMenuBar = true;
+      # キーを押してから長押しと判断するまでの閾値
       InitialKeyRepeat = 11;
+      # キー長押し時の速さ（最小に）
       KeyRepeat = 1;
       "com.apple.trackpad.forceClick" = false;
     };
     dock = {
+      # 自動非表示
       autohide = true;
+      # アプリアイコンのサイズ
       tilesize = 16;
+      # 起動中のアプリのみを表示
       static-only = true;
+      # 最近開いたアプリ非表示
       show-recents = false;
+      # 起動中アプリアイコンの下の白い点非表示
       show-process-indicators = false;
+      # ホットコーナー無効化
       wvous-bl-corner = 1;
       wvous-br-corner = 1;
       wvous-tl-corner = 1;
       wvous-tr-corner = 1;
     };
     finder = {
+      # ウィンドウ下部のパスバー表示
       ShowPathbar = true;
+      # ウィンドウ下部のステータス(アイテム数、ディスクサイズとか)表示
       ShowStatusBar = true;
+      # 新しくfinderを開いた時に表示するフォルダをホームディレクトリにする
       NewWindowTarget = "Home";
+      # リスト表示をデフォルトに
       FXPreferredViewStyle = "Nlsv";
+      # 全てのファイル拡張子表示
       AppleShowAllExtensions = true;
+      # 隠しファイル(.*)を表示
       AppleShowAllFiles = true;
+      # 検索対象のフォルダを今開いているフォルダ配下にする
       FXDefaultSearchScope = "SCcf";
     };
     trackpad = {
+      # タップでクリック
       Clicking = true;
+      # Tap To Drag(ダブルタップでドラッグ)
       Dragging = true;
     };
     controlcenter = {
+      # メニューバーにバッテリー残量の%を表示する
       BatteryShowPercentage = true;
+      # メニューバーにオーディオ設定を常に表示
       Sound = true;
-      Display = true;
+      # メニューバーにブルートゥース設定を常に表示
+      Bluetooth = true;
+      # メニューバーに再生中のメディア情報を常に表示
+      NowPlaying = true;
     };
-    WindowManager.EnableStandardClickToShowDesktop = false;
+    WindowManager = {
+      # デスクトップクリックでデスクトップ表示
+      EnableStandardClickToShowDesktop = false;
+      # アプリを画面端にドラッグすると左右半分にスナップする
+      EnableTilingByEdgeDrag = false;
+      # アプリを画面上橋にドラッグするとフススクリーンにする
+      EnableTopTilingByEdgeDrag = false;
+    };
   };
 
   security = {
     pam.services.sudo_local = {
+      # sudo実行の許可をタッチIDで行う
       touchIdAuth = true;
+      # 複数セッション間でsudoの実行の権限を共有する
       reattach = true;
     };
   };
 
   system.keyboard = {
+    # キーマップ変更を有効化
     enableKeyMapping = true;
+    # CapsをCtrlに変更
     remapCapsLockToControl = true;
   };
 
