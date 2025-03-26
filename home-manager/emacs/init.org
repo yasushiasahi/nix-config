@@ -1010,6 +1010,15 @@
     )
 #+end_src
 
+* ターミナル
+** [[https://github.com/szermatt/mistty][mistty]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf mistty
+  	:doc "Shell/Comint alternative based on term.el."
+  	:tag "unix" "convenience" "emacs>=29.1"
+  	:ensure t)
+#+end_src
+
 * Footer
 #+begin_src emacs-lisp :tangle yes
   (provide 'init)
