@@ -30,6 +30,11 @@ early-init.elでやるべき事の代表格①
 #+begin_src emacs-lisp :tangle yes  
   (setq frame-inhibit-implied-resize t)
 #+end_src
+*** タイトルバーの表示されるIconを非表示
+あまりかっこ良くなく若干目障りなので消す。できればファイルの種類によってiconを変更したいけど、どうも無理っぽい。ちなみにドキュメントによればこのiconはドラッグできるみたいなのだが、僕の環境ではできなかった。タイトルバーに表示されるバッファル名はそのままにしておく。
+#+begin_src emacs-lisp :tangle yes
+  (setq ns-use-proxy-icon nil)
+#+end_src
 *** タイトルバーの透過
 macの場合グレーのタイトルバーが透過されてthemaの背景と同じ色になる。
 #+begin_src emacs-lisp :tangle yes
