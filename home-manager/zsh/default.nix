@@ -1,6 +1,20 @@
 { pkgs, ... }:
 let
   initExtra = builtins.readFile ./init-extra.sh;
+
+  homebrewConfig = ''
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  '';
+
+  # emacs misttyの設定
+  # https://mistty.readthedocs.io/en/latest/shells.html#directory-tracking-in-zsh
+  misttyConfig = ''
+
+    function osc7_precmd() {
+      printf "\e]7;file://%s%s\e\\\\" "$HOSTNAME" "$PWD"
+    }
+    precmd_functions+=(osc7_precmd)
+  '';
 in
 {
   programs.zsh = {
@@ -22,10 +36,8 @@ in
       size = 10000;
     };
     historySubstringSearch.enable = true;
-    initExtraFirst = ''
-      eval "$(/opt/homebrew/bin/brew shellenv)"
-    '';
-    initExtra = initExtra;
+    initExtraFirst = homebrewConfig;
+    initExtra = initExtra + misttyConfig;
     oh-my-zsh = {
       enable = true;
       plugins = [ "aws" ];
