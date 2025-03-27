@@ -1,6 +1,7 @@
 #+TITLE: My Configuration for GNU Emacs
 #+AUTHOR: Yasushi Asahi
 #+EMAIL: asahi1600@gmail.com
+#+STARTUP: content indent
 
 * Header
 #+begin_src emacs-lisp :tangle yes
@@ -40,9 +41,9 @@
   (leaf *primitives
     :config
     (leaf exec-path-from-shell
-  	  :doc "Get environment variables such as $PATH from the shell"
-  	  :url "https://github.com/purcell/exec-path-from-shell"
-  	  :ensure t
+      :doc "Get environment variables such as $PATH from the shell"
+      :url "https://github.com/purcell/exec-path-from-shell"
+      :ensure t
       :custom ((exec-path-from-shell-arguments . nil)
                (exec-path-from-shell-variables . '("PATH")))
       :config
@@ -182,7 +183,7 @@
       :ensure t
       :require
       :config
-  																				; (nerd-icons-install-fonts t)
+                                          ; (nerd-icons-install-fonts t)
       (leaf nerd-icons-dired
         :doc "Shows icons for each file in dired mode"
         :url "https://github.com/rainstormstudio/nerd-icons-dired"
@@ -210,8 +211,8 @@
         "eglotのcurrent serverを表示する"
         :fetch
         (when-let ((_  (fboundp 'jsonrpc--process))
-  	               (_  (fboundp 'eglot-current-server))
-  	               (current-server (eglot-current-server)))
+                   (_  (fboundp 'eglot-current-server))
+                   (current-server (eglot-current-server)))
           (nth 4 (process-command (jsonrpc--process current-server)))))
       ;; (if (and (fboundp 'jsonrpc--process)
       ;;          (fboundp 'eglot-current-server))
@@ -232,7 +233,7 @@
             :parser 'json-read
             :success (cl-function
                       (lambda (&key data &allow-other-keys)
-  		                  (let* ((item (aref data 0))
+                        (let* ((item (aref data 0))
                                (meigen (alist-get 'meigen item))
                                (auther (alist-get 'auther item)))
                           (message "%s\nby %s" meigen auther))))))
@@ -259,17 +260,17 @@
       :custom ((mac-option-modifier . 'meta)     ; optionキーをmetaとして扱う
                (mac-command-modifier . 'super))  ; commandキーをsuperとして扱う
       :bind (("s-v" . yank)
-  	         ("s-c" . kill-ring-save)
-  	         ("s-x" . kill-region)))
+             ("s-c" . kill-ring-save)
+             ("s-x" . kill-region)))
 
     (defun my/beginning-of-line-text-or-line ()
       "行の最初の文字の位置に移動。すでに最初の文字だったら行頭に移動。"
       (interactive)
-      (let ((curr-point (point))		        ; コマンド実行前のカーソル位置
-  	        (curr-column (current-column))) ; コマンド実行前の行番号
-        (back-to-indentation)		            ; 一旦行の最初の文字の位置に移動
-        (when (and (/= curr-column 0)	      ; 元々行頭にいなかった
-  	               (<= curr-point (point))) ; 最初の文字の位置よりも前にいた
+      (let ((curr-point (point))                        ; コマンド実行前のカーソル位置
+            (curr-column (current-column))) ; コマンド実行前の行番号
+        (back-to-indentation)                       ; 一旦行の最初の文字の位置に移動
+        (when (and (/= curr-column 0)         ; 元々行頭にいなかった
+                   (<= curr-point (point))) ; 最初の文字の位置よりも前にいた
           (beginning-of-line))))            ; その場合は行頭に移動
     (define-key global-map (kbd "C-a") #'my/beginning-of-line-text-or-line)
 
@@ -314,26 +315,26 @@
         :transient-suffix     'transient--do-stay
         :transient-non-suffix 'transient--do-exit
         [:class transient-columns
-  	            ["Move"
+                ["Move"
                  ("p" "↑" windmove-up)
-  	             ("n" "↓" windmove-down)
-  	             ("b" "←" windmove-left)
-  	             ("f" "→" windmove-right)]
-  	            ["Ajust"
+                 ("n" "↓" windmove-down)
+                 ("b" "←" windmove-left)
+                 ("f" "→" windmove-right)]
+                ["Ajust"
                  ("<up>" "↑" shrink-window)
-  	             ("<down>" "↓" enlarge-window)
+                 ("<down>" "↓" enlarge-window)
                  ("<left>" "←" shrink-window-horizontally)
-  	             ("<right>" "→" enlarge-window-horizontally)]
-  	            ["Split"
-  	             ("\\" "vertical" split-window-right)
-  	             ("-" "horizontal" split-window-below)
+                 ("<right>" "→" enlarge-window-horizontally)]
+                ["Split"
+                 ("\\" "vertical" split-window-right)
+                 ("-" "horizontal" split-window-below)
                  ("s" "swap" window-swap-states)
-  	             ("e" "balance" balance-windows)]
-  	            ["Ohter"
-  	             ("0" "delete" delete-window)
+                 ("e" "balance" balance-windows)]
+                ["Ohter"
+                 ("0" "delete" delete-window)
                  ("q" "delete" delete-window)
-  	             ("1" "only" delete-other-windows)
-  	             ("t" "maxmaiz" toggle-frame-maximized)]])
+                 ("1" "only" delete-other-windows)
+                 ("t" "maxmaiz" toggle-frame-maximized)]])
       (put 'my/transient-window-operation 'interactive-only nil)
 
       (defun my/transient-window-operation-with-pulse ()
@@ -360,8 +361,8 @@
           "Window Operation"
           :transient-suffix     'transient--do-exit
           [:class transient-columns
-  	              ["Single word"
-  	               ("u" "EMACS" upcase-word)
+                  ["Single word"
+                   ("u" "EMACS" upcase-word)
                    ("d" "emacs" downcase-word)
                    ("c" "Emacs" capitalize-word)]
                   ["Mulchple Words"
@@ -371,7 +372,7 @@
                    ("p" "Foo_Bar" string-inflection-capital-underscore)
                    ("s" "FOO_BAR" string-inflection-upcase)
                    ("k" "foo-bar" string-inflection-kebab-case)]
-  	              ["Cycle"
+                  ["Cycle"
                    ("a" "cycle" string-inflection-all-cycle)]])
         )
       )
@@ -425,9 +426,9 @@
       )
 
     (leaf avy
-  	  :doc "Jump to arbitrary positions in visible text and select text quickly"
-  	  :url "https://github.com/abo-abo/avy"
-  	  :ensure t
+      :doc "Jump to arbitrary positions in visible text and select text quickly"
+      :url "https://github.com/abo-abo/avy"
+      :ensure t
       :bind (("C-s" . avy-goto-char-timer)))
     )
 
@@ -471,7 +472,7 @@
                                 "--plugin=prettier-plugin-astro" "--parser=astro"))
             apheleia-formatters)
       (setf (alist-get 'astro-ts-mode apheleia-mode-alist)
-  	        'prettier-astro)
+            'prettier-astro)
       )
 
     (leaf orderless
@@ -617,22 +618,22 @@
           "ghq listの結果をリストで返す"
           (with-temp-buffer
             (unless (zerop (apply #'call-process "ghq" nil t nil '("list" "--full-path")))
-  	          (error "Failed: Cannot get ghq list candidates"))
+              (error "Failed: Cannot get ghq list candidates"))
             (let ((paths))
-  	          (goto-char (point-min))
-  	          (while (not (eobp))
-  	            (push (buffer-substring-no-properties
-  		                 (line-beginning-position)
-  		                 (line-end-position))
-  		                paths)
-  	            (forward-line 1))
-  	          (nreverse paths))))
+              (goto-char (point-min))
+              (while (not (eobp))
+                (push (buffer-substring-no-properties
+                       (line-beginning-position)
+                       (line-end-position))
+                      paths)
+                (forward-line 1))
+              (nreverse paths))))
         (defun my-consult-ghq--read ()
           "ghq管理のリポジトリ一覧から選ぶ"
           (consult--read (my-consult-ghq--list-candidates)
                          :state (consult--file-preview)
-  		                   :prompt "ghq: "
-  		                   :category 'file))
+                         :prompt "ghq: "
+                         :category 'file))
         (defun my-consult-ghq-fd ()
           "ghq管理のリポジトリ一覧から選び、プロジェクト内ファイル検索"
           (interactive)
@@ -648,7 +649,7 @@
         ;; The vertico--candidate has a irregular char at the end.
         (let ((name  (substring (vertico--candidate) 0 -1)))
           (when (bufferp (get-buffer name))
-  	        (kill-buffer name))))
+            (kill-buffer name))))
       )
 
     (leaf embark
@@ -758,9 +759,9 @@
                                   :schemaStore (:enable t)))))
       :config
       (leaf eglot-booster
-  	    :doc "No description available."
-  	    :url "https://github.com/jdtsmith/eglot-booster"
-  	    :ensure t
+        :doc "No description available."
+        :url "https://github.com/jdtsmith/eglot-booster"
+        :ensure t
         :custom ((eglot-booster-io-only . t))
         :global-minor-mode t)
 
@@ -904,15 +905,7 @@
                 (unless (treesit-language-available-p lang nil)
                   (treesit-install-language-grammar lang)))
               (mapcar #'car treesit-language-source-alist)))
-      )
-
-  	(leaf org
-      :doc "Outline-based notes management and organizer"
-      :tag "builtin"
-  		:require t
-      :push ((org-structure-template-alist . '("," . "src emacs-lisp :tangle yes")))
-  		:config
-  		(setopt org-startup-truncated nil))
+      )    
 
     (leaf macrostep
       :doc "マクロを展開する。leafがどう実行されるのか確認できる。"
@@ -992,8 +985,8 @@
       )
 
     (leaf css-mode
-  	  :doc "Major mode to edit CSS files"
-  	  :custom ((css-indent-offset . 2)))
+      :doc "Major mode to edit CSS files"
+      :custom ((css-indent-offset . 2)))
 
     (leaf astro-ts-mode
       :doc "No description available."
@@ -1002,22 +995,72 @@
       :mode "\\.astro\\'")
 
     (leaf nix-ts-mode
-  	  :doc "Major mode for Nix expressions, powered by tree-sitter"
-  	  :url "https://github.com/nix-community/nix-ts-mode"
-  	  :ensure t
+      :doc "Major mode for Nix expressions, powered by tree-sitter"
+      :url "https://github.com/nix-community/nix-ts-mode"
+      :ensure t
       :mode ("\\.nix\\'"))
 
     )
 #+end_src
 
+* 雑多なグローバル設定
+
+** タブ文字を使用しない
+#+begin_src emacs-lisp :tangle yes
+  (setq indent-tabs-mode nil)
+#+end_src
+** 一時的なフォントサイズの変更方法
+普段は限界までフォントサイズを小さくしているが、画面共有などで他人にEmacsを見てもらう時に便利。
+以前までは、C-<wheel-up>, C-<wheel-down>で変更していたけど、これだとバッファローカルになる。
+グローバルに変更するにはvim-jpで見かけた以下をやる。
+mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイズ変更できる。
+#+begin_src emacs-lisp :tangle yes
+  (leaf face-remap
+  	:doc "Functions for managing `face-remapping-alist'"
+  	:tag "builtin"
+  	:added "2024-07-01"
+  	:custom ((text-scale-mode-step . 2))
+  	:bind (("C-x M-=" . global-text-scale-adjust)
+  				 ("C-x M-0" . global-text-scale-adjust)
+  				 ("C-x M-+" . global-text-scale-adjust)
+  				 ("C-x M--" . global-text-scale-adjust)))
+#+end_src
+
+* メジャーモード
+** org-mode
+#+begin_src emacs-lisp :tangle yes
+  (leaf org
+    :doc "Outline-based notes management and organizer"
+    :require t
+    :config
+    (setopt org-directory "~/ghq/github.com/yasushiasahi/org")
+    
+  	;; begin_の後に続くブロックのテンプレートを追加
+    (add-to-list 'org-structure-template-alist '("," . "src emacs-lisp :tangle yes")))
+#+end_src
+*** org-capture
+#+begin_src emacs-lisp :tangle yes
+  (leaf org-capture
+  	:doc "Fast note taking in Org"
+  	:tag "builtin" "text" "calendar" "hypermedia" "outlines"
+  	:url "https://orgmode.org"
+  	:bind (("C-c c" . org-capture))
+  	:config
+  	(setopt org-capture-templates `(("n" "Memo" entry
+  																	 (file+headline ,(expand-file-name "memo.org" org-directory) "Memos")
+                                     "* %?\nEntered on %U\n %i\n %a"))))
+#+end_src
+
+
 * ターミナル
 ** [[https://github.com/szermatt/mistty][mistty]]
 #+begin_src emacs-lisp :tangle yes
   (leaf mistty
-  	:doc "Shell/Comint alternative based on term.el."
-  	:tag "unix" "convenience" "emacs>=29.1"
-  	:ensure t)
+    :doc "Shell/Comint alternative based on term.el."
+    :tag "unix" "convenience" "emacs>=29.1"
+    :ensure t)
 #+end_src
+
 
 * Footer
 #+begin_src emacs-lisp :tangle yes
