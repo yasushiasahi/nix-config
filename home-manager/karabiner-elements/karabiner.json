@@ -1290,44 +1290,8 @@
             ]
           },
           {
-            "description": "（自作）セミコロン|シングルクォート|エンターを長押しした時はoptionと認識させる",
+            "description": "（自作）エンターを長押し -> オプション",
             "manipulators": [
-              {
-                "from": {
-                  "key_code": "quote",
-                  "modifiers": { "optional": ["any"] }
-                },
-                "parameters": {
-                  "basic.to_if_held_down_threshold_milliseconds": 100
-                },
-                "to": [
-                  {
-                    "key_code": "left_option",
-                    "lazy": true
-                  }
-                ],
-                "to_if_alone": [{ "key_code": "quote" }],
-                "to_if_held_down": [{ "key_code": "left_option" }],
-                "type": "basic"
-              },
-              {
-                "from": {
-                  "key_code": "semicolon",
-                  "modifiers": { "optional": ["any"] }
-                },
-                "parameters": {
-                  "basic.to_if_held_down_threshold_milliseconds": 100
-                },
-                "to": [
-                  {
-                    "key_code": "left_option",
-                    "lazy": true
-                  }
-                ],
-                "to_if_alone": [{ "key_code": "semicolon" }],
-                "to_if_held_down": [{ "key_code": "left_option" }],
-                "type": "basic"
-              },
               {
                 "from": {
                   "key_code": "return_or_enter",
@@ -1349,7 +1313,53 @@
             ]
           },
           {
-            "description": "（自作）SandS スペース長押しでシフト",
+            "description": "（自作）Aを長押し -> コマンド",
+            "manipulators": [
+              {
+                "from": {
+                  "key_code": "a",
+                  "modifiers": { "optional": ["any"] }
+                },
+                "parameters": {
+                  "basic.to_if_held_down_threshold_milliseconds": 100
+                },
+                "to": [
+                  {
+                    "key_code": "left_command",
+                    "lazy": true
+                  }
+                ],
+                "to_if_alone": [{ "key_code": "a" }],
+                "to_if_held_down": [{ "key_code": "left_command" }],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "description": "（自作）シングルクォート長押し -> コマンド",
+            "manipulators": [
+              {
+                "from": {
+                  "key_code": "quote",
+                  "modifiers": { "optional": ["any"] }
+                },
+                "parameters": {
+                  "basic.to_if_held_down_threshold_milliseconds": 100
+                },
+                "to": [
+                  {
+                    "key_code": "left_command",
+                    "lazy": true
+                  }
+                ],
+                "to_if_alone": [{ "key_code": "quote" }],
+                "to_if_held_down": [{ "key_code": "left_command" }],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "description": "（自作）SandS スペース長押し -> シフト",
             "manipulators": [
               {
                 "from": {
