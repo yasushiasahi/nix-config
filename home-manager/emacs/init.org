@@ -255,13 +255,8 @@
       :custom ((kill-read-only-ok . t)
                (kill-whole-line . t)))
 
-    ;; TODO これがEMPようの設定
-    (leaf *mac
-      :custom ((mac-option-modifier . 'meta)     ; optionキーをmetaとして扱う
-               (mac-command-modifier . 'super))  ; commandキーをsuperとして扱う
-      :bind (("s-v" . yank)
-             ("s-c" . kill-ring-save)
-             ("s-x" . kill-region)))
+
+
 
     (defun my/beginning-of-line-text-or-line ()
       "行の最初の文字の位置に移動。すでに最初の文字だったら行頭に移動。"
@@ -332,7 +327,6 @@
                  ("e" "balance" balance-windows)]
                 ["Ohter"
                  ("0" "delete" delete-window)
-                 ("q" "delete" delete-window)
                  ("1" "only" delete-other-windows)
                  ("t" "maxmaiz" toggle-frame-maximized)]])
       (put 'my/transient-window-operation 'interactive-only nil)
@@ -905,7 +899,7 @@
                 (unless (treesit-language-available-p lang nil)
                   (treesit-install-language-grammar lang)))
               (mapcar #'car treesit-language-source-alist)))
-      )    
+      )
 
     (leaf macrostep
       :doc "マクロを展開する。leafがどう実行されるのか確認できる。"
@@ -1006,6 +1000,7 @@
 * 雑多なグローバル設定
 
 ** タブ文字を使用しない
+ちなみに、untabifyでバッファ無いの全てのタブをスペースに置き換えられる。tabifyはその逆。
 #+begin_src emacs-lisp :tangle yes
   (setq indent-tabs-mode nil)
 #+end_src
@@ -1025,17 +1020,47 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
   				 ("C-x M-+" . global-text-scale-adjust)
   				 ("C-x M--" . global-text-scale-adjust)))
 #+end_src
-
+** describe-*した時*HELP*バッファのウィンドウにフォーカスする。
+こうしておくとqですぐに閉じられる。
+この設定をまではわざわざ*HELP*のウィンドウまで移動しないと閉じられなくて、気軽にdescribe-*できなかった。
+#+begin_src emacs-lisp :tangle yes
+  (leaf help
+  	:doc "help commands for Emacs"
+  	:tag "builtin" "internal" "help"
+  	:require t
+  	:config
+  	(setopt help-window-select t))
+#+end_src
+* マイナーモード
+** [[https://github.com/casouri/expreg][expreg]]
+現在のポイントを中心にリージョン(選択範囲)を広げていく。
+個人的Emacsのキラープラグインの一つ。コピペエンジニアとしてはこれがないとまともに編集できない。
+#+begin_src emacs-lisp :tangle yes
+  (leaf expreg
+  	:doc "Simple expand region"
+  	:bind (("C-=" . expreg-expand)
+  				 ("C-+" . expreg-contract))
+  	:ensure t
+  	:config
+  	(setq subword-mode t))
+#+end_src
 * メジャーモード
 ** org-mode
 #+begin_src emacs-lisp :tangle yes
   (leaf org
     :doc "Outline-based notes management and organizer"
     :require t
+    :bind (org-mode-map
+           ;; superを小文字のsでバインドし直さないと呼び出せない。そういうもんだっけ？
+           ("M-s-RET" . org-insert-todo-heading)
+           ("M-s-<return>" . org-insert-todo-heading)
+           ("C-s-RET" . org-insert-todo-heading-respect-content)
+           ("C-s-<return>" . org-insert-todo-heading-respect-content))
     :config
     (setopt org-directory "~/ghq/github.com/yasushiasahi/org")
-    
-  	;; begin_の後に続くブロックのテンプレートを追加
+    (setopt org-M-RET-may-split-line nil)
+
+    ;; begin_の後に続くブロックのテンプレートを追加
     (add-to-list 'org-structure-template-alist '("," . "src emacs-lisp :tangle yes")))
 #+end_src
 *** org-capture
@@ -1050,8 +1075,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
   																	 (file+headline ,(expand-file-name "memo.org" org-directory) "Memos")
                                      "* %?\nEntered on %U\n %i\n %a"))))
 #+end_src
-
-
+** 
 * ターミナル
 ** [[https://github.com/szermatt/mistty][mistty]]
 #+begin_src emacs-lisp :tangle yes
@@ -1065,6 +1089,6 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 * Footer
 #+begin_src emacs-lisp :tangle yes
   (provide 'init)
-  
+
   ;;; init.el ends here
 #+end_src
