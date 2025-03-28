@@ -1290,7 +1290,7 @@
             ]
           },
           {
-            "description": "（自作）シングルクォート長押しした時はoptionと認識させる",
+            "description": "（自作）セミコロン|シングルクォート|エンターを長押しした時はoptionと認識させる",
             "manipulators": [
               {
                 "from": {
@@ -1308,6 +1308,65 @@
                 ],
                 "to_if_alone": [{ "key_code": "quote" }],
                 "to_if_held_down": [{ "key_code": "left_option" }],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "key_code": "semicolon",
+                  "modifiers": { "optional": ["any"] }
+                },
+                "parameters": {
+                  "basic.to_if_held_down_threshold_milliseconds": 100
+                },
+                "to": [
+                  {
+                    "key_code": "left_option",
+                    "lazy": true
+                  }
+                ],
+                "to_if_alone": [{ "key_code": "semicolon" }],
+                "to_if_held_down": [{ "key_code": "left_option" }],
+                "type": "basic"
+              },
+              {
+                "from": {
+                  "key_code": "return_or_enter",
+                  "modifiers": { "optional": ["any"] }
+                },
+                "parameters": {
+                  "basic.to_if_held_down_threshold_milliseconds": 100
+                },
+                "to": [
+                  {
+                    "key_code": "left_option",
+                    "lazy": true
+                  }
+                ],
+                "to_if_alone": [{ "key_code": "return_or_enter" }],
+                "to_if_held_down": [{ "key_code": "left_option" }],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "description": "（自作）SandS スペース長押しでシフト",
+            "manipulators": [
+              {
+                "from": {
+                  "key_code": "spacebar",
+                  "modifiers": { "optional": ["any"] }
+                },
+                "parameters": {
+                  "basic.to_if_held_down_threshold_milliseconds": 100
+                },
+                "to": [
+                  {
+                    "key_code": "left_shift",
+                    "lazy": true
+                  }
+                ],
+                "to_if_alone": [{ "key_code": "spacebar" }],
+                "to_if_held_down": [{ "key_code": "left_shift" }],
                 "type": "basic"
               }
             ]

@@ -50,6 +50,22 @@ let
     # XDG_*の環境変数を設定する
     xdg.enable = true;
   };
+
+  optionModule =
+    { config, ... }:
+    {
+      # このリポジトリへのpathを各モジュールで共有できるようにする。
+      options = {
+        nix-config = pkgs.lib.mkOption {
+          type = pkgs.lib.types.path;
+          apply = toString;
+          default = "${config.home.homeDirectory}/ghq/github.com/yasushiasahi/nix-config";
+          example = "${config.home.homeDirectory}/ghq/github.com/yasushiasahi/nix-config";
+          description = "このリポジトリ自身のソースファイルの場所";
+        };
+      };
+    };
+
 in
 home-manager.lib.homeManagerConfiguration {
   inherit pkgs;
@@ -59,6 +75,7 @@ home-manager.lib.homeManagerConfiguration {
   modules = [
     mac-app-util.homeManagerModules.default
     miscModule
+    optionModule
     ./emacs
     ./zsh
     ./git
@@ -75,6 +92,8 @@ home-manager.lib.homeManagerConfiguration {
     ./zoxide
     ./aws
     ./starship
+    ./karabiner-elements
+    ./colima
   ];
 
   # Optionally use extraSpecialArgs
