@@ -419,11 +419,7 @@
                                    :render (gt-buffer-render)))
       )
 
-    (leaf avy
-      :doc "Jump to arbitrary positions in visible text and select text quickly"
-      :url "https://github.com/abo-abo/avy"
-      :ensure t
-      :bind (("C-s" . avy-goto-char-timer)))
+    
     )
 
   (leaf *git
@@ -1031,6 +1027,28 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :config
     (setopt help-window-select t))
 #+end_src
+* ユーティリティー
+** [[https://github.com/Wilfred/helpful][Helpful]] より見やすい*help*バッファー
+#+begin_src emacs-lisp :tangle yes
+  (leaf helpful
+    :doc "A better *help* buffer"
+    :ensure t
+    :bind (([remap describe-function] . helpful-callable)
+           ([remap describe-variable] . helpful-variable)
+           ([remap describe-key]      . helpful-key)
+           ([remap describe-command] . helpful-command)
+           ([remap Info-goto-emacs-command-node] . helpful-function)
+           ("C-c C-d" . helpful-at-point)))
+#+end_src
+** [[https://github.com/abo-abo/avy][avy]] 劇的にカーソル移動を早くする
+[[https://emacs-jp.github.io/tips/avy-can-do-anything][Avyならなんでもできる]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf avy	
+  	:ensure t
+  	:bind (("C-s" . avy-goto-char-timer))
+  	:config
+  	(setopt avy-background t))
+#+end_src
 * マイナーモード
 ** [[https://github.com/casouri/expreg][expreg]]
 現在のポイントを中心にリージョン(選択範囲)を広げていく。
@@ -1077,7 +1095,6 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
                                      (file+headline ,(expand-file-name "memo.org" org-directory) "Memos")
                                      "* %?\nEntered on %U\n %i\n %a"))))
 #+end_src
-** 
 * ターミナル
 ** [[https://github.com/szermatt/mistty][mistty]]
 #+begin_src emacs-lisp :tangle yes
@@ -1087,7 +1104,11 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :ensure t)
 #+end_src
 
-
+* ユースケース
+** 特定のバッファーのポイントを記録してどこからでもその位置にジャンプする
+- =C-x r SPC r=(point-to-register) ポイントの記録
+- =C-x r j r=(jump-to-register) 記録したポイントへジャンプ
+https://ayatakesi.github.io/emacs/25.1/Position-Registers.html#Position-Registers
 * Footer
 #+begin_src emacs-lisp :tangle yes
   (provide 'init)
