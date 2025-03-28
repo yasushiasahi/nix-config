@@ -1011,25 +1011,25 @@
 mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイズ変更できる。
 #+begin_src emacs-lisp :tangle yes
   (leaf face-remap
-  	:doc "Functions for managing `face-remapping-alist'"
-  	:tag "builtin"
-  	:added "2024-07-01"
-  	:custom ((text-scale-mode-step . 2))
-  	:bind (("C-x M-=" . global-text-scale-adjust)
-  				 ("C-x M-0" . global-text-scale-adjust)
-  				 ("C-x M-+" . global-text-scale-adjust)
-  				 ("C-x M--" . global-text-scale-adjust)))
+    :doc "Functions for managing `face-remapping-alist'"
+    :tag "builtin"
+    :added "2024-07-01"
+    :custom ((text-scale-mode-step . 2))
+    :bind (("C-x M-=" . global-text-scale-adjust)
+           ("C-x M-0" . global-text-scale-adjust)
+           ("C-x M-+" . global-text-scale-adjust)
+           ("C-x M--" . global-text-scale-adjust)))
 #+end_src
 ** describe-*した時*HELP*バッファのウィンドウにフォーカスする。
 こうしておくとqですぐに閉じられる。
 この設定をまではわざわざ*HELP*のウィンドウまで移動しないと閉じられなくて、気軽にdescribe-*できなかった。
 #+begin_src emacs-lisp :tangle yes
   (leaf help
-  	:doc "help commands for Emacs"
-  	:tag "builtin" "internal" "help"
-  	:require t
-  	:config
-  	(setopt help-window-select t))
+    :doc "help commands for Emacs"
+    :tag "builtin" "internal" "help"
+    :require t
+    :config
+    (setopt help-window-select t))
 #+end_src
 * マイナーモード
 ** [[https://github.com/casouri/expreg][expreg]]
@@ -1037,12 +1037,12 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 個人的Emacsのキラープラグインの一つ。コピペエンジニアとしてはこれがないとまともに編集できない。
 #+begin_src emacs-lisp :tangle yes
   (leaf expreg
-  	:doc "Simple expand region"
-  	:bind (("C-=" . expreg-expand)
-  				 ("C-+" . expreg-contract))
-  	:ensure t
-  	:config
-  	(setq subword-mode t))
+    :doc "Simple expand region"
+    :bind (("C-=" . expreg-expand)
+           ("C-+" . expreg-contract))
+    :ensure t
+    :config
+    (setq subword-mode t))
 #+end_src
 * メジャーモード
 ** org-mode
@@ -1055,7 +1055,9 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
            ("M-s-RET" . org-insert-todo-heading)
            ("M-s-<return>" . org-insert-todo-heading)
            ("C-s-RET" . org-insert-todo-heading-respect-content)
-           ("C-s-<return>" . org-insert-todo-heading-respect-content))
+           ("C-s-<return>" . org-insert-todo-heading-respect-content)
+           ("M-s-<left>" . org-promote-subtree)
+           ("M-s-<right>" . org-demote-subtree))
     :config
     (setopt org-directory "~/ghq/github.com/yasushiasahi/org")
     (setopt org-M-RET-may-split-line nil)
@@ -1066,13 +1068,13 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 *** org-capture
 #+begin_src emacs-lisp :tangle yes
   (leaf org-capture
-  	:doc "Fast note taking in Org"
-  	:tag "builtin" "text" "calendar" "hypermedia" "outlines"
-  	:url "https://orgmode.org"
-  	:bind (("C-c c" . org-capture))
-  	:config
-  	(setopt org-capture-templates `(("n" "Memo" entry
-  																	 (file+headline ,(expand-file-name "memo.org" org-directory) "Memos")
+    :doc "Fast note taking in Org"
+    :tag "builtin" "text" "calendar" "hypermedia" "outlines"
+    :url "https://orgmode.org"
+    :bind (("C-c c" . org-capture))
+    :config
+    (setopt org-capture-templates `(("n" "Memo" entry
+                                     (file+headline ,(expand-file-name "memo.org" org-directory) "Memos")
                                      "* %?\nEntered on %U\n %i\n %a"))))
 #+end_src
 ** 
