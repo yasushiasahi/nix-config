@@ -96,8 +96,7 @@
       :doc "define customization properties of builtins"
       :custom ((tab-width . 2))
       :config
-      (defalias 'yes-or-no-p 'y-or-n-p)
-      (indent-tabs-mode -1))
+      (defalias 'yes-or-no-p 'y-or-n-p))
 
     (leaf autorevert
       :doc "revert buffers when files on disk change"
@@ -419,7 +418,7 @@
                                    :render (gt-buffer-render)))
       )
 
-    
+
     )
 
   (leaf *git
@@ -998,7 +997,7 @@
 ** タブ文字を使用しない
 ちなみに、untabifyでバッファ無いの全てのタブをスペースに置き換えられる。tabifyはその逆。
 #+begin_src emacs-lisp :tangle yes
-  (setq indent-tabs-mode nil)
+  (setq-default indent-tabs-mode nil)
 #+end_src
 ** 一時的なフォントサイズの変更方法
 普段は限界までフォントサイズを小さくしているが、画面共有などで他人にEmacsを見てもらう時に便利。
@@ -1043,11 +1042,11 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 ** [[https://github.com/abo-abo/avy][avy]] 劇的にカーソル移動を早くする
 [[https://emacs-jp.github.io/tips/avy-can-do-anything][Avyならなんでもできる]]
 #+begin_src emacs-lisp :tangle yes
-  (leaf avy	
-  	:ensure t
-  	:bind (("C-s" . avy-goto-char-timer))
-  	:config
-  	(setopt avy-background t))
+  (leaf avy
+    :ensure t
+    :bind (("C-s" . avy-goto-char-timer))
+    :config
+    (setopt avy-background t))
 #+end_src
 * マイナーモード
 ** [[https://github.com/casouri/expreg][expreg]]
@@ -1076,12 +1075,17 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
            ("C-s-<return>" . org-insert-todo-heading-respect-content)
            ("M-s-<left>" . org-promote-subtree)
            ("M-s-<right>" . org-demote-subtree))
+    :hook ((org-mode-hook . my/setup-org-mode))
     :config
     (setopt org-directory "~/ghq/github.com/yasushiasahi/org")
     (setopt org-M-RET-may-split-line nil)
 
     ;; begin_の後に続くブロックのテンプレートを追加
-    (add-to-list 'org-structure-template-alist '("," . "src emacs-lisp :tangle yes")))
+    (add-to-list 'org-structure-template-alist '("," . "src emacs-lisp :tangle yes"))
+
+    (defun my/setup-org-mode ()
+      "保存前に行末のスペースを削除"
+      (add-hook 'before-save-hook 'delete-trailing-whitespace nil 'make-it-local)))
 #+end_src
 *** org-capture
 #+begin_src emacs-lisp :tangle yes
@@ -1094,6 +1098,14 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (setopt org-capture-templates `(("n" "Memo" entry
                                      (file+headline ,(expand-file-name "memo.org" org-directory) "Memos")
                                      "* %?\nEntered on %U\n %i\n %a"))))
+#+end_src
+*** org-src
+#+begin_src emacs-lisp :tangle yes
+  (leaf org-src
+    :require t
+    :config
+    (setopt org-src-window-setup 'current-window)
+    (setopt org-src-tab-acts-natively nil))
 #+end_src
 * ターミナル
 ** [[https://github.com/szermatt/mistty][mistty]]
