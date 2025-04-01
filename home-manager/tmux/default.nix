@@ -1,17 +1,4 @@
 { pkgs, ... }:
-let
-  tmux-mighty-scroll = pkgs.tmuxPlugins.mkTmuxPlugin {
-    pluginName = "mighty-scroll";
-    rtpFilePath = "mighty-scroll.tmux";
-    version = "unstable-2024-11-09";
-    src = pkgs.fetchFromGitHub {
-      owner = "noscript";
-      repo = "tmux-mighty-scroll";
-      rev = "c34808da912a6b4530d1c9dec8338757b6ec505a";
-      sha256 = "sha256-Osg/TqNxnsVhDEm+i8scjAbevS0qSXaay57I9fwujAQ=";
-    };
-  };
-in
 {
   programs.tmux = {
     enable = true;
@@ -41,7 +28,6 @@ in
           set -g status-right '#{prefix_highlight} | %a %Y-%m-%d %H:%M'
         '';
       }
-      tmux-mighty-scroll
     ];
     extraConfig = ''
       bind r source-file "$XDG_CONFIG_HOME/tmux/tmux.conf" \; display "Reloaded!"
