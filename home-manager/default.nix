@@ -1,7 +1,6 @@
 {
   pkgs,
   home-manager,
-  mac-app-util,
 }:
 let
   mkAlias = sets: {
@@ -45,6 +44,9 @@ let
       pkgs.nodejs_22
       pkgs.yarn
       pkgs.pnpm
+
+      # editer
+      pkgs.windsurf
     ];
 
     # XDG_*の環境変数を設定する
@@ -73,7 +75,6 @@ home-manager.lib.homeManagerConfiguration {
   # Specify your home configuration modules here, for example,
   # the path to your home.nix.
   modules = [
-    mac-app-util.homeManagerModules.default
     miscModule
     optionModule
     ./emacs

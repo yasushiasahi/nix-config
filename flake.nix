@@ -12,7 +12,6 @@
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    mac-app-util.url = "github:hraban/mac-app-util";
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -25,16 +24,15 @@
       nixpkgs,
       nix-darwin,
       home-manager,
-      mac-app-util,
       emacs-overlay,
       org-babel,
       self,
     }:
     let
       system = "aarch64-darwin";
-      # pkgs = nixpkgs.legacyPackages.${system};
       pkgs = import nixpkgs {
         inherit system;
+        config.allowUnfree = true;
         overlays = [
           emacs-overlay.overlay
           (_: _: {
@@ -47,15 +45,12 @@
       # Build darwin flake using:
       # $ darwin-rebuild build --flake .#simple
       darwinConfigurations.darwin = nix-darwin.lib.darwinSystem {
-        modules = [
-          mac-app-util.darwinModules.default
-          ./nix-darwin
-        ];
+        modules = [ ./nix-darwin ];
         specialArgs = { inherit self; };
       };
 
       homeConfigurations.home = import ./home-manager {
-        inherit pkgs home-manager mac-app-util;
+        inherit pkgs home-manager;
       };
 
       templates = {
