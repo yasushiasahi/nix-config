@@ -5,11 +5,9 @@ let
   };
 
   emacs-mac = pkgs.emacs.overrideAttrs (old: {
+    configureFlags = (old.configureFlags or [ ]) ++ [ "--with-xwidgets" ];
+    buildInputs = (old.buildInputs or [ ]) ++ [ pkgs.darwin.apple_sdk.frameworks.WebKit ];
     patches = (old.patches or [ ]) ++ [ ./emacs-29.1-inline.patch ];
-    # LANG=en_JP.UTF-8 cannot be used, using en_US.UTF-8 instead.を抑制する。問題ないらしいけど。
-    env = (old.env or { }) // {
-      LANG = "en_US.UTF-8";
-    };
   });
 
   eglot-booster =
