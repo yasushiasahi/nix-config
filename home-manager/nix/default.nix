@@ -1,8 +1,5 @@
 { mkAbbr, ... }:
 {
-  # zsh-abbr pluginを入れるのに必要
-  nixpkgs.config.allowUnfree = true;
-
   # Let Home Manager install and manage itself.
   programs =
     {
