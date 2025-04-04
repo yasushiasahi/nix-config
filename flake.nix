@@ -40,9 +40,9 @@
       home-manager,
       emacs-overlay,
       org-babel,
-      brew-api,
       brew-nix,
       self,
+      ...
     }:
     let
       system = "aarch64-darwin";
