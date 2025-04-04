@@ -4,19 +4,33 @@
   inputs = {
     # Specify the source of Home Manager and Nixpkgs.
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     nix-darwin = {
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     org-babel.url = "github:emacs-twist/org-babel";
+
+    brew-nix = {
+      url = "github:BatteredBunny/brew-nix";
+      inputs.brew-api.follows = "brew-api";
+    };
+
+    brew-api = {
+      url = "github:BatteredBunny/brew-api";
+      flake = false;
+    };
   };
 
   outputs =
@@ -26,6 +40,8 @@
       home-manager,
       emacs-overlay,
       org-babel,
+      brew-api,
+      brew-nix,
       self,
     }:
     let
@@ -35,6 +51,7 @@
         config.allowUnfree = true;
         overlays = [
           emacs-overlay.overlay
+          brew-nix.overlays.default
           (_: _: {
             tangleOrgBabel = org-babel.lib.tangleOrgBabel;
           })

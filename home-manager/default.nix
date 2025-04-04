@@ -82,7 +82,7 @@ home-manager.lib.homeManagerConfiguration {
     ./git
     ./nix
     ./alacritty
-    # ./ghostty nixpkg版が壊れているよう
+    ./ghostty
     ./tmux
     ./direnv
     ./eza
