@@ -579,6 +579,7 @@
               ("C-c M-x" . consult-mode-command)
               ;; C-x bindings in `ctl-x-map'
               ("C-x b" . consult-buffer)
+              ("C-x M-p" . consult-project-buffer)
               ;; Other custom bindings
               ("M-y" . consult-yank-pop)
               ;; M-g bindings in `goto-map'
@@ -719,7 +720,7 @@
       :doc "The Emacs Client for LSP servers"
       :tag "builtin"
       :defvar eglot-server-programs
-      :hook (((yaml-ts-mode-hook nix-ts-mode-hook html-ts-mode-hook css-ts-mode-map) . eglot-ensure))
+      :hook (((yaml-ts-mode-hook nix-ts-mode-hook html-ts-mode-hook css-ts-mode-hook) . eglot-ensure))
       :bind (:eglot-mode-map
              ("C-c d" . eldoc-box-help-at-point)
              ("M-g e" . consult-eglot-symbols))
