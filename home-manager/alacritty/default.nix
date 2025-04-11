@@ -10,7 +10,7 @@ in
         decorations = "Transparent";
         padding = {
           x = 8;
-          y = 6;
+          y = 24;
         };
       };
       scrolling.history = 100000;
