@@ -1087,6 +1087,13 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (defun my/setup-org-mode ()
       "保存前に行末のスペースを削除"
       (add-hook 'before-save-hook 'delete-trailing-whitespace nil 'make-it-local)))
+
+  (leaf ob-typescript
+    :doc "Org-babel functions for typescript evaluation"
+    :url "https://github.com/lurdan/ob-typescript"
+    :ensure t
+    :config
+    (org-babel-do-load-languages 'org-babel-load-languages '((typescript . t))))
 #+end_src
 *** org-capture
 #+begin_src emacs-lisp :tangle yes
@@ -1106,7 +1113,9 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :require t
     :config
     (setopt org-src-window-setup 'current-window)
-    (setopt org-src-tab-acts-natively nil))
+    (setopt org-src-tab-acts-natively nil)
+
+    (add-to-list 'org-src-lang-modes '("typescript" . jtsx-typescript)))
 #+end_src
 * ターミナル
 ** [[https://github.com/szermatt/mistty][mistty]]
