@@ -1,19 +1,26 @@
 { pkgs, ... }:
 let
-  initExtra = builtins.readFile ./init-extra.sh;
-
-  homebrewConfig = ''
+  initExtraFirstHomebrew = ''
     eval "$(/opt/homebrew/bin/brew shellenv)"
   '';
 
   # emacs misttyの設定
   # https://mistty.readthedocs.io/en/latest/shells.html#directory-tracking-in-zsh
-  misttyConfig = ''
-
+  initExtraMistty = ''
     function osc7_precmd() {
       printf "\e]7;file://%s%s\e\\\\" "$HOSTNAME" "$PWD"
     }
     precmd_functions+=(osc7_precmd)
+  '';
+
+  # fzfでabbrを選択する
+  initExtraPickAbbr = ''
+    function my_pick_abbr() {
+      BUFFER=$(abbr list | sed -E 's/"(.*)"="(.*)"/\1 -> \2/' | fzf-tmux -p 60%,60% --border-label ' abbr ' | sed -E 's/.*-> (.*)/\1 /')
+      CURSOR=$((''${#BUFFER} / 1))
+    }
+    zle -N my_pick_abbr
+    bindkey "^j" my_pick_abbr
   '';
 in
 {
@@ -36,8 +43,8 @@ in
       size = 10000;
     };
     historySubstringSearch.enable = true;
-    initExtraFirst = homebrewConfig;
-    initExtra = initExtra + misttyConfig;
+    initExtraFirst = initExtraFirstHomebrew;
+    initExtra = initExtraMistty + initExtraPickAbbr;
     oh-my-zsh = {
       enable = true;
       plugins = [ "aws" ];

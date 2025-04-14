@@ -1,4 +1,25 @@
 { pkgs, ... }:
+let
+  extraConfigReroadConfig = ''
+    bind r source-file "$XDG_CONFIG_HOME/tmux/tmux.conf" \; display "Reloaded!"
+    set -g status-position top
+  '';
+
+  extraConfigStatusLine = ''
+    set-option -g status-justify centre
+  '';
+
+  # ghqから選択してtmuxのsessionを作る
+  extraConfigSeshFromGhq = ''
+    bind-key "P" run-shell "sesh connect \"$(ghq list | fzf-tmux -p 60%,60% --border-label ' select project ' --prompt='Create new session from > ' --preview='eza --icons always --color always --git-ignore --tree --level=2 $(ghq root)/{1}')\"";
+  '';
+
+  # tmux-which-key
+  # nix storeに入れてしまうとなぜか動かないので、一時凌ぎ。
+  extraConfigTmuxWhichKey = ''
+    run-shell $XDG_DATA_HOME/tmux/plugins/tmux-which-key/plugin.sh.tmux
+  '';
+in
 {
   programs.tmux = {
     enable = true;
@@ -29,12 +50,16 @@
         '';
       }
     ];
-    extraConfig = ''
-      bind r source-file "$XDG_CONFIG_HOME/tmux/tmux.conf" \; display "Reloaded!"
-      set -g status-position top
+    extraConfig =
+      extraConfigReroadConfig + extraConfigStatusLine + extraConfigSeshFromGhq + extraConfigTmuxWhichKey;
+  };
 
-      # nix storeに入れてしまうとなぜか動かないので、一時凌ぎ。
-      run-shell $XDG_DATA_HOME/tmux/plugins/tmux-which-key/plugin.sh.tmux
-    '';
+  # セッションをいい感じに扱える
+  # https://github.com/joshmedeski/sesh
+  programs.sesh = {
+    enable = true;
+    icons = true;
+    tmuxKey = "S";
+    enableTmuxIntegration = true;
   };
 }
