@@ -1,7 +1,7 @@
 { mkAbbr, ... }:
 let
   abbrConfig = mkAbbr {
-    ll = "eza -alh --icons always --color always --git";
+    ll = "eza -alh";
     lt = "eza --tree --sort=type --reverse --git-ignore";
   };
 in
@@ -9,6 +9,9 @@ in
   programs = {
     eza = {
       enable = true;
+      git = true;
+      colors = "always";
+      icons = "always";
       enableZshIntegration = true;
       enableFishIntegration = true;
     };
