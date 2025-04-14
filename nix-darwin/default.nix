@@ -34,18 +34,18 @@
       cleanup = "uninstall";
     };
     casks = [
-      "1password"
-      "arc"
-      "datagrip"
-      "google-chrome"
-      "karabiner-elements"
+      # osと結びつきが強いアプリをnixで入れても上手く動作しない。
+      # 力技でどうにかできることもありそうだけど、日々不安に苛まれることになるので諦めるのが無難と判断。
       "logi-options+"
+      "1password"
+      "karabiner-elements"
       "raycast"
     ];
     masApps = {
       LINE = 539883307;
       amazon-kindle = 302584613;
       tailscale = 1475387142;
+      yoink = 457622435;
     };
   };
 

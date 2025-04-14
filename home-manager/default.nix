@@ -34,6 +34,10 @@ let
       pkgs.darwin.trash
       pkgs.jq # programs.jq.enableでもいけるけど、設定することないのでこっち
 
+      # TODO: chronimuがないと怒られて動作しない。node2nixでいつかトライしたい。
+      # pkgs.nodePackages.mermaid-cli
+      # pkgs.mermaid-cli
+
       # docker
       pkgs.colima
       pkgs.docker
@@ -45,8 +49,16 @@ let
       pkgs.yarn
       pkgs.pnpm
 
-      # editer
+      # ai & llm
+      pkgs.ollama
+
+      # GUI
+      pkgs.brave
+      pkgs.firefox
+      pkgs.google-chrome
+      pkgs.arc-browser
       pkgs.windsurf
+      pkgs.jetbrains.datagrip
     ];
 
     # XDG_*の環境変数を設定する
