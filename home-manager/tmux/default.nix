@@ -6,6 +6,9 @@ let
   '';
 
   extraConfigStatusLine = ''
+    # 左側の長さ(デフォルトは10)
+    set -g status-left-length 50
+    # ウィンドウリストを中央配置
     set-option -g status-justify centre
   '';
 
