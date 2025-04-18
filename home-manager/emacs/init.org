@@ -456,6 +456,8 @@
             apheleia-formatters)
       (setf (alist-get 'astro-ts-mode apheleia-mode-alist)
             'prettier-astro)
+
+      (add-to-list 'apheleia-mode-alist '(scss-ts-mode . prettier-scss))
       )
 
     (leaf orderless
@@ -874,7 +876,8 @@
       :tag "builtin"
       :defvar (treesit-language-source-alist)
       :mode (("\\.html\\'" . html-ts-mode)
-             ("\\.s?css\\'" . css-ts-mode)
+             ("\\.css\\'" . css-ts-mode)
+             ("\\.scss\\'" . scss-ts-mode)
              ("\\.ya?ml\\'" . yaml-ts-mode)
              ("\\.toml\\'" . toml-ts-mode)
              ("\\.json\\'" . json-ts-mode)
@@ -889,6 +892,9 @@
                 (unless (treesit-language-available-p lang nil)
                   (treesit-install-language-grammar lang)))
               (mapcar #'car treesit-language-source-alist)))
+
+      ;; scss-ts-modeを定義する。apheleiaで引っかけるだけもの目的。
+      (define-derived-mode scss-ts-mode css-ts-mode "SCSS")
       )
 
     (leaf macrostep
