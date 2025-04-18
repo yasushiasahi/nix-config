@@ -713,6 +713,7 @@
       :ensure t
       :defun (eldoc-box-prettify-ts-errors)
       :custom ((eldoc-box-clear-with-C-g . t))
+      :bind (("C-c d" . eldoc-box-help-at-point))
       :config
       ;; TODO typescript以外のプロジェクトの時にこれ有効にしちゃダメよね
       (add-hook 'eldoc-box-buffer-setup-hook #'eldoc-box-prettify-ts-errors 0 t))
@@ -723,8 +724,9 @@
       :defvar eglot-server-programs
       :hook (((yaml-ts-mode-hook nix-ts-mode-hook html-ts-mode-hook css-ts-mode-hook) . eglot-ensure))
       :bind (:eglot-mode-map
-             ("C-c d" . eldoc-box-help-at-point)
-             ("M-g e" . consult-eglot-symbols))
+             ("M-g e" . consult-eglot-symbols)
+             ("C-c l r r" . my/eglot-rename)
+             ("C-c l a" . eglot-code-actions))
       :push ((eglot-server-programs . '(nix-ts-mode . ("nil"))))
       :setq-default ((eglot-workspace-configuration
                       . '(:yaml ( :format (:enable t)
@@ -749,6 +751,22 @@
                                             )
                                   :schemaStore (:enable t)))))
       :config
+      (defun my/eglot-rename ()
+        "eglot-renameの改良版"
+        (interactive)
+        (if-let* ((symbol (thing-at-point 'symbol t))
+                  (newname (string-trim
+                            (read-from-minibuffer (format "Rename `%s' to: " symbol) symbol))))
+            (cond ((string-empty-p newname)
+                   (user-error "空の名前は受け付けません"))
+                  ((string-search " " newname)
+                   (user-error "ホワイトスペースを含む変数名はダメでしょ"))
+                  ((string= symbol newname)
+                   (user-error "元の名前と同じやん"))
+                  (t
+                   (eglot-rename newname)))
+          (user-error "ポイントにシンボルがないです")))
+
       (leaf eglot-booster
         :doc "No description available."
         :url "https://github.com/jdtsmith/eglot-booster"
