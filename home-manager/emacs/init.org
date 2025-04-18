@@ -576,6 +576,7 @@
               ;; C-x bindings in `ctl-x-map'
               ("C-x b" . consult-buffer)
               ("C-x M-p" . consult-project-buffer)
+              ("C-x C-g" . my/consult-ghq-magit-status)
               ;; Other custom bindings
               ("M-y" . consult-yank-pop)
               ;; M-g bindings in `goto-map'
@@ -627,7 +628,11 @@
         (defun my-consult-ghq-ripgrep ()
           "ghq管理のリポジトリ一覧から選び、プロジェクト内でripgrep"
           (interactive)
-          (consult-ripgrep (my-consult-ghq--read))))
+          (consult-ripgrep (my-consult-ghq--read)))
+        (defun my/consult-ghq-magit-status ()
+          "ghq管理のリポジトリ一覧から選び、magit statusを開く"
+          (interactive)
+          (magit-status (my-consult-ghq--read))))
 
       (defun my-consult-switch-buffer-kill ()
         "Kill candidate buffer at point within the minibuffer completion."
