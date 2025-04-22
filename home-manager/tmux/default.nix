@@ -14,7 +14,7 @@ let
 
   # ghqから選択してtmuxのsessionを作る
   extraConfigSeshFromGhq = ''
-    bind-key "P" run-shell "sesh connect \"$(ghq list | fzf-tmux -p 60%,60% --border-label ' select project ' --prompt='Create new session from > ' --preview='eza --icons always --color always --git-ignore --tree --level=2 $(ghq root)/{1}')\"";
+    bind-key "P" run-shell "sesh connect \"$(ghq root)/$(ghq list | fzf-tmux -p 60%,60% --border-label ' select project ' --prompt='Create new session from > ' --preview='eza --icons always --color always --git-ignore --tree --level=2 $(ghq root)/{1}')\"";
   '';
 
   # tmux-which-key
