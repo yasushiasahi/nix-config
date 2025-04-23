@@ -4,19 +4,14 @@
 
 (
  ;; for TypesCript
- (jtsx-typescript-mode . ((eval . (lsp-deferred))
-													(eval . (eglot-ensure))
-													(eval . (apheleia-mode))))
-
- ;; for tsx
- (jtsx-tsx-mode . ((eval . (lsp-deferred))
-									 (eval . (eglot-ensure))
-									 (eval . (apheleia-mode))))
-
+ (typescript-ts-mode . ((eval . (lsp-deferred))
+												(eval . (eglot-ensure))
+												(eval . (apheleia-mode))))
+ 
  ;; for JavaScript and jsx
- (jtsx-jsx-mode . ((eval . (eglot-ensure))
-									 (eval . (lsp-deferred))
-									 (eval . (apheleia-mode))))
+ (js-ts-mode . ((eval . (eglot-ensure))
+								(eval . (lsp-deferred))
+								(eval . (apheleia-mode))))
 
  ;; for Astro
  (astro-ts-mode . ((eglot-server-programs . ((astro-ts-mode . ("astro-ls" "--stdio"
