@@ -5,6 +5,9 @@ let
     gsw = "git switch";
     gswc = "git switch -c";
     gchd = "git checkout -- .";
+    gpu = "git pull";
+    gloo = "git log --oneline | head";
+    gcl = "git clean -fd";
   };
 in
 {
