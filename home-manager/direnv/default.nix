@@ -1,7 +1,7 @@
 { mkAbbr, ... }:
 let
   abbr = mkAbbr {
-    dgie = "echo '.dir-locals-2.el\n.envrc\nshell.nix' >> .git/info/exclude";
+    dgie = "echo '.dir-locals-2.el\\n.envrc\\nshell.nix' >> .git/info/exclude";
   };
 in
 {

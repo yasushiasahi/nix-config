@@ -10,7 +10,7 @@ pkgs.mkShell {
     # pkgs.yarn
     # pkgs.pnpm
   ];
-  # shellHook = ''
-  # 	echo "hello dir-local development!!"
-  # '';
+  shellHook = ''
+    echo "hello dir-local development!!"
+  '';
 }

@@ -64,8 +64,6 @@ in
       enable = true;
       package = emacs-mac-with-epkgs;
     };
-
-    git.ignores = [ ".dir-locals.el" ];
   } // shellAlias;
 
   home.packages = [
