@@ -71,6 +71,10 @@ in
   home.packages = [
     pkgs.emacs-lsp-booster
 
+    # gnuのlsを入れないと以下の警告が出る
+    # ls does not support --dired; see ‘dired-use-ls-dired’ for more details.
+    pkgs.coreutils
+
     # lsp
     pkgs.nodePackages.typescript
     pkgs.nodePackages.typescript-language-server
