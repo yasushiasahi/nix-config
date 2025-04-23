@@ -1,9 +1,5 @@
 { pkgs, mkAlias, ... }:
 let
-  shellAlias = mkAlias {
-    emacs = "${pkgs.emacs}/Applications/Emacs.app/Contents/MacOS/Emacs";
-  };
-
   emacs-mac = pkgs.emacs.overrideAttrs (old: {
     configureFlags = (old.configureFlags or [ ]) ++ [ "--with-xwidgets" ];
     buildInputs = (old.buildInputs or [ ]) ++ [ pkgs.darwin.apple_sdk.frameworks.WebKit ];
@@ -57,6 +53,10 @@ let
   };
 
   tangle = pkgs.tangleOrgBabel { languages = [ "emacs-lisp" ]; };
+
+  shellAlias = mkAlias {
+    emacs = "${emacs-mac-with-epkgs}/Applications/Emacs.app/Contents/MacOS/Emacs";
+  };
 in
 {
   programs = {
