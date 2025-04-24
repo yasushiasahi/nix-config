@@ -34,6 +34,7 @@ let
       pkgs.darwin.trash
       pkgs.jq # programs.jq.enableでもいけるけど、設定することないのでこっち
       pkgs.gnused
+      pkgs._1password-cli
 
       # TODO: chronimuがないと怒られて動作しない。node2nixでいつかトライしたい。
       # pkgs.nodePackages.mermaid-cli
@@ -64,6 +65,8 @@ let
 
     # XDG_*の環境変数を設定する
     xdg.enable = true;
+
+    services.ollama.enable = true;
   };
 
   optionModule =
