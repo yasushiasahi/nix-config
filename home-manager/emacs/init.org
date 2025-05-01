@@ -469,27 +469,6 @@
                (completion-category-defaults . nil)
                (completion-category-overrides . '((file (styles partial-completion))))))
 
-    (leaf tempel
-      :doc "Tempo templates/snippets with in-buffer field editing"
-      :url "https://github.com/minad/tempel"
-      :ensure t
-      :custom `((tempel-path . ,(no-littering-expand-etc-file-name "templates")))
-      :bind (("M-+" . tempel-complete)
-             ("M-*" . tempel-insert))
-      :hook ((conf-mode-hook prog-mode-hook text-mode-hook) . tempel-setup-capf)
-      :init
-      (defun tempel-setup-capf ()
-        (setq-local completion-at-point-functions
-                    (cons #'tempel-expand
-                          completion-at-point-functions)))
-      :config
-      (leaf tempel-collection
-        :doc "Collection of templates for Tempel"
-        :url "https://github.com/Crandel/tempel-collection"
-        :ensure t
-        :require t)
-      )
-
     (leaf corfu
       :doc "コード補完機能"
       :ensure t
@@ -501,13 +480,17 @@
                (corfu-auto-prefix . 1)
                (corfu-popupinfo-delay . 0))
       :bind ((corfu-map
-              ("C-s" . corfu-insert-separator)))
+              ("M-SPC" . corfu-insert-separator)))
       :config
       (leaf nerd-icons-corfu
         :doc "Corfuにアイコンを表示する"
         :ensure t
         :config
         (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+
+      (setopt tab-always-indent 'complete)
+      (setopt text-mode-ispell-word-completion nil)
+      (setopt read-extended-command-predicate #'command-completion-default-include-p)
       )
 
     (leaf marginalia
@@ -577,6 +560,7 @@
               ("C-x b" . consult-buffer)
               ("C-x M-p" . consult-project-buffer)
               ("C-x C-g" . my/consult-ghq-magit-status)
+              ("C-x M-s" . consult-yasnippet)
               ;; Other custom bindings
               ("M-y" . consult-yank-pop)
               ;; M-g bindings in `goto-map'
@@ -818,6 +802,9 @@
                (lsp-eslint-server-command . '("vscode-eslint-language-server" "--stdio"))
                )
       :init
+
+      (setopt lsp-eldoc-render-all t)
+
       (defun my/lsp-mode-setup-completion ()
         (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
               '(orderless)))
@@ -1001,12 +988,6 @@
       :doc "Major mode to edit CSS files"
       :custom ((css-indent-offset . 2)))
 
-    (leaf astro-ts-mode
-      :doc "No description available."
-      :url "https://github.com/Sorixelle/astro-ts-mode"
-      :ensure t
-      :mode "\\.astro\\'")
-
     (leaf nix-ts-mode
       :doc "Major mode for Nix expressions, powered by tree-sitter"
       :url "https://github.com/nix-community/nix-ts-mode"
@@ -1072,6 +1053,58 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :config
     (setopt avy-background t))
 #+end_src
+** yasnippet
+#+begin_src emacs-lisp :tangle yes
+  (leaf yasnippet
+    :doc "Yet another snippet extension for Emacs"
+    :url "http://github.com/joaotavora/yasnippet"
+    :ensure t
+    :config
+    (yas-global-mode 1)
+
+    (leaf yasnippet-snippets
+      :doc "Collection of yasnippet snippets"
+      :url "https://github.com/AndreaCrotti/yasnippet-snippets"
+      :ensure t))
+
+  (leaf consult-yasnippet
+    :doc "A consulting-read interface for yasnippet"
+    :url "https://github.com/mohkale/consult-yasnippet"
+    :ensure t
+    :after yasnippet consult)
+
+
+#+end_src
+** flymake
+*** flymake-eslint
+#+begin_src emacs-lisp :tangle yes
+  (leaf flymake-eslint
+    :doc "A Flymake backend for Javascript using eslint"
+    :url "https://github.com/orzechowskid/flymake-eslint"
+    :ensure t
+    :hook ((eglot-managed-mode-hook . my/setup-flymake-eslint))
+    :config
+    (defun my/eslint-config-p ()
+      "ディレクトリを遡ってESLintのconfigを探索する"
+      (if-let* ((current-path  (file-name-directory (buffer-file-name)))
+                (path-list  (split-string (string-trim current-path "/" "/") "/"))
+                (idx-list (seq-map-indexed (lambda (_ i) i)
+                                           path-list))
+                (list-length (seq-length path-list)))
+          (seq-some (lambda (idx)
+                      (let* ((sliced (cl-subseq path-list 0 (- list-length idx)))
+                             (seq-path  (concat "/" (string-join sliced "/"))))
+                        (directory-files seq-path nil "eslint")))
+                    idx-list)))
+
+    (defun my/setup-flymake-eslint ()
+      "eglotのbufferがtsかjsでそのプロジェクトがeslintの設定ファイルを持っているなら、flymakeにeslintを設定する"
+      (when (and (or (derived-mode-p 'typescript-ts-mode)
+                     (derived-mode-p 'js-ts-mode))
+                 (my/eslint-config-p)
+                 (executable-find "eslint"))
+        (flymake-eslint-enable))))
+#+end_src
 * マイナーモード
 ** [[https://github.com/casouri/expreg][expreg]]
 現在のポイントを中心にリージョン(選択範囲)を広げていく。
@@ -1092,13 +1125,9 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :doc "Tool for interacting with LLMs"
     :when (executable-find "ollama")
     :ensure t
+    :require llm-ollama
     :bind (("C-c e" . ellama))
-    :hook ((org-ctrl-c-ctrl-c-hook . ellama-chat-send-last-message))
-    :config
-    ;; show ellama context in header line in all buffers
-    (ellama-context-header-line-global-mode +1)
-    ;; show ellama session id in header line in all buffers
-    (ellama-session-header-line-global-mode +1))
+    :hook ((org-ctrl-c-ctrl-c-hook . ellama-chat-send-last-message)))
 #+end_src
 ** chatgpt-shell
 #+begin_src emacs-lisp :tangle yes
@@ -1136,6 +1165,33 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
                   :context-window 131072)))
 #+end_src
 * メジャーモード
+** astro-ts-mode
+#+begin_src emacs-lisp :tangle yes
+  (leaf astro-ts-mode
+    :doc "No description available."
+    :url "https://github.com/Sorixelle/astro-ts-mode"
+    :ensure t
+    :mode "\\.astro\\'"
+    :config
+    (add-to-list 'eglot-server-programs '(astro-ts-mode . ("astro-ls" "--stdio"
+  																												 :initializationOptions
+  																												 (:typescript
+  																													(:tsdk (eval (my/find-typescript-lib)))))))
+    (defun my/find-typescript-lib ()
+      "ディレクトリを遡ってESLintのconfigを探索する"
+      (if-let* ((current-path  (file-name-directory (buffer-file-name)))
+                (path-list  (split-string (string-trim current-path "/" "/") "/"))
+                (idx-list (seq-map-indexed (lambda (_ i) i)
+                                           path-list))
+                (list-length (seq-length path-list))
+                (node-module-path-idx (seq-find (lambda (idx)
+                                                  (let* ((sliced (cl-subseq path-list 0 (- list-length idx)))
+                                                         (seq-path  (concat "/" (string-join sliced "/"))))
+                                                    (directory-files seq-path nil "node_modules")))
+                                                idx-list))
+                (node-module-parent-dir (s-join "/" (cl-subseq path-list 0 (- list-length node-module-path-idx)))))
+          (concat "/" node-module-parent-dir "/typescript/lib"))))
+#+end_src
 ** mermaid-mode
 #+begin_src emacs-lisp :tangle yes
   (leaf mermaid-mode
@@ -1143,7 +1199,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :url "https://github.com/abrochard/mermaid-mode"
     :ensure t)
 #+end_src
-** org-mode
+* org-mode
 #+begin_src emacs-lisp :tangle yes
   (leaf org
     :doc "Outline-based notes management and organizer"
@@ -1168,7 +1224,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
       "保存前に行末のスペースを削除"
       (add-hook 'before-save-hook 'delete-trailing-whitespace nil 'make-it-local)))
 #+end_src
-*** org-capture
+** org-capture
 #+begin_src emacs-lisp :tangle yes
   (leaf org-capture
     :doc "Fast note taking in Org"
@@ -1180,7 +1236,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
                                      (file+headline ,(expand-file-name "memo.org" org-directory) "Memos")
                                      "* %?\nEntered on %U\n %i\n %a"))))
 #+end_src
-*** org-src
+** org-src
 #+begin_src emacs-lisp :tangle yes
   (leaf org-src
     :require t
@@ -1188,7 +1244,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (setopt org-src-window-setup 'current-window)
     (setopt org-src-tab-acts-natively nil))
 #+end_src
-**** ob-mermaid
+*** ob-mermaid
 #+begin_src emacs-lisp :tangle yes
   (leaf ob-mermaid
     :doc "Org-babel support for mermaid evaluation"
@@ -1197,7 +1253,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
   (org-babel-do-load-languages 'org-babel-load-languages '((mermaid . t)))
   (add-to-list 'org-src-lang-modes '("mermaid" . mermaid))
 #+end_src
-**** ob-typescript
+*** ob-typescript
 #+begin_src emacs-lisp :tangle yes
   (leaf ob-typescript
     :doc "Org-babel functions for typescript evaluation"

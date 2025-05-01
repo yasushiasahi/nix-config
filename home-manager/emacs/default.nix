@@ -83,9 +83,10 @@ in
     pkgs.vscode-langservers-extracted
     pkgs.nil
 
-    #formatter
+    #formatter & linter
     pkgs.nodePackages.prettier
     pkgs.nixfmt-rfc-style
+    pkgs.eslint
   ];
 
   # cliからemacsを起動した時にLANGがないと警告が出る。
