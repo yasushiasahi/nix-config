@@ -442,24 +442,6 @@
 
   (leaf *programing-minar-modes
     :config
-    (leaf apheleia
-      :doc "Reformat buffer stably"
-      :url "https://github.com/radian-software/apheleia"
-      :ensure t
-      :hook (nix-ts-mode-hook . apheleia-mode)
-      :commands apheleia-mode
-      :defvar (apheleia-formatters apheleia-mode-alist)
-      :custom ((apheleia-formatters-respect-indent-level . nil))
-      :config
-      (push '(prettier-astro . ("apheleia-npx" "prettier" "--stdin-filepath" filepath
-                                "--plugin=prettier-plugin-astro" "--parser=astro"))
-            apheleia-formatters)
-      (setf (alist-get 'astro-ts-mode apheleia-mode-alist)
-            'prettier-astro)
-
-      (add-to-list 'apheleia-mode-alist '(scss-ts-mode . prettier-scss))
-      )
-
     (leaf orderless
       :doc "Completion style for matching regexps in any order"
       :url "https://github.com/oantolin/orderless"
@@ -676,11 +658,6 @@
         :tag "builtin"
         :global-minor-mode electric-pair-mode)
       )
-
-    (leaf flymake
-      :doc "A universal on-the-fly syntax checker"
-      :tag "builtin"
-      :hook (prog-mode-hook conf-mode-hook))
 
     ;; (leaf flycheck
     ;;   :url "https://www.flycheck.org"
@@ -1076,6 +1053,12 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 
 #+end_src
 ** flymake
+#+begin_src emacs-lisp :tangle yes
+  (leaf flymake
+    :doc "A universal on-the-fly syntax checker"
+    :tag "builtin"
+    :hook (prog-mode-hook conf-mode-hook))
+#+end_src
 *** flymake-eslint
 #+begin_src emacs-lisp :tangle yes
   (leaf flymake-eslint
@@ -1106,6 +1089,19 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
         (flymake-eslint-enable))))
 #+end_src
 * マイナーモード
+** [[https://github.com/radian-software/apheleia][apheleia]] いろんな言語のフォーマッターインテグレーション
+#+begin_src emacs-lisp :tangle yes
+  (leaf apheleia
+    :ensure t
+    :hook ((nix-ts-mode-hook astro-ts-mode-hook) . apheleia-mode)
+    :commands apheleia-mode
+    :config
+    (setopt apheleia-formatters-respect-indent-level nil)
+    (add-to-list 'apheleia-formatters '(prettier-astro . ("apheleia-npx" "prettier" "--stdin-filepath" filepath
+                                                          "--plugin=prettier-plugin-astro" "--parser=astro")))
+    (add-to-list 'apheleia-mode-alist '(astro-ts-mode . prettier-astro))
+    (add-to-list 'apheleia-mode-alist '(scss-ts-mode . prettier-scss)))
+#+end_src
 ** [[https://github.com/casouri/expreg][expreg]]
 現在のポイントを中心にリージョン(選択範囲)を広げていく。
 個人的Emacsのキラープラグインの一つ。コピペエンジニアとしてはこれがないとまともに編集できない。
@@ -1172,11 +1168,17 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :url "https://github.com/Sorixelle/astro-ts-mode"
     :ensure t
     :mode "\\.astro\\'"
+    :hook ((astro-ts-mode-hook . my/setup-astro-eglot))
     :config
-    (add-to-list 'eglot-server-programs '(astro-ts-mode . ("astro-ls" "--stdio"
-  																												 :initializationOptions
-  																												 (:typescript
-  																													(:tsdk (eval (my/find-typescript-lib)))))))
+    (defun my/setup-astro-eglot ()
+      "astro-ts-mode起動時に、typscript/libのpathを正しくセットしてeglotをスタートする"
+      (require 'eglot)
+      (add-to-list 'eglot-server-programs `(astro-ts-mode . ("astro-ls" "--stdio"
+  																												   :initializationOptions
+  																												   (:typescript
+  																												    (:tsdk ,(my/find-typescript-lib))))))
+      (eglot-ensure))
+
     (defun my/find-typescript-lib ()
       "ディレクトリを遡ってESLintのconfigを探索する"
       (if-let* ((current-path  (file-name-directory (buffer-file-name)))
@@ -1189,8 +1191,8 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
                                                          (seq-path  (concat "/" (string-join sliced "/"))))
                                                     (directory-files seq-path nil "node_modules")))
                                                 idx-list))
-                (node-module-parent-dir (s-join "/" (cl-subseq path-list 0 (- list-length node-module-path-idx)))))
-          (concat "/" node-module-parent-dir "/typescript/lib"))))
+                (node-module-parent-dir (string-join (cl-subseq path-list 0 (- list-length node-module-path-idx)) "/")))
+          (concat "/" node-module-parent-dir "/node_modules/typescript/lib"))))
 #+end_src
 ** mermaid-mode
 #+begin_src emacs-lisp :tangle yes
