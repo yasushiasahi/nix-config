@@ -43,8 +43,7 @@ in
       size = 10000;
     };
     historySubstringSearch.enable = true;
-    initExtraFirst = initExtraFirstHomebrew;
-    initExtra = initExtraMistty + initExtraPickAbbr;
+    initContent = initExtraFirstHomebrew + initExtraMistty + initExtraPickAbbr;
     oh-my-zsh = {
       enable = true;
       plugins = [ "aws" ];
