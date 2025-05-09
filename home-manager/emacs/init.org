@@ -913,54 +913,6 @@
         (add-hook 'before-save-hook 'delete-trailing-whitespace nil 'make-it-local))
       )
 
-    (leaf jtsx
-      :doc "Extends JSX/TSX built-in support"
-      :url "https://github.com/llemaitre19/jtsx"
-      :ensure t
-      :defvar (jtsx-jsx-mode-map jtsx-tsx-mode-map)
-      :defun (my-jtsx-bind-keys-to-mode-map)
-      :mode (("\\.jsx?\\'" . jtsx-jsx-mode)
-             ("\\.tsx\\'" . jtsx-tsx-mode)
-             ("\\.ts\\'" . jtsx-typescript-mode))
-      :hook ((jtsx-jsx-mode-hook . my-jtsx-bind-keys-to-jtsx-jsx-mode-map)
-             (jtsx-tsx-mode-hook . my-jtsx-bind-keys-to-jtsx-tsx-mode-map))
-      :custom ((js-indent-level . 2)
-               (typescript-ts-mode-indent-offset . 2)
-               (jtsx-switch-indent-offset . 0)
-               (jtsx-indent-statement-block-regarding-standalone-parent . nil)
-               (jtsx-jsx-element-move-allow-step-out . t)
-               (jtsx-enable-jsx-electric-closing-element . t)
-               (jtsx-enable-electric-open-newline-between-jsx-element-tags . t)
-               ;; (jtsx-enable-jsx-element-tags-auto-sync . nil)
-               (jtsx-enable-all-syntax-highlighting-features . t))
-      :config
-      (defun my-jtsx-bind-keys-to-mode-map (mode-map)
-        "Bind keys to MODE-MAP."
-        (define-key mode-map (kbd "C-c C-j") 'jtsx-jump-jsx-element-tag-dwim)
-        (define-key mode-map (kbd "C-c j o") 'jtsx-jump-jsx-opening-tag)
-        (define-key mode-map (kbd "C-c j c") 'jtsx-jump-jsx-closing-tag)
-        (define-key mode-map (kbd "C-c j r") 'jtsx-rename-jsx-element)
-        (define-key mode-map (kbd "C-c <down>") 'jtsx-move-jsx-element-tag-forward)
-        (define-key mode-map (kbd "C-c <up>") 'jtsx-move-jsx-element-tag-backward)
-        (define-key mode-map (kbd "C-c C-<down>") 'jtsx-move-jsx-element-forward)
-        (define-key mode-map (kbd "C-c C-<up>") 'jtsx-move-jsx-element-backward)
-        (define-key mode-map (kbd "C-c C-S-<down>") 'jtsx-move-jsx-element-step-in-forward)
-        (define-key mode-map (kbd "C-c C-S-<up>") 'jtsx-move-jsx-element-step-in-backward)
-        (define-key mode-map (kbd "C-c j w") 'jtsx-wrap-in-jsx-element)
-        (define-key mode-map (kbd "C-c j u") 'jtsx-unwrap-jsx)
-        (define-key mode-map (kbd "C-c j d n") 'jtsx-delete-jsx-node)
-        (define-key mode-map (kbd "C-c j d a") 'jtsx-delete-jsx-attribute)
-        (define-key mode-map (kbd "C-c j t") 'jtsx-toggle-jsx-attributes-orientation)
-        (define-key mode-map (kbd "C-c j h") 'jtsx-rearrange-jsx-attributes-horizontally)
-        (define-key mode-map (kbd "C-c j v") 'jtsx-rearrange-jsx-attributes-vertically))
-
-      (defun my-jtsx-bind-keys-to-jtsx-jsx-mode-map ()
-        (my-jtsx-bind-keys-to-mode-map jtsx-jsx-mode-map))
-
-      (defun my-jtsx-bind-keys-to-jtsx-tsx-mode-map ()
-        (my-jtsx-bind-keys-to-mode-map jtsx-tsx-mode-map))
-      )
-
     (leaf css-mode
       :doc "Major mode to edit CSS files"
       :custom ((css-indent-offset . 2)))
@@ -1114,53 +1066,56 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :config
     (setq subword-mode t))
 #+end_src
-* LLM
-** ellama
-#+begin_src emacs-lisp :tangle yes
-  (leaf ellama
-    :doc "Tool for interacting with LLMs"
-    :when (executable-find "ollama")
-    :ensure t
-    :require llm-ollama
-    :bind (("C-c e" . ellama))
-    :hook ((org-ctrl-c-ctrl-c-hook . ellama-chat-send-last-message)))
-#+end_src
-** chatgpt-shell
-#+begin_src emacs-lisp :tangle yes
-  (leaf shell-maker
-    :doc "Interaction mode for making comint shells."
-    :url "https://github.com/xenodium/shell-maker"
-    :ensure t)
-
-  (leaf chatgpt-shell
-    :doc "A family of utilities to interact with LLMs (ChatGPT, Claude, DeepSeek, Gemini, Kagi, Ollama, Perplexity)"
-    :url "https://github.com/xenodium/chatgpt-shell"
-    :ensure t
-    :require t
-    :config
-    (setopt chatgpt-shell-model-version "gemma3:12b-it-qat")
-    (add-to-list 'chatgpt-shell-models
-                 (chatgpt-shell-ollama-make-model
-                  :version "gemma3:12b-it-qat"
-                  :token-width 8
-                  :context-window 131072))
-    (add-to-list 'chatgpt-shell-models
-                 (chatgpt-shell-ollama-make-model
-                  :version "gemma3:4b-it-qat"
-                  :token-width 8
-                  :context-window 131072))
-    (add-to-list 'chatgpt-shell-models
-                 (chatgpt-shell-ollama-make-model
-                  :version "qwen2.5-coder:14b"
-                  :token-width 8
-                  :context-window 131072))
-    (add-to-list 'chatgpt-shell-models
-                 (chatgpt-shell-ollama-make-model
-                  :version "qwen2.5-coder:7b"
-                  :token-width 8
-                  :context-window 131072)))
-#+end_src
 * メジャーモード
+** [[https://github.com/llemaitre19/jtsx][jtsx-mode]] jsx tsxに対応したモード
+#+begin_src emacs-lisp :tangle yes
+  (leaf jtsx
+    :doc "Extends JSX/TSX built-in support"
+    :url "https://github.com/llemaitre19/jtsx"
+    :ensure t
+    :defvar (jtsx-jsx-mode-map jtsx-tsx-mode-map)
+    :defun (my-jtsx-bind-keys-to-mode-map)
+    :mode ((("\\.jsx?\\'" "\\.mjs\\'" "\\.cjs\\'") . jtsx-jsx-mode)
+           ("\\.tsx\\'" . jtsx-tsx-mode)
+           ("\\.ts\\'" . jtsx-typescript-mode))
+    :hook ((jtsx-jsx-mode-hook . my-jtsx-bind-keys-to-jtsx-jsx-mode-map)
+           (jtsx-tsx-mode-hook . my-jtsx-bind-keys-to-jtsx-tsx-mode-map))
+    :custom ((js-indent-level . 2)
+             (typescript-ts-mode-indent-offset . 2)
+             (jtsx-switch-indent-offset . 0)
+             (jtsx-indent-statement-block-regarding-standalone-parent . nil)
+             (jtsx-jsx-element-move-allow-step-out . t)
+             (jtsx-enable-jsx-electric-closing-element . t)
+             (jtsx-enable-electric-open-newline-between-jsx-element-tags . t)
+             ;; (jtsx-enable-jsx-element-tags-auto-sync . nil)
+             (jtsx-enable-all-syntax-highlighting-features . t))
+    :config
+    (defun my-jtsx-bind-keys-to-mode-map (mode-map)
+      "Bind keys to MODE-MAP."
+      (define-key mode-map (kbd "C-c C-j") 'jtsx-jump-jsx-element-tag-dwim)
+      (define-key mode-map (kbd "C-c j o") 'jtsx-jump-jsx-opening-tag)
+      (define-key mode-map (kbd "C-c j c") 'jtsx-jump-jsx-closing-tag)
+      (define-key mode-map (kbd "C-c j r") 'jtsx-rename-jsx-element)
+      (define-key mode-map (kbd "C-c <down>") 'jtsx-move-jsx-element-tag-forward)
+      (define-key mode-map (kbd "C-c <up>") 'jtsx-move-jsx-element-tag-backward)
+      (define-key mode-map (kbd "C-c C-<down>") 'jtsx-move-jsx-element-forward)
+      (define-key mode-map (kbd "C-c C-<up>") 'jtsx-move-jsx-element-backward)
+      (define-key mode-map (kbd "C-c C-S-<down>") 'jtsx-move-jsx-element-step-in-forward)
+      (define-key mode-map (kbd "C-c C-S-<up>") 'jtsx-move-jsx-element-step-in-backward)
+      (define-key mode-map (kbd "C-c j w") 'jtsx-wrap-in-jsx-element)
+      (define-key mode-map (kbd "C-c j u") 'jtsx-unwrap-jsx)
+      (define-key mode-map (kbd "C-c j d n") 'jtsx-delete-jsx-node)
+      (define-key mode-map (kbd "C-c j d a") 'jtsx-delete-jsx-attribute)
+      (define-key mode-map (kbd "C-c j t") 'jtsx-toggle-jsx-attributes-orientation)
+      (define-key mode-map (kbd "C-c j h") 'jtsx-rearrange-jsx-attributes-horizontally)
+      (define-key mode-map (kbd "C-c j v") 'jtsx-rearrange-jsx-attributes-vertically))
+
+    (defun my-jtsx-bind-keys-to-jtsx-jsx-mode-map ()
+      (my-jtsx-bind-keys-to-mode-map jtsx-jsx-mode-map))
+
+    (defun my-jtsx-bind-keys-to-jtsx-tsx-mode-map ()
+      (my-jtsx-bind-keys-to-mode-map jtsx-tsx-mode-map)))
+#+end_src
 ** astro-ts-mode
 #+begin_src emacs-lisp :tangle yes
   (leaf astro-ts-mode
@@ -1263,6 +1218,74 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :ensure t)
   (org-babel-do-load-languages 'org-babel-load-languages '((typescript . t)))
   (add-to-list 'org-src-lang-modes '("typescript" . jtsx-typescript))
+#+end_src
+* AI
+** ellama
+#+begin_src emacs-lisp :tangle yes
+  (leaf ellama
+    :doc "Tool for interacting with LLMs"
+    :when (executable-find "ollama")
+    :ensure t
+    :require llm-ollama
+    :bind (("C-c e" . ellama))
+    :hook ((org-ctrl-c-ctrl-c-hook . ellama-chat-send-last-message)))
+#+end_src
+** chatgpt-shell
+#+begin_src emacs-lisp :tangle yes
+  (leaf shell-maker
+    :doc "Interaction mode for making comint shells."
+    :url "https://github.com/xenodium/shell-maker"
+    :ensure t)
+
+  (leaf chatgpt-shell
+    :doc "A family of utilities to interact with LLMs (ChatGPT, Claude, DeepSeek, Gemini, Kagi, Ollama, Perplexity)"
+    :url "https://github.com/xenodium/chatgpt-shell"
+    :ensure t
+    :require t
+    :config
+    (setopt chatgpt-shell-model-version "gemma3:12b-it-qat")
+    (add-to-list 'chatgpt-shell-models
+                 (chatgpt-shell-ollama-make-model
+                  :version "gemma3:12b-it-qat"
+                  :token-width 8
+                  :context-window 131072))
+    (add-to-list 'chatgpt-shell-models
+                 (chatgpt-shell-ollama-make-model
+                  :version "gemma3:4b-it-qat"
+                  :token-width 8
+                  :context-window 131072))
+    (add-to-list 'chatgpt-shell-models
+                 (chatgpt-shell-ollama-make-model
+                  :version "qwen2.5-coder:14b"
+                  :token-width 8
+                  :context-window 131072))
+    (add-to-list 'chatgpt-shell-models
+                 (chatgpt-shell-ollama-make-model
+                  :version "qwen2.5-coder:7b"
+                  :token-width 8
+                  :context-window 131072)))
+#+end_src
+** [[https://github.com/karthink/gptel][gptel]] シンプルなLLMのクライアント
+無料、有料、ローカル問わずほとんどのモデルに対応している。
+いかなるバッファからでもでサクッと使える。
+#+begin_src emacs-lisp :tangle yes
+  (leaf gptel
+    :ensure t
+    :config
+    (setopt gptel-model 'gemini-2.5-pro-preview-03-25)
+    (setopt gptel-backend
+            (gptel-make-gemini "Gemini"
+              :key (auth-source-pick-first-password
+                    :machine "generativelanguage.googleapis.com"
+                    :login "asahi1600@gmail.com"
+                    :port "api-key")
+              :stream t
+              :request-params '(:generationConfig (:temperature 0.0))))
+    (setopt gptel-org-convert-response nil)
+    (setopt gptel-log-level 'info)
+    (setopt gptel-use-header-line nil))
+
+
 #+end_src
 * ターミナル
 ** [[https://github.com/szermatt/mistty][mistty]]

@@ -82,6 +82,7 @@ in
     pkgs.dockerfile-language-server-nodejs
     pkgs.vscode-langservers-extracted
     pkgs.nil
+    pkgs.copilot-language-server
 
     #formatter & linter
     pkgs.nodePackages.prettier
