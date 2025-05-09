@@ -1287,6 +1287,22 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 
 
 #+end_src
+** [[https://github.com/copilot-emacs/copilot.el?tab=readme-ov-file][copilot]] github copilotプラグイン
+#+begin_src emacs-lisp :tangle yes
+  (leaf copilot
+    :ensure t
+    :commands copilot-mode
+    :config
+    (add-to-list 'copilot-major-mode-alist '("jtsx-typescript" . "typescript"))
+    (add-to-list 'copilot-major-mode-alist '("jtsx-tsx" . "typescriptreact"))
+    (add-to-list 'copilot-major-mode-alist '("astro-ts" . "typescriptreact")))
+#+end_src
+** [[https://github.com/chep/copilot-chat.el][copilot-chat]] copilotとチャットできる
+#+begin_src emacs-lisp :tangle yes
+  (leaf copilot-chat
+    :ensure t
+    :hook ((git-commit-setup-hook . copilot-chat-insert-commit-message)))
+#+end_src
 * ターミナル
 ** [[https://github.com/szermatt/mistty][mistty]]
 #+begin_src emacs-lisp :tangle yes
