@@ -1,0 +1,32 @@
+[language-server.astro-ls]
+command = "astro-ls"
+args = [ "--stdio" ]
+config = { typescript = { tsdk = "node_modules/typescript/lib" } }
+
+[[language]]
+name = "astro"
+language-id = "astro"
+file-types = ["astro"]
+roots = ["package.json"]
+language-servers = [ "astro-ls" ]
+
+[[language]]
+name = "typescript"
+language-id = "typescript"
+file-types = ["ts", "mts", "cts"]
+roots = ["package.json"]
+language-servers = [
+  { name = "typescript-language-server", except-features = ["format"] },
+  { name = "eslint", support-workspace = true, config-files = [".eslintrc.js", ".eslintrc.cjs", ".eslintrc.yaml", ".eslintrc.yml", ".eslintrc", ".eslintrc.json", "eslint.config.js", "eslint.config.mjs", "eslint.config.cjs", "eslint.config.ts", "eslint.config.mts", "eslint.config.cts"] },
+]
+
+[[language]]
+name = "tsx"
+language-id = "typescriptreact"
+file-types = ["tsx"]
+roots = ["package.json"]
+language-servers = [
+  { name = "typescript-language-server", except-features = ["format"] },
+  { name = "tailwindcss-ls" },
+  { name = "eslint", support-workspace = true, config-files = [".eslintrc.js", ".eslintrc.cjs", ".eslintrc.yaml", ".eslintrc.yml", ".eslintrc", ".eslintrc.json", "eslint.config.js", "eslint.config.mjs", "eslint.config.cjs", "eslint.config.ts", "eslint.config.mts", "eslint.config.cts"] },
+]
