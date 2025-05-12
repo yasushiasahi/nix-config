@@ -49,49 +49,6 @@
       :config
       (exec-path-from-shell-initialize))
 
-    (leaf no-littering
-      :doc "組み込みor外部に関わらず、パッケージが作り出す設定ファイルを整頓して、.config/emacs配下を綺麗に保つ"
-      :url "https://github.com/emacscollective/no-littering"
-      :ensure t
-      :defvar (no-littering-var-directory no-littering-etc-directory)
-      :config
-      ;; Lock files
-      (let ((dir (no-littering-expand-var-file-name "lock-files/")))
-        (make-directory dir t)
-        (setq lock-file-name-transforms `((".*" ,dir t))))
-
-      ;; Saved customizations
-      (setq custom-file (no-littering-expand-var-file-name "custom.el"))
-
-      (leaf recentf
-        :doc "開いたファイルの履歴を保存しておく機能"
-        :tag "builtin"
-        :custom ((recentf-max-saved-items . 100))
-        :hook ((emacs-startup-hook . recentf-mode))
-        :defvar (recentf-exclude)
-        :defun (recentf-expand-file-name)
-        :config
-        ;; no-littering配下ファイルは除外
-        ;; https://github.com/emacscollective/no-littering?tab=readme-ov-file#recent-files
-        (add-to-list 'recentf-exclude
-                     (recentf-expand-file-name no-littering-var-directory))
-        (add-to-list 'recentf-exclude
-                     (recentf-expand-file-name no-littering-etc-directory))
-        )
-
-      (leaf files
-        :doc "file input and output commands for Emacs"
-        :custom ((version-control . t)
-                 (delete-old-versions . t))
-        :config
-        ;; Auto-save, backup and undo-tree files
-        (no-littering-theme-backups)
-        ;; .dir-locals.el読み込み時の警告を抑制する
-        (add-to-list 'safe-local-variable-values '(eval . (eglot-ensure)))
-        (add-to-list 'safe-local-variable-values '(eval . (lsp-deferred)))
-        (add-to-list 'safe-local-variable-values '(eval . (apheleia-mode))))
-      )
-
     (leaf cus-start
       :doc "define customization properties of builtins"
       :custom ((tab-width . 2))
@@ -442,196 +399,6 @@
 
   (leaf *programing-minar-modes
     :config
-    (leaf orderless
-      :doc "Completion style for matching regexps in any order"
-      :url "https://github.com/oantolin/orderless"
-      :defun (orderless--highlight orderless-compile)
-      :ensure t
-      :custom ((completion-styles . '(orderless basic))
-               (completion-category-defaults . nil)
-               (completion-category-overrides . '((file (styles partial-completion))))))
-
-    (leaf corfu
-      :doc "コード補完機能"
-      :ensure t
-      :require corfu-popupinfo
-      :defvar (corfu-margin-formatters)
-      :global-minor-mode global-corfu-mode corfu-popupinfo-mode
-      :custom ((corfu-auto . t)
-               (corfu-auto-delay . 0)
-               (corfu-auto-prefix . 1)
-               (corfu-popupinfo-delay . 0))
-      :bind ((corfu-map
-              ("M-SPC" . corfu-insert-separator)))
-      :config
-      (leaf nerd-icons-corfu
-        :doc "Corfuにアイコンを表示する"
-        :ensure t
-        :config
-        (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
-
-      (setopt tab-always-indent 'complete)
-      (setopt text-mode-ispell-word-completion nil)
-      (setopt read-extended-command-predicate #'command-completion-default-include-p)
-      )
-
-    (leaf marginalia
-      :doc "Enrich existing commands with completion annotations"
-      :url "https://github.com/minad/marginalia"
-      :ensure t
-      :global-minor-mode t
-      :config
-      (leaf nerd-icons-completion
-        :doc "Add icons to completion candidates"
-        :url "https://github.com/rainstormstudio/nerd-icons-completion"
-        :ensure t
-        :global-minor-mode t
-        :hook (marginalia-mode-hook . nerd-icons-completion-marginalia-setup))
-      )
-
-    (leaf vertico
-      :doc "言わずと知れたミニバッファ補完インターフェイス"
-      :url "https://github.com/minad/vertico"
-      :ensure t
-      :defvar (crm-separator)
-      :defun (crm-indicator vertico--candidate)
-      :global-minor-mode t
-      :custom ((enable-recursive-minibuffers . t)
-               (read-extended-command-predicate . #'command-completion-default-include-p)
-               (vertico-count . 30))
-      :init
-      (defun crm-indicator (args)
-        (cons (format "[CRM%s] %s"
-                      (replace-regexp-in-string
-                       "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                       crm-separator)
-                      (car args))
-              (cdr args)))
-      (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
-
-      ;; Do not allow the cursor in the minibuffer prompt
-      (setq minibuffer-prompt-properties
-            '(read-only t cursor-intangible t face minibuffer-prompt))
-      (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-
-      :config
-      (leaf vertico-directory
-        :doc "Ido-like directory navigation for Vertico"
-        :url "https://github.com/minad/vertico"
-        :require t
-        :bind (vertico-map
-               ("RET" . vertico-directory-enter)
-               ("DEL" . vertico-directory-delete-char)
-               ("M-DEL" . vertico-directory-delete-word))
-        :hook ((rfn-eshadow-update-overlay-hook . vertico-directory-tidy)))
-
-      (leaf savehist
-        :doc "Save minibuffer history"
-        :tag "builtin"
-        :global-minor-mode t)
-      )
-
-    (leaf consult
-      :doc "Consulting completing-read"
-      :url "https://github.com/minad/consult"
-      :ensure t
-      :defun (consult-customize consult--read)
-      :bind* (;; C-c bindings in `mode-specific-map'
-              ("C-c M-x" . consult-mode-command)
-              ;; C-x bindings in `ctl-x-map'
-              ("C-x b" . consult-buffer)
-              ("C-x M-p" . consult-project-buffer)
-              ("C-x C-g" . my/consult-ghq-magit-status)
-              ("C-x M-s" . consult-yasnippet)
-              ;; Other custom bindings
-              ("M-y" . consult-yank-pop)
-              ;; M-g bindings in `goto-map'
-              ("M-g f" . consult-flymake)
-              ("M-g g" . consult-goto-line)
-              ("M-g m" . consult-mark)
-              ("M-g k" . consult-global-mark)
-              ("M-g i" . consult-imenu)
-              ("M-g I" . consult-imenu-multi)
-              ;; M-s bindings in `search-map'
-              ("M-s d" . consult-fd)
-              ("M-s g d" . my-consult-ghq-fd)
-              ("M-s c" . consult-locate)
-              ("M-s r" . consult-ripgrep)
-              ("M-s g r" . my-consult-ghq-ripgrep)
-              ("M-s l" . consult-line)
-              ("M-s L" . consult-line-multi))
-      :hook (completion-list-mode-hook . consult-preview-at-point-mode)
-      :custom ((xref-show-xrefs-function . #'consult-xref)
-               (xref-show-definitions-function . #'consult-xref))
-      :config
-      (leaf *consult-ghq
-        :defun (buffer-substring-no-propertie my-consult-ghq--list-candidates my-consult-ghq--read consult--file-preview)
-        :config
-        (defun my-consult-ghq--list-candidates ()
-          "ghq listの結果をリストで返す"
-          (with-temp-buffer
-            (unless (zerop (apply #'call-process "ghq" nil t nil '("list" "--full-path")))
-              (error "Failed: Cannot get ghq list candidates"))
-            (let ((paths))
-              (goto-char (point-min))
-              (while (not (eobp))
-                (push (buffer-substring-no-properties
-                       (line-beginning-position)
-                       (line-end-position))
-                      paths)
-                (forward-line 1))
-              (nreverse paths))))
-        (defun my-consult-ghq--read ()
-          "ghq管理のリポジトリ一覧から選ぶ"
-          (consult--read (my-consult-ghq--list-candidates)
-                         :state (consult--file-preview)
-                         :prompt "ghq: "
-                         :category 'file))
-        (defun my-consult-ghq-fd ()
-          "ghq管理のリポジトリ一覧から選び、プロジェクト内ファイル検索"
-          (interactive)
-          (consult-fd (my-consult-ghq--read)))
-        (defun my-consult-ghq-ripgrep ()
-          "ghq管理のリポジトリ一覧から選び、プロジェクト内でripgrep"
-          (interactive)
-          (consult-ripgrep (my-consult-ghq--read)))
-        (defun my/consult-ghq-magit-status ()
-          "ghq管理のリポジトリ一覧から選び、magit statusを開く"
-          (interactive)
-          (magit-status (my-consult-ghq--read))))
-
-      (defun my-consult-switch-buffer-kill ()
-        "Kill candidate buffer at point within the minibuffer completion."
-        (interactive)
-        ;; The vertico--candidate has a irregular char at the end.
-        (let ((name  (substring (vertico--candidate) 0 -1)))
-          (when (bufferp (get-buffer name))
-            (kill-buffer name))))
-      )
-
-    (leaf embark
-      :doc "Conveniently act on minibuffer completions"
-      :url "https://github.com/oantolin/embark"
-      :ensure t
-      :bind (("C-." . embark-act)         ;; pick some comfortable binding
-             ("C-;" . embark-dwim)        ;; good alternative: M-.
-             ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
-      :init
-      (setq prefix-help-command #'embark-prefix-help-command)
-      ;; (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
-      (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly))
-
-    (leaf embark-consult
-      :doc "Consult integration for Embark"
-      :url "https://github.com/oantolin/embark"
-      :ensure t
-      :hook (embark-collect-mode-hook . consult-preview-at-point-mode))
-
-    (leaf wgrep
-      :doc "Writable grep buffer"
-      :url "https://github.com/mhayashi1120/Emacs-wgrep"
-      :ensure t)
-
     (leaf rainbow-delimiters
       :doc "Highlight brackets according to their depth"
       :url "https://github.com/Fanael/rainbow-delimiters"
@@ -678,78 +445,6 @@
       :config
       ;; TODO typescript以外のプロジェクトの時にこれ有効にしちゃダメよね
       (add-hook 'eldoc-box-buffer-setup-hook #'eldoc-box-prettify-ts-errors 0 t))
-
-    (leaf eglot
-      :doc "The Emacs Client for LSP servers"
-      :tag "builtin"
-      :defvar eglot-server-programs
-      :hook (((yaml-ts-mode-hook nix-ts-mode-hook html-ts-mode-hook css-ts-mode-hook) . eglot-ensure))
-      :bind (:eglot-mode-map
-             ("M-g e" . consult-eglot-symbols)
-             ("C-c l r r" . my/eglot-rename)
-             ("C-c l a" . eglot-code-actions))
-      :push ((eglot-server-programs . '(nix-ts-mode . ("nil"))))
-      :setq-default ((eglot-workspace-configuration
-                      . '(:yaml ( :format (:enable t)
-                                  :validate t
-                                  :hover t
-                                  :completion t
-                                  ;; ここに一覧がある
-                                  ;; https://github.com/SchemaStore/schemastore/blob/master/src/api/json/catalog.json
-                                  :schemas (
-                                            https://json.schemastore.org/github-workflow.json ["/.github/workflows/*.{yml,yaml}"]
-                                            https://raw.githubusercontent.com/awslabs/goformation/master/schema/cloudformation.schema.json ["/cloudformation.{yml,yaml}"
-                                                                                                                                            "/*.cf.{yml,yaml}"]
-                                            https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json ["/docker-compose.yml"
-                                                                                                                                         "/docker-compose.yaml"
-                                                                                                                                         "/docker-compose.*.yml"
-                                                                                                                                         "/docker-compose.*.yaml"
-                                                                                                                                         "/compose.yml"
-                                                                                                                                         "/compose.yaml"
-                                                                                                                                         "/compose.*.yml"
-                                                                                                                                         "/compose.*.yaml"]
-                                            https://json.schemastore.org/yamllint.json ["/*.yml"]
-                                            )
-                                  :schemaStore (:enable t)))))
-      :config
-      (defun my/eglot-rename ()
-        "eglot-renameの改良版"
-        (interactive)
-        (if-let* ((symbol (thing-at-point 'symbol t))
-                  (newname (string-trim
-                            (read-from-minibuffer (format "Rename `%s' to: " symbol) symbol))))
-            (cond ((string-empty-p newname)
-                   (user-error "空の名前は受け付けません"))
-                  ((string-search " " newname)
-                   (user-error "ホワイトスペースを含む変数名はダメでしょ"))
-                  ((string= symbol newname)
-                   (user-error "元の名前と同じやん"))
-                  (t
-                   (eglot-rename newname)))
-          (user-error "ポイントにシンボルがないです")))
-
-      (leaf eglot-booster
-        :doc "No description available."
-        :url "https://github.com/jdtsmith/eglot-booster"
-        :ensure t
-        :custom ((eglot-booster-io-only . t))
-        :global-minor-mode t)
-
-      (leaf consult-eglot
-        :doc "A consulting-read interface for eglot"
-        :url "https://github.com/mohkale/consult-eglot"
-        :ensure t)
-
-      (leaf eglot-signature-eldoc-talkative
-        :doc "Make Eglot make ElDoc echo docs."
-        :url "https://codeberg.org/mekeor/eglot-signature-eldoc-talkative"
-        :ensure t
-        :defun (eglot-signature-eldoc-function eglot-signature-eldoc-talkative)
-        :commands eglot-signature-eldoc-talkative
-        :config
-        (advice-add #'eglot-signature-eldoc-function
-                    :override #'eglot-signature-eldoc-talkative))
-      )
 
     (leaf lsp-mode
       :doc "LSP mode"
@@ -927,7 +622,51 @@
 #+end_src
 
 * 雑多なグローバル設定
+** [[https://github.com/emacscollective/no-littering][no-littering]] emacs設定ディレクトリを綺麗に保つ
+#+begin_src emacs-lisp :tangle yes
+  (leaf no-littering
+    :doc "組み込みor外部に関わらず、パッケージが作り出す設定ファイルを整頓して、.config/emacs配下を綺麗に保つ"
+    :url "https://github.com/emacscollective/no-littering"
+    :ensure t
+    :defvar (no-littering-var-directory no-littering-etc-directory)
+    :config
+    ;; Lock files
+    (let ((dir (no-littering-expand-var-file-name "lock-files/")))
+      (make-directory dir t)
+      (setq lock-file-name-transforms `((".*" ,dir t))))
 
+    ;; Saved customizations
+    (setq custom-file (no-littering-expand-var-file-name "custom.el"))
+
+    (leaf recentf
+      :doc "開いたファイルの履歴を保存しておく機能"
+      :tag "builtin"
+      :custom ((recentf-max-saved-items . 100))
+      :hook ((emacs-startup-hook . recentf-mode))
+      :defvar (recentf-exclude)
+      :defun (recentf-expand-file-name)
+      :config
+      ;; no-littering配下ファイルは除外
+      ;; https://github.com/emacscollective/no-littering?tab=readme-ov-file#recent-files
+      (add-to-list 'recentf-exclude
+                   (recentf-expand-file-name no-littering-var-directory))
+      (add-to-list 'recentf-exclude
+                   (recentf-expand-file-name no-littering-etc-directory))
+      )
+
+    (leaf files
+      :doc "file input and output commands for Emacs"
+      :custom ((version-control . t)
+               (delete-old-versions . t))
+      :config
+      ;; Auto-save, backup and undo-tree files
+      (no-littering-theme-backups)
+      ;; .dir-locals.el読み込み時の警告を抑制する
+      (add-to-list 'safe-local-variable-values '(eval . (eglot-ensure)))
+      (add-to-list 'safe-local-variable-values '(eval . (lsp-deferred)))
+      (add-to-list 'safe-local-variable-values '(eval . (apheleia-mode))))
+    )
+#+end_src
 ** タブ文字を使用しない
 ちなみに、untabifyでバッファ無いの全てのタブをスペースに置き換えられる。tabifyはその逆。
 #+begin_src emacs-lisp :tangle yes
@@ -1040,6 +779,240 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
                  (executable-find "eslint"))
         (flymake-eslint-enable))))
 #+end_src
+* 補完インターフェイス minadさんシリーズ
+** [[https://github.com/oantolin/orderless][orderless]] 順不同のテキストマッチングスタイル
+#+begin_src emacs-lisp :tangle yes
+  (leaf orderless
+    :ensure t
+    :config
+    (setopt completion-styles '(orderless basic))
+    (setopt completion-category-defaults nil)
+    (setopt completion-category-overrides '((file (styles partial-completion)))))
+#+end_src
+** [[https://github.com/minad/corfu][corfu]] コード補完
+#+begin_src emacs-lisp :tangle yes
+  (leaf corfu
+    :doc "コード補完機能"
+    :ensure t
+    :require corfu-popupinfo
+    :defvar (corfu-margin-formatters)
+    :global-minor-mode global-corfu-mode corfu-popupinfo-mode
+    :custom ((corfu-auto . t)
+             (corfu-auto-delay . 0)
+             (corfu-auto-prefix . 1)
+             (corfu-popupinfo-delay . 0))
+    :bind ((corfu-map
+            ("M-SPC" . corfu-insert-separator)))
+    :config
+    (setopt tab-always-indent 'complete)
+    (setopt text-mode-ispell-word-completion nil)
+    (setopt read-extended-command-predicate #'command-completion-default-include-p))
+#+end_src
+*** [[https://github.com/LuigiPiucco/nerd-icons-corfu][nerd-icons-corfu]] corfuの補完候補にアイコンを表示する
+#+begin_src emacs-lisp :tangle yes
+  (leaf nerd-icons-corfu
+    :ensure t
+    :config
+    (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+#+end_src
+** [[https://github.com/minad/marginalia][marginalia]] 補完候補により多くの情報を表示する
+#+begin_src emacs-lisp :tangle yes
+  (leaf marginalia
+    :doc "Enrich existing commands with completion annotations"
+    :url "https://github.com/minad/marginalia"
+    :ensure t
+    :global-minor-mode t
+    :config
+    (leaf nerd-icons-completion
+      :doc "Add icons to completion candidates"
+      :url "https://github.com/rainstormstudio/nerd-icons-completion"
+      :ensure t
+      :global-minor-mode t
+      :hook (marginalia-mode-hook . nerd-icons-completion-marginalia-setup)))
+#+end_src
+** [[https://github.com/minad/vertico][vertico]] ミニバッファに高さを与える
+#+begin_src emacs-lisp :tangle yes
+  (leaf vertico
+    :doc "言わずと知れたミニバッファ補完インターフェイス"
+    :url "https://github.com/minad/vertico"
+    :ensure t
+    :defvar (crm-separator)
+    :defun (crm-indicator vertico--candidate)
+    :global-minor-mode t
+    :custom ((enable-recursive-minibuffers . t)
+             (read-extended-command-predicate . #'command-completion-default-include-p)
+             (vertico-count . 30))
+    :init
+    (defun crm-indicator (args)
+      (cons (format "[CRM%s] %s"
+                    (replace-regexp-in-string
+                     "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                     crm-separator)
+                    (car args))
+            (cdr args)))
+    (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+    ;; Do not allow the cursor in the minibuffer prompt
+    (setq minibuffer-prompt-properties
+          '(read-only t cursor-intangible t face minibuffer-prompt))
+    (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+    :config
+    (leaf vertico-directory
+      :doc "Ido-like directory navigation for Vertico"
+      :url "https://github.com/minad/vertico"
+      :require t
+      :bind (vertico-map
+             ("RET" . vertico-directory-enter)
+             ("DEL" . vertico-directory-delete-char)
+             ("M-DEL" . vertico-directory-delete-word))
+      :hook ((rfn-eshadow-update-overlay-hook . vertico-directory-tidy)))
+
+    (leaf savehist
+      :doc "Save minibuffer history"
+      :tag "builtin"
+      :global-minor-mode t))
+#+end_src
+** [[https://github.com/minad/consult][consult]] 便利な補完機能をたくさん提供してくれる
+#+begin_src emacs-lisp :tangle yes
+  (leaf consult
+    :doc "Consulting completing-read"
+    :url "https://github.com/minad/consult"
+    :ensure t
+    :defun (consult-customize consult--read)
+    :bind* (;; C-c bindings in `mode-specific-map'
+            ("C-c M-x" . consult-mode-command)
+            ;; C-x bindings in `ctl-x-map'
+            ("C-x b" . consult-buffer)
+            ("C-x M-p" . consult-project-buffer)
+            ("C-x C-g" . my/consult-ghq-magit-status)
+            ("C-x M-s" . consult-yasnippet)
+            ;; Other custom bindings
+            ("M-y" . consult-yank-pop)
+            ;; M-g bindings in `goto-map'
+            ("M-g f" . consult-flymake)
+            ("M-g g" . consult-goto-line)
+            ("M-g m" . consult-mark)
+            ("M-g k" . consult-global-mark)
+            ("M-g i" . consult-imenu)
+            ("M-g I" . consult-imenu-multi)
+            ;; M-s bindings in `search-map'
+            ("M-s d" . consult-fd)
+            ("M-s g d" . my-consult-ghq-fd)
+            ("M-s c" . consult-locate)
+            ("M-s r" . consult-ripgrep)
+            ("M-s g r" . my-consult-ghq-ripgrep)
+            ("M-s l" . consult-line)
+            ("M-s L" . consult-line-multi))
+    :hook (completion-list-mode-hook . consult-preview-at-point-mode)
+    :custom ((xref-show-xrefs-function . #'consult-xref)
+             (xref-show-definitions-function . #'consult-xref))
+    :config
+    (leaf *consult-ghq
+      :defun (buffer-substring-no-propertie my-consult-ghq--list-candidates my-consult-ghq--read consult--file-preview)
+      :config
+      (defun my-consult-ghq--list-candidates ()
+        "ghq listの結果をリストで返す"
+        (with-temp-buffer
+          (unless (zerop (apply #'call-process "ghq" nil t nil '("list" "--full-path")))
+            (error "Failed: Cannot get ghq list candidates"))
+          (let ((paths))
+            (goto-char (point-min))
+            (while (not (eobp))
+              (push (buffer-substring-no-properties
+                     (line-beginning-position)
+                     (line-end-position))
+                    paths)
+              (forward-line 1))
+            (nreverse paths))))
+      (defun my-consult-ghq--read ()
+        "ghq管理のリポジトリ一覧から選ぶ"
+        (consult--read (my-consult-ghq--list-candidates)
+                       :state (consult--file-preview)
+                       :prompt "ghq: "
+                       :category 'file))
+      (defun my-consult-ghq-fd ()
+        "ghq管理のリポジトリ一覧から選び、プロジェクト内ファイル検索"
+        (interactive)
+        (consult-fd (my-consult-ghq--read)))
+      (defun my-consult-ghq-ripgrep ()
+        "ghq管理のリポジトリ一覧から選び、プロジェクト内でripgrep"
+        (interactive)
+        (consult-ripgrep (my-consult-ghq--read)))
+      (defun my/consult-ghq-magit-status ()
+        "ghq管理のリポジトリ一覧から選び、magit statusを開く"
+        (interactive)
+        (magit-status (my-consult-ghq--read))))
+
+    (defun my-consult-switch-buffer-kill ()
+      "Kill candidate buffer at point within the minibuffer completion."
+      (interactive)
+      ;; The vertico--candidate has a irregular char at the end.
+      (let ((name  (substring (vertico--candidate) 0 -1)))
+        (when (bufferp (get-buffer name))
+          (kill-buffer name))))
+    )
+
+  (leaf embark
+    :doc "Conveniently act on minibuffer completions"
+    :url "https://github.com/oantolin/embark"
+    :ensure t
+    :bind (("C-." . embark-act)         ;; pick some comfortable binding
+           ("C-;" . embark-dwim)        ;; good alternative: M-.
+           ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+    :init
+    (setq prefix-help-command #'embark-prefix-help-command)
+    ;; (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
+    (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly))
+
+  (leaf embark-consult
+    :doc "Consult integration for Embark"
+    :url "https://github.com/oantolin/embark"
+    :ensure t
+    :hook (embark-collect-mode-hook . consult-preview-at-point-mode))
+
+  (leaf wgrep
+    :doc "Writable grep buffer"
+    :url "https://github.com/mhayashi1120/Emacs-wgrep"
+    :ensure t)
+#+end_src
+*** [[https://github.com/armindarvish/consult-gh][consult-gh]] ghコマンドと通じてgithubを操作する
+#+begin_src emacs-lisp :tangle yes
+  (leaf consult-gh
+    :ensure t
+    :config
+    (require 'consult-gh-transient)
+
+    (setopt consult-gh-default-clone-directory "~/ghq/github.com")
+    (setopt consult-gh-show-preview t)
+    (setopt consult-gh-preview-key "C-o")
+    (setopt consult-gh-repo-action #'consult-gh--repo-browse-files-action)
+    (setopt consult-gh-issue-action #'consult-gh--issue-view-action)
+    (setopt consult-gh-pr-action #'consult-gh--pr-view-action)
+    (setopt consult-gh-code-action #'consult-gh--code-view-action)
+    (setopt consult-gh-file-action #'consult-gh--files-view-action)
+    (setopt consult-gh-notifications-action #'consult-gh--notifications-action)
+    (setopt consult-gh-dashboard-action #'consult-gh--dashboard-action)
+    (setopt consult-gh-large-file-warning-threshold 2500000)
+
+    (add-to-list 'savehist-additional-variables 'consult-gh--known-orgs-list) ;;keep record of searched orgs
+    (add-to-list 'savehist-additional-variables 'consult-gh--known-repos-list) ;;keep record of searched repos
+    (consult-gh-enable-default-keybindings))
+
+  (leaf consult-gh-forge
+    :ensure t
+    :config
+    (consult-gh-embark-mode +1))
+
+  (leaf consult-gh-embark
+    :ensure t
+    :config
+    (consult-gh-forge-mode +1))
+
+  ;; (leaf consult-gh-with-pr-review
+  ;;   :ensure t
+  ;;   (consult-gh-with-pr-review-mode +1))
+#+end_src
 * マイナーモード
 ** [[https://github.com/radian-software/apheleia][apheleia]] いろんな言語のフォーマッターインテグレーション
 #+begin_src emacs-lisp :tangle yes
@@ -1066,6 +1039,70 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :config
     (setq subword-mode t))
 #+end_src
+* LSP
+** eglot
+#+begin_src emacs-lisp :tangle yes
+  (leaf eglot
+    :hook (((yaml-ts-mode-hook nix-ts-mode-hook html-ts-mode-hook css-ts-mode-hook astro-ts-mode) . eglot-ensure))
+    :bind (:eglot-mode-map
+           ("C-c l r r" . my/eglot-rename)
+           ("C-c l a" . eglot-code-actions))
+    :config
+    (add-to-list 'eglot-server-programs '(nix-ts-mode . ("nil")))
+
+    (defun my/eglot-rename ()
+      "eglot-renameの改良版"
+      (interactive)
+      (if-let* ((symbol (thing-at-point 'symbol t))
+                (newname (string-trim
+                          (read-from-minibuffer (format "Rename `%s' to: " symbol) symbol))))
+          (cond ((string-empty-p newname)
+                 (user-error "空の名前は受け付けません"))
+                ((string-search " " newname)
+                 (user-error "ホワイトスペースを含む変数名はダメでしょ"))
+                ((string= symbol newname)
+                 (user-error "元の名前と同じやん"))
+                (t
+                 (eglot-rename newname)))
+        (user-error "ポイントにシンボルがないです"))))
+#+end_src
+*** [[https://github.com/jdtsmith/eglot-booster][eglot-booster]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf eglot-booster
+    :ensure t
+    :custom ((eglot-booster-io-only . t))
+    :global-minor-mode t)
+#+end_src
+*** [[https://github.com/mohkale/consult-eglot][consult-eglot]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf consult-eglot
+    :ensure t
+    :bind (:eglot-mode-map
+           ("M-g e" . consult-eglot-symbols)))
+#+end_src
+*** [[https://codeberg.org/mekeor/eglot-signature-eldoc-talkative][eglot-signature-eldoc-talkative]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf eglot-signature-eldoc-talkative
+    :ensure t
+    :commands eglot-signature-eldoc-talkative
+    :config
+    (advice-add #'eglot-signature-eldoc-function
+                :override #'eglot-signature-eldoc-talkative))
+#+end_src
+** [[https://github.com/jadestrong/lsp-proxy][lsp-proxy]] rust製 LSPクランアント
+#+begin_src emacs-lisp :tangle yes
+  (leaf lsp-proxy
+    :ensure t
+    :require t
+    ;; :hook ((astro-ts-mode-hook . lsp-proxy-mode))
+    :config
+    (setopt lsp-proxy-user-languages-config (no-littering-expand-etc-file-name "languages.toml"))
+    (setopt lsp-proxy-diagnostics-provider :flymake)
+    (setopt lsp-proxy-log-file-directory (no-littering-expand-var-file-name "lsp-proxy-logs/"))
+    (setopt lsp-proxy-log-max 1000000)
+    (setopt lsp-proxy-log-level 3))
+#+end_src
+
 * メジャーモード
 ** [[https://github.com/llemaitre19/jtsx][jtsx-mode]] jsx tsxに対応したモード
 #+begin_src emacs-lisp :tangle yes
@@ -1116,11 +1153,9 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (defun my-jtsx-bind-keys-to-jtsx-tsx-mode-map ()
       (my-jtsx-bind-keys-to-mode-map jtsx-tsx-mode-map)))
 #+end_src
-** astro-ts-mode
+** [[https://github.com/Sorixelle/astro-ts-mode][astro-ts-mode]]
 #+begin_src emacs-lisp :tangle yes
   (leaf astro-ts-mode
-    :doc "No description available."
-    :url "https://github.com/Sorixelle/astro-ts-mode"
     :ensure t
     :mode "\\.astro\\'"
     :hook ((astro-ts-mode-hook . my/setup-astro-eglot))
@@ -1147,7 +1182,8 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
                                                     (directory-files seq-path nil "node_modules")))
                                                 idx-list))
                 (node-module-parent-dir (string-join (cl-subseq path-list 0 (- list-length node-module-path-idx)) "/")))
-          (concat "/" node-module-parent-dir "/node_modules/typescript/lib"))))
+          (concat "/" node-module-parent-dir "/node_modules/typescript/lib")))
+    )
 #+end_src
 ** mermaid-mode
 #+begin_src emacs-lisp :tangle yes
@@ -1301,7 +1337,14 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 #+begin_src emacs-lisp :tangle yes
   (leaf copilot-chat
     :ensure t
-    :hook ((git-commit-setup-hook . copilot-chat-insert-commit-message)))
+    :hook ((git-commit-setup-hook . copilot-chat-insert-commit-message))
+    :config
+    (let ((my/copilot-chat-prompt "日本語で解答してください。\nあなたは一流のコーディングチューターです。コードの説明は、高レベルな概念と詳細な内容のバランスが完璧です。あなたのアプローチにより、学習者はコードの書き方だけでなく、効果的なプログラミングを導く基本原理も理解できます。\n名前を尋ねられた場合、必ず「GitHub Copilot」と答えてください。\nユーザーの要件を正確かつ厳密に守ってください。\n専門知識はソフトウェア開発トピックに厳密に限定されています。\nMicrosoft のコンテンツポリシーに従ってください。\n著作権を侵害する内容は避けてください。\nソフトウェア開発に関連しない質問には、AIプログラミングアシスタントであることを簡単に伝えるだけにしてください。\n回答は簡潔かつ非個人的なものにしてください。\nMarkdown形式を使用して回答してください。\nコードブロックの最初にプログラミング言語名を必ず記述してください。\n全体を三重バッククオートで囲まないようにしてください。\nユーザーは Neovim という IDE を使用しています。この IDE には、開いているファイルのエディタ、統合ユニットテストサポート、コード実行結果を表示する出力ペイン、統合ターミナルがあります。\nアクティブなドキュメントは、ユーザーが現在見ているソースコードです。\n1 回の会話で 1 つの回答しかできません。\n\n追加ルール\nステップごとに考えてください：\n1. 提供されたコード選択部分やユーザーの質問、関連するエラー、プロジェクトの詳細、クラス定義などを確認します。\n2. コードや概念、ユーザーの質問が不明確な場合は、明確化する質問を行います。\n3. ユーザーが特定の質問やエラーを提供している場合は、選択されたコードと追加のコンテキストに基づいて答えてください。それ以外の場合は、選択されたコードの説明に集中します。\n4. コードの可読性やパフォーマンス向上の機会があれば、提案を行ってください。\n\n簡潔でわかりやすく、かつ徹底的な説明を心がけ、広範な予備知識があると仮定しないでください。\n開発者に親しみやすい用語やアナロジーを使用してください。\n注意すべき点や、初心者が見落としがちな部分を指摘してください。\n提供されたコンテキストに沿った具体的で関連性の高い例を示してください。\n"))
+      (setopt copilot-chat-markdown-prompt my/copilot-chat-prompt)
+      (setopt copilot-chat-org-prompt my/copilot-chat-prompt))
+
+    (setopt copilot-chat-commit-prompt (string-join (list "Output in Japanese." copilot-chat-commit-prompt) "\n"))
+    )
 #+end_src
 * ターミナル
 ** [[https://github.com/szermatt/mistty][mistty]]
