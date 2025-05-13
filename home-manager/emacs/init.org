@@ -372,31 +372,6 @@
 
     )
 
-  (leaf *git
-    :config
-    (leaf magit
-      :doc "A Git porcelain inside Emacs"
-      :url "https://github.com/magit/magit"
-      :ensure t)
-
-    (leaf diff-hl
-      :doc "Highlight uncommitted changes using VC"
-      :url "https://github.com/dgutov/diff-hl"
-      :ensure t
-      :global-minor-mode (global-diff-hl-mode
-                          diff-hl-flydiff-mode
-                          global-diff-hl-show-hunk-mouse-mode)
-      :hook ((magit-post-refresh-hook . diff-hl-magit-post-refresh)
-             (dired-mode-hook . diff-hl-dired-mode)))
-
-    ;;; 使いたいけど。よくわからん。
-    ;; (leaf difftastic
-    ;;   :doc "Wrapper for difftastic"
-    ;;   :url "https://github.com/pkryger/difftastic.el"
-    ;;   :ensure t
-    ;;   :global-minor-mode difftastic-bindings-mode)
-    )
-
   (leaf *programing-minar-modes
     :config
     (leaf rainbow-delimiters
@@ -620,7 +595,6 @@
 
     )
 #+end_src
-
 * 雑多なグローバル設定
 ** [[https://github.com/emacscollective/no-littering][no-littering]] emacs設定ディレクトリを綺麗に保つ
 #+begin_src emacs-lisp :tangle yes
@@ -698,6 +672,12 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :require t
     :config
     (setopt help-window-select t))
+#+end_src
+** auth-source Emacsデフォルトのシークレット管理
+#+begin_src emacs-lisp :tangle yes
+  (leaf auth-source
+    :config
+    (setopt auth-sources '("~/.authinfo")))
 #+end_src
 * ユーティリティー
 ** [[https://github.com/Wilfred/helpful][Helpful]] より見やすい*help*バッファー
@@ -1012,6 +992,29 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
   ;; (leaf consult-gh-with-pr-review
   ;;   :ensure t
   ;;   (consult-gh-with-pr-review-mode +1))
+#+end_src
+* git
+** [[https://magit.vc/][magit]] gitクライアント
+#+begin_src emacs-lisp :tangle yes
+  (leaf magit
+    :ensure t)
+#+end_src
+*** [[https://magit.vc/manual/forge.html][forge]] magitからgithubを操作する
+#+begin_src emacs-lisp :tangle yes
+  (leaf forge
+    :ensure t
+    :config
+    (setopt forge-buffer-draft-p t))
+#+end_src
+** [[https://github.com/dgutov/diff-hl][diff-hl]] 行頭にgitのステータスを表示する
+#+begin_src emacs-lisp :tangle yes
+  (leaf diff-hl
+    :ensure t
+    :hook ((magit-post-refresh-hook . diff-hl-magit-post-refresh)
+           (dired-mode-hook . diff-hl-dired-mode))
+    :config
+    (global-diff-hl-mode)
+    (global-diff-hl-show-hunk-mouse-mode))
 #+end_src
 * マイナーモード
 ** [[https://github.com/radian-software/apheleia][apheleia]] いろんな言語のフォーマッターインテグレーション
