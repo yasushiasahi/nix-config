@@ -40,6 +40,10 @@
       "1password"
       "karabiner-elements"
       "raycast"
+      "arc"
+      "firefox"
+      "google-chrome"
+      "brave-browser"
     ];
     masApps = {
       LINE = 539883307;

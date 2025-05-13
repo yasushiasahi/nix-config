@@ -36,10 +36,6 @@ let
       pkgs.gnused
       pkgs._1password-cli
 
-      # TODO: chronimuがないと怒られて動作しない。node2nixでいつかトライしたい。
-      # pkgs.nodePackages.mermaid-cli
-      # pkgs.mermaid-cli
-
       # docker
       pkgs.colima
       pkgs.docker
@@ -48,17 +44,11 @@ let
 
       # node tools
       pkgs.nodejs_22
-      pkgs.yarn
-      pkgs.pnpm
 
       # ai & llm
       pkgs.ollama
 
       # GUI
-      pkgs.brave
-      pkgs.firefox
-      pkgs.google-chrome
-      pkgs.arc-browser
       pkgs.windsurf
       pkgs.jetbrains.datagrip
     ];
