@@ -47,6 +47,7 @@ let
 
       # ai & llm
       pkgs.ollama
+      pkgs.aider-chat
 
       # GUI
       pkgs.windsurf
