@@ -1,7 +1,7 @@
 #+TITLE: My Configuration for GNU Emacs
 #+AUTHOR: Yasushi Asahi
 #+EMAIL: asahi1600@gmail.com
-#+STARTUP: content indent
+#+STARTUP: content
 
 * Header
 #+begin_src emacs-lisp :tangle yes
@@ -732,32 +732,30 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 #+end_src
 *** flymake-eslint
 #+begin_src emacs-lisp :tangle yes
-  (leaf flymake-eslint
-    :doc "A Flymake backend for Javascript using eslint"
-    :url "https://github.com/orzechowskid/flymake-eslint"
-    :ensure t
-    :hook ((eglot-managed-mode-hook . my/setup-flymake-eslint))
-    :config
-    (defun my/eslint-config-p ()
-      "ディレクトリを遡ってESLintのconfigを探索する"
-      (if-let* ((current-path  (file-name-directory (buffer-file-name)))
-                (path-list  (split-string (string-trim current-path "/" "/") "/"))
-                (idx-list (seq-map-indexed (lambda (_ i) i)
-                                           path-list))
-                (list-length (seq-length path-list)))
-          (seq-some (lambda (idx)
-                      (let* ((sliced (cl-subseq path-list 0 (- list-length idx)))
-                             (seq-path  (concat "/" (string-join sliced "/"))))
-                        (directory-files seq-path nil "eslint")))
-                    idx-list)))
+  ;; (leaf flymake-eslint
+  ;;   :ensure t
+  ;;   :hook ((eglot-managed-mode-hook . my/setup-flymake-eslint))
+  ;;   :config
+  ;;   (defun my/eslint-config-p ()
+  ;;     "ディレクトリを遡ってESLintのconfigを探索する"
+  ;;     (if-let* ((current-path  (file-name-directory (buffer-file-name)))
+  ;;               (path-list  (split-string (string-trim current-path "/" "/") "/"))
+  ;;               (idx-list (seq-map-indexed (lambda (_ i) i)
+  ;;                                          path-list))
+  ;;               (list-length (seq-length path-list)))
+  ;;         (seq-some (lambda (idx)
+  ;;                     (let* ((sliced (cl-subseq path-list 0 (- list-length idx)))
+  ;;                            (seq-path  (concat "/" (string-join sliced "/"))))
+  ;;                       (directory-files seq-path nil "eslint")))
+  ;;                   idx-list)))
 
-    (defun my/setup-flymake-eslint ()
-      "eglotのbufferがtsかjsでそのプロジェクトがeslintの設定ファイルを持っているなら、flymakeにeslintを設定する"
-      (when (and (or (derived-mode-p 'typescript-ts-mode)
-                     (derived-mode-p 'js-ts-mode))
-                 (my/eslint-config-p)
-                 (executable-find "eslint"))
-        (flymake-eslint-enable))))
+  ;;   (defun my/setup-flymake-eslint ()
+  ;;     "eglotのbufferがtsかjsでそのプロジェクトがeslintの設定ファイルを持っているなら、flymakeにeslintを設定する"
+  ;;     (when (and (or (derived-mode-p 'typescript-ts-mode)
+  ;;                    (derived-mode-p 'js-ts-mode))
+  ;;                (my/eslint-config-p)
+  ;;                (executable-find "eslint"))
+  ;;       (flymake-eslint-enable))))
 #+end_src
 * 補完インターフェイス minadさんシリーズ
 ** [[https://github.com/oantolin/orderless][orderless]] 順不同のテキストマッチングスタイル
@@ -960,6 +958,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 #+begin_src emacs-lisp :tangle yes
   (leaf consult-gh
     :ensure t
+    :bind (("C-x M-r" . consult-gh-transient))
     :config
     (require 'consult-gh-transient)
 
@@ -973,7 +972,9 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (setopt consult-gh-file-action #'consult-gh--files-view-action)
     (setopt consult-gh-notifications-action #'consult-gh--notifications-action)
     (setopt consult-gh-dashboard-action #'consult-gh--dashboard-action)
+    (setopt consult-gh-default-interactive-command #'consult-gh-transient)
     (setopt consult-gh-large-file-warning-threshold 2500000)
+    (setopt consult-gh-favorite-orgs-list '("karabiner-inc" "deltaXinc" ))
 
     (add-to-list 'savehist-additional-variables 'consult-gh--known-orgs-list) ;;keep record of searched orgs
     (add-to-list 'savehist-additional-variables 'consult-gh--known-repos-list) ;;keep record of searched repos
@@ -981,17 +982,22 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 
   (leaf consult-gh-forge
     :ensure t
+    :after consult forge consult-gh
     :config
-    (consult-gh-embark-mode +1))
+    (consult-gh-forge-mode +1)
+    (setopt consult-gh-forge-timeout-seconds 20))
 
   (leaf consult-gh-embark
     :ensure t
+    :after consult consult-gh embark-consult
     :config
-    (consult-gh-forge-mode +1))
+    (consult-gh-embark-mode +1))
 
-  ;; (leaf consult-gh-with-pr-review
-  ;;   :ensure t
-  ;;   (consult-gh-with-pr-review-mode +1))
+  (leaf pr-review
+    :ensure t)
+
+  (leaf consult-gh-with-pr-review
+    :ensure t)
 #+end_src
 * git
 ** [[https://magit.vc/][magit]] gitクライアント
@@ -1026,6 +1032,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
   (leaf vc-msg
     :ensure t)
 #+end_src
+
 * マイナーモード
 ** [[https://github.com/radian-software/apheleia][apheleia]] いろんな言語のフォーマッターインテグレーション
 #+begin_src emacs-lisp :tangle yes
@@ -1045,12 +1052,9 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 個人的Emacsのキラープラグインの一つ。コピペエンジニアとしてはこれがないとまともに編集できない。
 #+begin_src emacs-lisp :tangle yes
   (leaf expreg
-    :doc "Simple expand region"
-    :bind (("C-=" . expreg-expand)
-           ("C-+" . expreg-contract))
     :ensure t
-    :config
-    (setq subword-mode t))
+    :bind (("C-z" . expreg-expand)
+           ("C-M-z" . expreg-contract)))
 #+end_src
 * LSP
 ** eglot
@@ -1170,33 +1174,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 #+begin_src emacs-lisp :tangle yes
   (leaf astro-ts-mode
     :ensure t
-    :mode "\\.astro\\'"
-    :hook ((astro-ts-mode-hook . my/setup-astro-eglot))
-    :config
-    (defun my/setup-astro-eglot ()
-      "astro-ts-mode起動時に、typscript/libのpathを正しくセットしてeglotをスタートする"
-      (require 'eglot)
-      (add-to-list 'eglot-server-programs `(astro-ts-mode . ("astro-ls" "--stdio"
-  																												   :initializationOptions
-  																												   (:typescript
-  																												    (:tsdk ,(my/find-typescript-lib))))))
-      (eglot-ensure))
-
-    (defun my/find-typescript-lib ()
-      "ディレクトリを遡ってESLintのconfigを探索する"
-      (if-let* ((current-path  (file-name-directory (buffer-file-name)))
-                (path-list  (split-string (string-trim current-path "/" "/") "/"))
-                (idx-list (seq-map-indexed (lambda (_ i) i)
-                                           path-list))
-                (list-length (seq-length path-list))
-                (node-module-path-idx (seq-find (lambda (idx)
-                                                  (let* ((sliced (cl-subseq path-list 0 (- list-length idx)))
-                                                         (seq-path  (concat "/" (string-join sliced "/"))))
-                                                    (directory-files seq-path nil "node_modules")))
-                                                idx-list))
-                (node-module-parent-dir (string-join (cl-subseq path-list 0 (- list-length node-module-path-idx)) "/")))
-          (concat "/" node-module-parent-dir "/node_modules/typescript/lib")))
-    )
+    :mode "\\.astro\\'")
 #+end_src
 ** mermaid-mode
 #+begin_src emacs-lisp :tangle yes
@@ -1241,6 +1219,12 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (setopt org-capture-templates `(("n" "Memo" entry
                                      (file+headline ,(expand-file-name "memo.org" org-directory) "Memos")
                                      "* %?\nEntered on %U\n %i\n %a"))))
+#+end_src
+** [[https://github.com/integral-dw/org-superstar-mode][org-superstar]] 見出しをいい感じの見た目にする
+#+begin_src emacs-lisp :tangle yes
+  (leaf org-superstar
+    :ensure t
+    :hook (('org-mode-hook . (lambda () (org-superstar-mode 1)))))
 #+end_src
 ** org-src
 #+begin_src emacs-lisp :tangle yes
@@ -1354,7 +1338,12 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
       (setopt copilot-chat-markdown-prompt my/copilot-chat-prompt)
       (setopt copilot-chat-org-prompt my/copilot-chat-prompt))
 
-    (setopt copilot-chat-commit-prompt (string-join (list "Output in Japanese." copilot-chat-commit-prompt) "\n"))
+    (setopt copilot-chat-commit-prompt
+            (string-join (list
+                          "Step 1: Review the English commit message as instructed below.
+  Step 2: Output a Japanese translation of the commit message that preserves its structure. Do not include the original English text in the output."
+                          copilot-chat-commit-prompt)
+                         "\n\n"))
     )
 #+end_src
 * ターミナル
