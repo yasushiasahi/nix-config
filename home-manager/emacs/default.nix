@@ -22,6 +22,39 @@ let
       };
     };
 
+  consult-omni =
+    {
+      melpaBuild,
+      fetchFromGitHub,
+    }:
+    melpaBuild {
+      pname = "consult-omni";
+      version = "0-unstable-2025-02-19";
+      files = ''("*.el" "sources/*.el")'';
+      src = fetchFromGitHub {
+        owner = "armindarvish";
+        repo = "consult-omni";
+        rev = "d0a24058bf0dda823e5f1efcae5da7dc0efe6bda";
+        hash = "sha256-dzKkJ+3lMRkHRuwe43wpzqnFvF8Tl6j+6XHUsDhMX4o=";
+      };
+    };
+
+  org-modern-indent =
+    {
+      melpaBuild,
+      fetchFromGitHub,
+    }:
+    melpaBuild {
+      pname = "org-modern-indent";
+      version = "0-unstable-2025-04-13";
+      src = fetchFromGitHub {
+        owner = "jdtsmith";
+        repo = "org-modern-indent";
+        rev = "9973bd3b91e4733a3edd1fca232208c837c05473";
+        hash = "sha256-st3338Jk9kZ5BLEPRJZhjqdncMpLoWNwp60ZwKEObyU=";
+      };
+    };
+
   lsp-proxy-version = "0.4.2";
   lsp-proxy-src = pkgs.fetchFromGitHub {
     owner = "jadestrong";
@@ -62,6 +95,14 @@ let
           inherit (pkgs) fetchFromGitHub;
           inherit (epkgs) melpaBuild;
         };
+        consult-omni = pkgs.callPackage consult-omni {
+          inherit (pkgs) fetchFromGitHub;
+          inherit (epkgs) melpaBuild;
+        };
+        org-modern-indent = pkgs.callPackage org-modern-indent {
+          inherit (pkgs) fetchFromGitHub;
+          inherit (epkgs) melpaBuild;
+        };
         lsp-proxy = pkgs.callPackage lsp-proxy-pkg {
           inherit (epkgs) melpaBuild;
         };
@@ -88,6 +129,7 @@ let
   shellAlias = mkAlias {
     emacs = "${emacs-mac-with-epkgs}/Applications/Emacs.app/Contents/MacOS/Emacs";
   };
+
 in
 {
   programs = {

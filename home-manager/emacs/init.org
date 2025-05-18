@@ -49,12 +49,6 @@
       :config
       (exec-path-from-shell-initialize))
 
-    (leaf cus-start
-      :doc "define customization properties of builtins"
-      :custom ((tab-width . 2))
-      :config
-      (defalias 'yes-or-no-p 'y-or-n-p))
-
     (leaf autorevert
       :doc "revert buffers when files on disk change"
       :tag "builtin"
@@ -199,13 +193,6 @@
     (define-key key-translation-map [?\M-\d] [?\M-h])
     (define-key key-translation-map [?\C-h] [?\C-?])
     (define-key key-translation-map [?\M-h] [?\M-\d])
-
-    (leaf simple
-      :doc "basic editing commands for Emacs"
-      :custom ((kill-read-only-ok . t)
-               (kill-whole-line . t)))
-
-
 
 
     (defun my/beginning-of-line-text-or-line ()
@@ -354,22 +341,6 @@
       :url "http://www.emacswiki.org/cgi-bin/wiki/download/open-junk-file.el"
       :ensure t
       :custom ((open-junk-file-format . "~/ghq/github.com/yasushiasahi/junkfiles/%Y/%m/%d-%H%M%S.")))
-
-    (leaf go-translate
-      :doc "Translation framework, configurable and scalable"
-      :url "https://github.com/lorniu/go-translate"
-      :ensure t
-      :defvar (gt-langs gt-default-translator my/deepl-api-key)
-      :defun (gt-translator gt-google-engine gt-deepl-engine gt-buffer-render)
-      :commands gt-do-translate
-      :config
-      (setq gt-langs '(ja en))
-      (setq gt-default-translator (gt-translator
-                                   :engines (list (gt-google-engine) (gt-deepl-engine :key my/deepl-api-key))
-                                   :render (gt-buffer-render)))
-      )
-
-
     )
 
   (leaf *programing-minar-modes
@@ -596,6 +567,38 @@
     )
 #+end_src
 * 雑多なグローバル設定
+** ビルトインの設定
+#+begin_src emacs-lisp :tangle yes
+  (leaf cus-start
+    :config
+    ;;; buffer.c
+    ;; タブの幅。各言語のモードのタブはばは別でそのモードの設定でそれぞれ設定しないといけない。
+    (setopt tab-width 2)
+    ;; yesと打たずにyだけで答える
+    (defalias 'yes-or-no-p 'y-or-n-p)
+
+    ;;; minibuf.c
+    ;; [vertico]ミニバッファ内で新たにミニバッファを開けるようにする
+    (setq enable-recursive-minibuffers t)
+    ;; [vertico]正直よくわからない。後日検証。readmeのおすすめ設定に載っているのでとりあえず書いておく。
+    (setq minibuffer-prompt-properties '(read-only t cursor-intangible t face minibuffer-prompt))
+    ;; [vertico]ignore-caseにバッファをミニバッファ補完
+    (setq read-buffer-completion-ignore-case t)
+    ;; [vertico]ignore-caseにコマンドをミニバッファ補完
+    (setq completion-ignore-case t))
+
+#+end_src
+** 基本的なコマンド
+#+begin_src emacs-lisp :tangle yes
+  (leaf simple
+    :config
+    ;; read-onlyなテキストをkilしようとしても警告を表示しない
+    (setopt kill-read-only-ok t)
+    ;; 行頭でC-k(kill-line)したときにその行自体を消す
+    (setopt kill-whole-line nil)
+    ;; [vertico]M-xで表示される候補を現在のモードで実行可能なコマンドだけに限定する
+    (setopt read-extended-command-predicate #'command-completion-default-include-p))
+#+end_src
 ** [[https://github.com/emacscollective/no-littering][no-littering]] emacs設定ディレクトリを綺麗に保つ
 #+begin_src emacs-lisp :tangle yes
   (leaf no-littering
@@ -701,6 +704,22 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :config
     (setopt avy-background t))
 #+end_src
+** [[https://github.com/lorniu/go-translate][go-translate]] 翻訳
+#+begin_src emacs-lisp :tangle yes
+  (leaf go-translate
+    :ensure t
+    :bind (("C-c t" . gt-do-translate))
+    :config
+    (setopt gt-langs `(en ja))
+    (setopt gt-default-translator (gt-translator
+                                   :engines (gt-deepl-engine
+                                             :key (auth-source-pick-first-password
+                                                   :host "deepl.com"
+                                                   :user "asahi1600@gmail.com"
+                                                   :port "deepl-api-key"))
+                                   :render (gt-buffer-render)))
+    (setopt gt-buffer-render-follow-p t))
+#+end_src
 ** yasnippet
 #+begin_src emacs-lisp :tangle yes
   (leaf yasnippet
@@ -767,32 +786,6 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (setopt completion-category-defaults nil)
     (setopt completion-category-overrides '((file (styles partial-completion)))))
 #+end_src
-** [[https://github.com/minad/corfu][corfu]] コード補完
-#+begin_src emacs-lisp :tangle yes
-  (leaf corfu
-    :doc "コード補完機能"
-    :ensure t
-    :require corfu-popupinfo
-    :defvar (corfu-margin-formatters)
-    :global-minor-mode global-corfu-mode corfu-popupinfo-mode
-    :custom ((corfu-auto . t)
-             (corfu-auto-delay . 0)
-             (corfu-auto-prefix . 1)
-             (corfu-popupinfo-delay . 0))
-    :bind ((corfu-map
-            ("M-SPC" . corfu-insert-separator)))
-    :config
-    (setopt tab-always-indent 'complete)
-    (setopt text-mode-ispell-word-completion nil)
-    (setopt read-extended-command-predicate #'command-completion-default-include-p))
-#+end_src
-*** [[https://github.com/LuigiPiucco/nerd-icons-corfu][nerd-icons-corfu]] corfuの補完候補にアイコンを表示する
-#+begin_src emacs-lisp :tangle yes
-  (leaf nerd-icons-corfu
-    :ensure t
-    :config
-    (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
-#+end_src
 ** [[https://github.com/minad/marginalia][marginalia]] 補完候補により多くの情報を表示する
 #+begin_src emacs-lisp :tangle yes
   (leaf marginalia
@@ -808,50 +801,148 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
       :global-minor-mode t
       :hook (marginalia-mode-hook . nerd-icons-completion-marginalia-setup)))
 #+end_src
-** [[https://github.com/minad/vertico][vertico]] ミニバッファに高さを与える
+** [[https://github.com/oantolin/embark][embark]] ミニバッファ補完の選択肢に対して右クリック的な操作を行える
+#+begin_src emacs-lisp :tangle yes
+  (leaf embark
+    :ensure t
+    :bind (("C-." . embark-act)         ;; pick some comfortable binding
+           ("C-;" . embark-dwim)        ;; good alternative: M-.
+           ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+    :init
+    (setq prefix-help-command #'embark-prefix-help-command)
+    ;; (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
+    (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly))
+#+end_src
+** grepの結果を編集する [[https://github.com/mhayashi1120/Emacs-wgrep][wgrep]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf wgrep
+    :ensure t)
+#+end_src
+** [[https://github.com/minad/vertico][vertico]] ミニバッファ補完インターフェイス
 #+begin_src emacs-lisp :tangle yes
   (leaf vertico
-    :doc "言わずと知れたミニバッファ補完インターフェイス"
-    :url "https://github.com/minad/vertico"
     :ensure t
-    :defvar (crm-separator)
-    :defun (crm-indicator vertico--candidate)
-    :global-minor-mode t
-    :custom ((enable-recursive-minibuffers . t)
-             (read-extended-command-predicate . #'command-completion-default-include-p)
-             (vertico-count . 30))
-    :init
-    (defun crm-indicator (args)
-      (cons (format "[CRM%s] %s"
-                    (replace-regexp-in-string
-                     "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                     crm-separator)
-                    (car args))
-            (cdr args)))
-    (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
-
-    ;; Do not allow the cursor in the minibuffer prompt
-    (setq minibuffer-prompt-properties
-          '(read-only t cursor-intangible t face minibuffer-prompt))
-    (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-
+    :require t
+    :bind (("s-SPC" . my/vertico-restrict-to-matches))
     :config
-    (leaf vertico-directory
-      :doc "Ido-like directory navigation for Vertico"
-      :url "https://github.com/minad/vertico"
-      :require t
-      :bind (vertico-map
-             ("RET" . vertico-directory-enter)
-             ("DEL" . vertico-directory-delete-char)
-             ("M-DEL" . vertico-directory-delete-word))
-      :hook ((rfn-eshadow-update-overlay-hook . vertico-directory-tidy)))
+    (setopt vertico-count 30)
+    (vertico-mode)
 
-    (leaf savehist
-      :doc "Save minibuffer history"
-      :tag "builtin"
-      :global-minor-mode t))
+    (defun my/vertico-restrict-to-matches ()
+      "現在マッチしている候補のみに選択肢を絞った状態でプロンプトをクリアする。
+
+  実際にはクリアしているわけではない。
+  https://github.com/minad/vertico/wiki#restrict-the-set-of-candidates"
+      (interactive)
+      (let ((inhibit-read-only t))
+        (goto-char (point-max))
+        (insert " ")
+        (add-text-properties (minibuffer-prompt-end) (point-max)
+                             '(invisible t read-only t cursor-intangible t rear-nonsticky t))))
+
+    ;; 選択行に猫を表示する
+    ;; https://github.com/minad/vertico/wiki#prefix-current-candidate-with-arrow
+    (defvar +vertico-current-arrow t)
+    (cl-defmethod vertico--format-candidate :around
+      (cand prefix suffix index start &context ((and +vertico-current-arrow
+                                                     (not (bound-and-true-p vertico-flat-mode)))
+                                                (eql t)))
+      (setq cand (cl-call-next-method cand prefix suffix index start))
+      (let ((cat (nerd-icons-faicon "nf-fa-cat"))
+            (blank (nerd-icons-codicon "nf-cod-blank")))
+        (if (bound-and-true-p vertico-grid-mode)
+            (if (= vertico--index index)
+                (concat cat " " cand)
+              (concat blank " " cand))
+          (if (= vertico--index index)
+              (concat cat " " cand)
+            (concat blank " " cand))))))
 #+end_src
-** [[https://github.com/minad/consult][consult]] 便利な補完機能をたくさん提供してくれる
+
+=vertico-multiform= 補完候補の表示方法をインタラクティブに変更できる
+| =M-B= | ~vertico-multiform-buffer~      |
+| =M-F= | ~vertico-multiform-flat~        |
+| =M-G= | ~vertico-multiform-grid~        |
+| =M-R= | ~vertico-multiform-reverse~     |
+| =M-U= | ~vertico-multiform-unobtrusive~ |
+| =M-V= | ~vertico-multiform-vertical~    |
+#+begin_src emacs-lisp :tangle yes
+(leaf vertico-multiform
+    :require t
+    :config
+    (vertico-multiform-mode))
+#+end_src
+
+=vertico-buffer= mini bufferではなくbufferで補完を開く
+#+begin_src emacs-lisp :tangle yes
+(leaf vertico-buffer
+    :require t
+    :config
+    (setopt vertico-buffer-display-action (lambda () (display-buffer-in-direction
+                                                      (direction . right)))))
+#+end_src
+
+=vertico-directory= C-fが扱いやすくなる
+#+begin_src emacs-lisp :tangle yes
+(leaf vertico-directory
+    :require t
+    :bind (vertico-map
+           ("RET" . vertico-directory-enter)
+           ("DEL" . vertico-directory-delete-char)
+           ("M-DEL" . vertico-directory-delete-word))
+    :hook ((rfn-eshadow-update-overlay-hook . vertico-directory-tidy)))
+#+end_src
+
+*** ミニバッファの履歴を永続化する
+#+begin_src emacs-lisp :tangle yes
+  (leaf savehist
+    :config
+    (savehist-mode 1))
+#+end_src
+
+*** その他ミニバッファ関連
+#+begin_src emacs-lisp :tangle yes
+  (leaf minibuffer
+    :config
+    ;; ミニバッファ補完時にファイル名をignore-caseにマッチさせる
+    (setopt read-file-name-completion-ignore-case t))
+#+end_src
+** [[https://github.com/minad/corfu][corfu]] コード補完
+#+begin_src emacs-lisp :tangle yes
+  (leaf hotfuzz
+    :doc "Fuzzy completion style."
+    :url "https://github.com/axelf4/hotfuzz"
+    :ensure t)
+
+  (leaf corfu
+    :doc "コード補完機能"
+    :ensure t
+    :require t
+    :bind ((corfu-map
+            ("M-SPC" . corfu-insert-separator)))
+    :hook ((corfu-mode-hook
+            . (lambda () (setq-local completion-styles '(hotfuzz)))))
+    :config
+    (setopt corfu-auto t)
+    (setopt corfu-auto-delay 0.0)
+    (setopt corfu-auto-prefix 1)
+    (setopt corfu-popupinfo-delay 0.0)
+    (setopt tab-always-indent 'complete)
+    (setopt text-mode-ispell-word-completion nil)
+    (setopt read-extended-command-predicate #'command-completion-default-include-p)
+
+    (global-corfu-mode)
+    (corfu-popupinfo-mode)
+    (corfu-history-mode))
+#+end_src
+*** corfuの補完候補にアイコンを表示する [[https://github.com/LuigiPiucco/nerd-icons-corfu][nerd-icons-corfu]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf nerd-icons-corfu
+    :ensure t
+    :config
+    (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+#+end_src
+** 便利な補完機能をたくさん提供してくれる [[https://github.com/minad/consult][consult]]
 #+begin_src emacs-lisp :tangle yes
   (leaf consult
     :doc "Consulting completing-read"
@@ -874,6 +965,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
             ("M-g k" . consult-global-mark)
             ("M-g i" . consult-imenu)
             ("M-g I" . consult-imenu-multi)
+            ("M-g o" . consult-outline)
             ;; M-s bindings in `search-map'
             ("M-s d" . consult-fd)
             ("M-s g d" . my-consult-ghq-fd)
@@ -930,31 +1022,8 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
         (when (bufferp (get-buffer name))
           (kill-buffer name))))
     )
-
-  (leaf embark
-    :doc "Conveniently act on minibuffer completions"
-    :url "https://github.com/oantolin/embark"
-    :ensure t
-    :bind (("C-." . embark-act)         ;; pick some comfortable binding
-           ("C-;" . embark-dwim)        ;; good alternative: M-.
-           ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
-    :init
-    (setq prefix-help-command #'embark-prefix-help-command)
-    ;; (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
-    (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly))
-
-  (leaf embark-consult
-    :doc "Consult integration for Embark"
-    :url "https://github.com/oantolin/embark"
-    :ensure t
-    :hook (embark-collect-mode-hook . consult-preview-at-point-mode))
-
-  (leaf wgrep
-    :doc "Writable grep buffer"
-    :url "https://github.com/mhayashi1120/Emacs-wgrep"
-    :ensure t)
 #+end_src
-*** [[https://github.com/armindarvish/consult-gh][consult-gh]] ghコマンドと通じてgithubを操作する
+*** ghコマンドと通じてgithubを操作する [[https://github.com/armindarvish/consult-gh][consult-gh]]
 #+begin_src emacs-lisp :tangle yes
   (leaf consult-gh
     :ensure t
@@ -998,6 +1067,53 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 
   (leaf consult-gh-with-pr-review
     :ensure t)
+#+end_src
+*** embarkインテグレーション [[https://github.com/oantolin/embark/tree/master?tab=readme-ov-file#consult][embark-consult]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf embark-consult
+    :ensure t
+    :require t
+    :hook (embark-collect-mode-hook . consult-preview-at-point-mode))
+#+end_src
+*** ブラウザの履歴を検索する [[https://github.com/agzam/browser-hist.el][browser-hist.el]]
+
+=browser-hist-default-browser= というカスタマイズ変数があるのだが =:type '(chrome chromium brave firefox safari qutebrowser)= となっていてvivaldiに設定できないので、デフォルトのchromeのpathをvivaldiにする。
+#+begin_src emacs-lisp :tangle yes
+  (leaf browser-hist
+    :ensure t
+    :config
+    (setopt browser-hist-db-paths '((chrome . "$HOME/Library/Application Support/Vivaldi/Default/History"))))
+#+end_src
+*** あらゆる検索の入り口 [[https://github.com/armindarvish/consult-omni][consult-omni]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf consult-omni
+    :ensure t
+    :config
+    (setq consult-omni-show-preview t)
+    (setq consult-omni-preview-key "C-o")
+    (setq consult-omni-default-preview-function #'xwidget-webkit-browse-url)
+
+    (require 'consult-omni-embark)
+
+    ;; Load Sources Core code
+    (require 'consult-omni-sources)
+    (require 'consult-omni-ripgrep-all)
+    (require 'consult-omni-fd)
+    (require 'consult-omni-browser-history)
+    (require 'consult-omni-google-autosuggest)
+    ;; brave seach
+    (require 'consult-omni-brave)
+    (setopt consult-omni-brave-api-key (auth-source-pick-first-password
+                                        :host "search.brave.com"
+                                        :user "asahi1600@gmail.com"))
+    ;; wiki search
+    (require 'consult-omni-wikipedia)
+    (setq consult-omni-wikipedia-url "https://ja.wikipedia.org/")              ; なぜかdefverで宣言されている
+    (setq consult-omni-wikipedia-api-url "https://ja.wikipedia.org/w/api.php") ; なぜかdefverで宣言されている
+    ;; app search
+    (require 'consult-omni-apps)
+    (setopt consult-omni-apps-paths (cons "~/Applications/Home Manager Apps/" consult-omni-apps-paths)))
+
 #+end_src
 * git
 ** [[https://magit.vc/][magit]] gitクライアント
@@ -1200,6 +1316,8 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :config
     (setopt org-directory "~/ghq/github.com/yasushiasahi/org")
     (setopt org-M-RET-may-split-line nil)
+    (setopt org-use-speed-commands t)
+    (setopt org-startup-indented t)
 
     ;; begin_の後に続くブロックのテンプレートを追加
     (add-to-list 'org-structure-template-alist '("," . "src emacs-lisp :tangle yes"))
@@ -1220,11 +1338,37 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
                                      (file+headline ,(expand-file-name "memo.org" org-directory) "Memos")
                                      "* %?\nEntered on %U\n %i\n %a"))))
 #+end_src
-** [[https://github.com/integral-dw/org-superstar-mode][org-superstar]] 見出しをいい感じの見た目にする
+** かっこいい見た目にする [[https://github.com/minad/org-modern/tree/main][org-modern]]
 #+begin_src emacs-lisp :tangle yes
-  (leaf org-superstar
+  (leaf org-modern
     :ensure t
-    :hook (('org-mode-hook . (lambda () (org-superstar-mode 1)))))
+    :hook ((org-mode-hook . org-modern-mode)
+           (org-agenda-finalize-hook . org-modern-agenda))
+    :config
+    (setopt org-modern-star 'replace)
+
+    (setopt org-auto-align-tags nil)
+    (setopt org-tags-column 0)
+    (setopt org-catch-invisible-edits 'show-and-error)
+    (setopt org-special-ctrl-a/e t)
+    (setopt org-insert-heading-respect-content t)
+
+    (setopt org-hide-emphasis-markers t)
+    (setopt org-pretty-entities t)
+    (setopt org-agenda-tags-column 0))
+#+end_src
+*** org-modernをindentに対応させる [[https://github.com/jdtsmith/org-modern-indent][org-modern-indent]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf org-modern-indent
+    :ensure t
+    :hook ((org-modern-mode-hook . org-modern-indent-mode))
+    :config
+    (set-face-attribute 'org-modern-symbol nil :family "Iosevka")
+    (set-face-attribute 'org-modern-indent-bracket-line nil :family "Iosevka")
+    (set-face-attribute 'org-modern-block-name nil :family "Iosevka")
+    (set-face-attribute 'org-block-begin-line nil :underline nil :family "Iosevka")
+    (set-face-attribute 'org-block-end-line nil :overline nil :family "Iosevka")
+    (set-face-attribute 'org-block nil :background "#001e27"))
 #+end_src
 ** org-src
 #+begin_src emacs-lisp :tangle yes
@@ -1298,25 +1442,22 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
                   :token-width 8
                   :context-window 131072)))
 #+end_src
-** [[https://github.com/karthink/gptel][gptel]] シンプルなLLMのクライアント
+** [[https://github.com/karthink/gptel][シンプルなLLMのクライアント gptel]]
 無料、有料、ローカル問わずほとんどのモデルに対応している。
 いかなるバッファからでもでサクッと使える。
 #+begin_src emacs-lisp :tangle yes
   (leaf gptel
     :ensure t
+    :commands (gptel gptel-menu gptel-send)
     :config
-    (setopt gptel-model 'gemini-2.5-pro-preview-05-06)
-    (setopt gptel-backend
-            (gptel-make-gemini "Gemini"
-              :key (auth-source-pick-first-password
-                    :machine "generativelanguage.googleapis.com"
-                    :login "asahi1600@gmail.com"
-                    :port "api-key")
-              :stream t
-              :request-params '(:generationConfig (:temperature 0.0))))
-    (setopt gptel-org-convert-response nil)
-    (setopt gptel-log-level 'info)
-    (setopt gptel-use-header-line nil))
+    (setopt gptel-temperature 0.0)
+    (setopt gptel-org-branching-context t)
+    (setopt gptel-default-mode 'org-mode)
+
+    (setopt gptel-model 'gpt-4.5-preview)
+    (setopt gptel-backend (gptel-make-gh-copilot "Copilot"))
+
+    (gptel-make-gemini "Gemini" :stream t))
 #+end_src
 ** [[https://github.com/copilot-emacs/copilot.el?tab=readme-ov-file][copilot]] github copilotプラグイン
 #+begin_src emacs-lisp :tangle yes

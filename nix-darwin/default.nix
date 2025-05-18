@@ -18,6 +18,7 @@
     pkgs.noto-fonts-monochrome-emoji
     pkgs.hackgen-nf-font
     pkgs.hackgen-font
+    pkgs.iosevka
     # nerdfontを入れたい nerd-icons.elでお勧めされているもの
     # https://github.com/rainstormstudio/nerd-icons.el?tab=readme-ov-file#installing-fonts
     pkgs.nerd-fonts.symbols-only
@@ -44,6 +45,7 @@
       "firefox"
       "google-chrome"
       "brave-browser"
+      "vivaldi"
     ];
     masApps = {
       LINE = 539883307;

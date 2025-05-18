@@ -34,7 +34,8 @@ let
       pkgs.darwin.trash
       pkgs.jq # programs.jq.enableでもいけるけど、設定することないのでこっち
       pkgs.gnused
-      pkgs._1password-cli
+
+      pkgs.ripgrep-all
 
       # docker
       pkgs.colima
@@ -48,10 +49,6 @@ let
       # ai & llm
       pkgs.ollama
       pkgs.aider-chat
-
-      # GUI
-      pkgs.windsurf
-      pkgs.jetbrains.datagrip
     ];
 
     # XDG_*の環境変数を設定する
@@ -99,6 +96,8 @@ home-manager.lib.homeManagerConfiguration {
     ./bat
     ./zoxide
     ./aws
+    ./authinfo
+    ./vscode
     ./starship
     ./karabiner-elements
     ./colima
