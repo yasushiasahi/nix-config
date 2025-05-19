@@ -637,11 +637,7 @@
                (delete-old-versions . t))
       :config
       ;; Auto-save, backup and undo-tree files
-      (no-littering-theme-backups)
-      ;; .dir-locals.el読み込み時の警告を抑制する
-      (add-to-list 'safe-local-variable-values '(eval . (eglot-ensure)))
-      (add-to-list 'safe-local-variable-values '(eval . (lsp-deferred)))
-      (add-to-list 'safe-local-variable-values '(eval . (apheleia-mode))))
+      (no-littering-theme-backups))
     )
 #+end_src
 ** タブ文字を使用しない
@@ -1000,11 +996,6 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 #+end_src
 ** [[https://github.com/minad/corfu][corfu]] コード補完
 #+begin_src emacs-lisp :tangle yes
-  (leaf hotfuzz
-    :doc "Fuzzy completion style."
-    :url "https://github.com/axelf4/hotfuzz"
-    :ensure t)
-
   (leaf corfu
     :doc "コード補完機能"
     :ensure t
@@ -1012,8 +1003,18 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :bind ((corfu-map
             ("M-SPC" . corfu-insert-separator)))
     :hook ((corfu-mode-hook
-            . (lambda () (setq-local completion-styles '(hotfuzz)))))
+            . (lambda ()
+                (setq-local completion-styles '(hotfuzz))
+                (corfu-popupinfo-mode)
+                (corfu-history-mode)))
+           ;; ((emacs-lisp-mode-hook lisp-interaction-mode) . corfu-mode)
+           )
     :config
+    (leaf hotfuzz
+      :doc "Fuzzy completion style."
+      :url "https://github.com/axelf4/hotfuzz"
+      :ensure t)
+
     (setopt corfu-auto t)
     (setopt corfu-auto-delay 0.0)
     (setopt corfu-auto-prefix 1)
@@ -1022,9 +1023,12 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (setopt text-mode-ispell-word-completion nil)
     (setopt read-extended-command-predicate #'command-completion-default-include-p)
 
-    (global-corfu-mode)
-    (corfu-popupinfo-mode)
-    (corfu-history-mode))
+    ;; (defun my/setup-corfu ()
+    ;;   (corfu-mode)
+    ;;   (setq-local completion-styles '(hotfuzz))
+    ;;   (corfu-popupinfo-mode)
+    ;;   (corfu-history-mode))
+    )
 #+end_src
 *** corfuの補完候補にアイコンを表示する [[https://github.com/LuigiPiucco/nerd-icons-corfu][nerd-icons-corfu]]
 #+begin_src emacs-lisp :tangle yes
@@ -1309,7 +1313,8 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 ** eglot
 #+begin_src emacs-lisp :tangle yes
   (leaf eglot
-    :hook (((yaml-ts-mode-hook html-ts-mode-hook css-ts-mode-hook astro-ts-mode) . eglot-ensure))
+    :disabled t
+    ;; :hook (((yaml-ts-mode-hook html-ts-mode-hook css-ts-mode-hook astro-ts-mode) . eglot-ensure))
     :bind (:eglot-mode-map
            ("C-c l r r" . my/eglot-rename)
            ("C-c l a" . eglot-code-actions))
@@ -1358,6 +1363,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 ** [[https://github.com/jadestrong/lsp-proxy][Rust製 LSPクランアント lsp-proxy]]
 #+begin_src emacs-lisp :tangle yes
   (leaf lsp-proxy
+    :disabled t
     :ensure t
     :hook (((jtsx-tsx-mode-hook jtsx-jsx-mode-hook jtsx-typescript-mode-hook nix-ts-mode-hook) . lsp-proxy-mode))
     :config
@@ -1367,7 +1373,30 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (setopt lsp-proxy-log-max 1000000)
     (setopt lsp-proxy-log-level 3))
 #+end_src
+** 最速LSPクライアント [[https://github.com/manateelazycat/lsp-bridge][lsp-brigde]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf lsp-bridge
+    :ensure t
+    :require t
+    :bind (:lsp-bridge-mode-map
+           ("M-." . lsp-bridge-find-def)
+           ("M-," . lsp-bridge-find-def-return)
+           ("M-?" . lsp-bridge-find-references)
+           ("C-c d" . lsp-bridge-popup-documentation)
+           ("C-c l r r" . lsp-bridge-rename)
+           ("C-c l d l" . lsp-bridge-diagnostic-list)
+           ("C-c l a" . lsp-bridge-diagnostic-list))
+    :config
+    ;;lsp-bridge.el
+    (setopt lsp-bridge-nix-lsp-server "nil")
+    (setopt lsp-bridge-default-mode-hooks (cons 'astro-ts-mode-hook lsp-bridge-default-mode-hooks))
+    ;; lsp-bridge-org-babel.el
+    (setopt lsp-bridge-enable-org-babel t)
+    ;; acm.el
+    (setopt acm-candidate-match-function 'orderless-flex)
 
+    (global-lsp-bridge-mode))
+#+end_src
 * メジャーモード
 ** [[https://github.com/llemaitre19/jtsx][jtsx-mode]] jsx tsxに対応したモード
 #+begin_src emacs-lisp :tangle yes

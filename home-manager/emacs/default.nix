@@ -122,6 +122,7 @@ let
       };
     extraEmacsPackages = epkgs: [
       epkgs.treesit-grammars.with-all-grammars
+      epkgs.lsp-bridge
       # TODO astroのgrammarsも入れたいけど、grammarsのbuild方法がわからない。
     ];
   };
