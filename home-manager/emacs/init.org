@@ -776,6 +776,97 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
   ;;                (executable-find "eslint"))
   ;;       (flymake-eslint-enable))))
 #+end_src
+* AI
+** ellama
+#+begin_src emacs-lisp :tangle yes
+  (leaf ellama
+    :doc "Tool for interacting with LLMs"
+    :when (executable-find "ollama")
+    :ensure t
+    :require llm-ollama
+    :bind (("C-c e" . ellama))
+    :hook ((org-ctrl-c-ctrl-c-hook . ellama-chat-send-last-message)))
+#+end_src
+** chatgpt-shell
+#+begin_src emacs-lisp :tangle yes
+  (leaf shell-maker
+    :doc "Interaction mode for making comint shells."
+    :url "https://github.com/xenodium/shell-maker"
+    :ensure t)
+
+  (leaf chatgpt-shell
+    :doc "A family of utilities to interact with LLMs (ChatGPT, Claude, DeepSeek, Gemini, Kagi, Ollama, Perplexity)"
+    :url "https://github.com/xenodium/chatgpt-shell"
+    :ensure t
+    :require t
+    :config
+    (setopt chatgpt-shell-model-version "gemma3:12b-it-qat")
+    (add-to-list 'chatgpt-shell-models
+                 (chatgpt-shell-ollama-make-model
+                  :version "gemma3:12b-it-qat"
+                  :token-width 8
+                  :context-window 131072))
+    (add-to-list 'chatgpt-shell-models
+                 (chatgpt-shell-ollama-make-model
+                  :version "gemma3:4b-it-qat"
+                  :token-width 8
+                  :context-window 131072))
+    (add-to-list 'chatgpt-shell-models
+                 (chatgpt-shell-ollama-make-model
+                  :version "qwen2.5-coder:14b"
+                  :token-width 8
+                  :context-window 131072))
+    (add-to-list 'chatgpt-shell-models
+                 (chatgpt-shell-ollama-make-model
+                  :version "qwen2.5-coder:7b"
+                  :token-width 8
+                  :context-window 131072)))
+#+end_src
+** [[https://github.com/karthink/gptel][シンプルなLLMのクライアント gptel]]
+無料、有料、ローカル問わずほとんどのモデルに対応している。
+いかなるバッファからでもでサクッと使える。
+#+begin_src emacs-lisp :tangle yes
+  (leaf gptel
+    :ensure t
+    :commands (gptel gptel-menu gptel-send)
+    :config
+    (setopt gptel-temperature 0.0)
+    (setopt gptel-org-branching-context nil)
+    (setopt gptel-default-mode 'org-mode)
+
+    (setopt gptel-model 'gpt-4.1)
+    (setopt gptel-backend (gptel-make-gh-copilot "Copilot"))
+
+    (gptel-make-gemini "Gemini" :stream t))
+#+end_src
+** [[https://github.com/copilot-emacs/copilot.el?tab=readme-ov-file][copilot]] github copilotプラグイン
+#+begin_src emacs-lisp :tangle yes
+  (leaf copilot
+    :ensure t
+    :commands copilot-mode
+    :config
+    (add-to-list 'copilot-major-mode-alist '("jtsx-typescript" . "typescript"))
+    (add-to-list 'copilot-major-mode-alist '("jtsx-tsx" . "typescriptreact"))
+    (add-to-list 'copilot-major-mode-alist '("astro-ts" . "typescriptreact")))
+#+end_src
+** [[https://github.com/chep/copilot-chat.el][copilot-chat]] copilotとチャットできる
+#+begin_src emacs-lisp :tangle yes
+  (leaf copilot-chat
+    :ensure t
+    :hook ((git-commit-setup-hook . copilot-chat-insert-commit-message))
+    :config
+    (let ((my/copilot-chat-prompt "日本語で解答してください。\nあなたは一流のコーディングチューターです。コードの説明は、高レベルな概念と詳細な内容のバランスが完璧です。あなたのアプローチにより、学習者はコードの書き方だけでなく、効果的なプログラミングを導く基本原理も理解できます。\n名前を尋ねられた場合、必ず「GitHub Copilot」と答えてください。\nユーザーの要件を正確かつ厳密に守ってください。\n専門知識はソフトウェア開発トピックに厳密に限定されています。\nMicrosoft のコンテンツポリシーに従ってください。\n著作権を侵害する内容は避けてください。\nソフトウェア開発に関連しない質問には、AIプログラミングアシスタントであることを簡単に伝えるだけにしてください。\n回答は簡潔かつ非個人的なものにしてください。\nMarkdown形式を使用して回答してください。\nコードブロックの最初にプログラミング言語名を必ず記述してください。\n全体を三重バッククオートで囲まないようにしてください。\nユーザーは Neovim という IDE を使用しています。この IDE には、開いているファイルのエディタ、統合ユニットテストサポート、コード実行結果を表示する出力ペイン、統合ターミナルがあります。\nアクティブなドキュメントは、ユーザーが現在見ているソースコードです。\n1 回の会話で 1 つの回答しかできません。\n\n追加ルール\nステップごとに考えてください：\n1. 提供されたコード選択部分やユーザーの質問、関連するエラー、プロジェクトの詳細、クラス定義などを確認します。\n2. コードや概念、ユーザーの質問が不明確な場合は、明確化する質問を行います。\n3. ユーザーが特定の質問やエラーを提供している場合は、選択されたコードと追加のコンテキストに基づいて答えてください。それ以外の場合は、選択されたコードの説明に集中します。\n4. コードの可読性やパフォーマンス向上の機会があれば、提案を行ってください。\n\n簡潔でわかりやすく、かつ徹底的な説明を心がけ、広範な予備知識があると仮定しないでください。\n開発者に親しみやすい用語やアナロジーを使用してください。\n注意すべき点や、初心者が見落としがちな部分を指摘してください。\n提供されたコンテキストに沿った具体的で関連性の高い例を示してください。\n"))
+      (setopt copilot-chat-markdown-prompt my/copilot-chat-prompt)
+      (setopt copilot-chat-org-prompt my/copilot-chat-prompt))
+
+    (setopt copilot-chat-commit-prompt
+            (string-join (list
+                          "Step 1: Review the English commit message as instructed below.
+  Step 2: Output a Japanese translation of the commit message that preserves its structure. Do not include the original English text in the output."
+                          copilot-chat-commit-prompt)
+                         "\n\n"))
+    )
+#+end_src
 * 補完インターフェイス minadさんシリーズ
 ** [[https://github.com/oantolin/orderless][orderless]] 順不同のテキストマッチングスタイル
 #+begin_src emacs-lisp :tangle yes
@@ -975,9 +1066,10 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
             ("M-s l" . consult-line)
             ("M-s L" . consult-line-multi))
     :hook (completion-list-mode-hook . consult-preview-at-point-mode)
-    :custom ((xref-show-xrefs-function . #'consult-xref)
-             (xref-show-definitions-function . #'consult-xref))
     :config
+    (setopt xref-show-xrefs-function #'consult-xref)
+    (setopt xref-show-definitions-function #'consult-xref)
+
     (leaf *consult-ghq
       :defun (buffer-substring-no-propertie my-consult-ghq--list-candidates my-consult-ghq--read consult--file-preview)
       :config
@@ -1088,32 +1180,73 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 #+begin_src emacs-lisp :tangle yes
   (leaf consult-omni
     :ensure t
+    :bind* (("M-s w" . my/consult-omni-web)
+            ("M-s h" . my/consult-omni-home))
     :config
+    (leaf plz :ensure t)
+    (leaf org-web-tools :ensure t)
+
     (setq consult-omni-show-preview t)
     (setq consult-omni-preview-key "C-o")
-    (setq consult-omni-default-preview-function #'xwidget-webkit-browse-url)
+    (setopt consult-omni-dynamic-input-debounce 0.8)
+    (setopt consult-omni-dynamic-input-throttle 1.6)
+    (setopt consult-omni-dynamic-refresh-delay 0.8)
+    (setopt consult-omni-http-retrieve-backend #'plz)
+    (setopt consult-omni-default-preview-function #'xwidget-webkit-browse-url)
+    (setopt consult-omni-default-browse-function #'org-web-tools-read-url-as-org)
+
+    (require 'consult-omni-google-autosuggest)
+    (setopt consult-omni-default-autosuggest-command #'consult-omni-google-autosuggest)
 
     (require 'consult-omni-embark)
-
-    ;; Load Sources Core code
     (require 'consult-omni-sources)
     (require 'consult-omni-ripgrep-all)
     (require 'consult-omni-fd)
     (require 'consult-omni-browser-history)
-    (require 'consult-omni-google-autosuggest)
-    ;; brave seach
+    (require 'consult-omni-gptel)
+    (require 'consult-omni-gh)
+    (require 'consult-omni-brave-autosuggest)
     (require 'consult-omni-brave)
+    (require 'consult-omni-wikipedia)
+    (require 'consult-omni-apps)
+
+    ;; brave seach api keyの設定
     (setopt consult-omni-brave-api-key (auth-source-pick-first-password
                                         :host "search.brave.com"
                                         :user "asahi1600@gmail.com"))
-    ;; wiki search
-    (require 'consult-omni-wikipedia)
+    ;; wiki search 検索結果の日本語化
     (setq consult-omni-wikipedia-url "https://ja.wikipedia.org/")              ; なぜかdefverで宣言されている
     (setq consult-omni-wikipedia-api-url "https://ja.wikipedia.org/w/api.php") ; なぜかdefverで宣言されている
-    ;; app search
-    (require 'consult-omni-apps)
-    (setopt consult-omni-apps-paths (cons "~/Applications/Home Manager Apps/" consult-omni-apps-paths)))
+    ;; app search home-managerのインストール先を検索対象に含める
+    (setopt consult-omni-apps-paths (cons "~/Applications/Home Manager Apps/" consult-omni-apps-paths))
 
+
+
+    (defvar my/consult-omni-web-sources (list "gptel"
+                                              "Brave"
+                                              "Browser History"
+                                              "GitHub"
+                                              "Wikipedia"                                                                                  ))
+    (defun my/consult-omni-web (&optional initial prompt sources no-callback &rest args)
+      "いろいろインターネット検索"
+      (interactive "P")
+      (let ((prompt (or prompt (concat (nerd-icons-mdicon "nf-md-cloud_search" :face 'nerd-icons-pink)  ": ")))
+            (sources (or sources my/consult-omni-web-sources)))
+        (consult-omni-multi initial prompt sources no-callback args)))
+
+
+    ;; consult-omni-local
+    (defvar my/consult-omni-home-sources (list "Apps"
+                                               "fd"
+                                               ;; "ripgrep-all"
+                                               ))
+    (defun my/consult-omni-home (&optional initial prompt sources no-callback &rest args)
+      "ホームフォルダ内を検索"
+      (interactive "P")
+      (let ((prompt (or prompt (concat (nerd-icons-mdicon "nf-md-home_search" :face 'nerd-icons-green)  ": ")))
+            (sources (or sources my/consult-omni-home-sources)))
+        (consult-omni-multi initial prompt sources no-callback args)))
+    )
 #+end_src
 * git
 ** [[https://magit.vc/][magit]] gitクライアント
@@ -1154,8 +1287,8 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 #+begin_src emacs-lisp :tangle yes
   (leaf apheleia
     :ensure t
-    :hook ((nix-ts-mode-hook astro-ts-mode-hook) . apheleia-mode)
-    :commands apheleia-mode
+    :hook ((jtsx-tsx-mode-hook jtsx-jsx-mode-hook jtsx-typescript-mode-hook nix-ts-mode-hook astro-ts-mode-hook) . apheleia-mode)
+    :commands (apheleia-mode apheleia-format-buffer)
     :config
     (setopt apheleia-formatters-respect-indent-level nil)
     (add-to-list 'apheleia-formatters '(prettier-astro . ("apheleia-npx" "prettier" "--stdin-filepath" filepath
@@ -1176,7 +1309,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 ** eglot
 #+begin_src emacs-lisp :tangle yes
   (leaf eglot
-    :hook (((yaml-ts-mode-hook nix-ts-mode-hook html-ts-mode-hook css-ts-mode-hook astro-ts-mode) . eglot-ensure))
+    :hook (((yaml-ts-mode-hook html-ts-mode-hook css-ts-mode-hook astro-ts-mode) . eglot-ensure))
     :bind (:eglot-mode-map
            ("C-c l r r" . my/eglot-rename)
            ("C-c l a" . eglot-code-actions))
@@ -1222,12 +1355,11 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (advice-add #'eglot-signature-eldoc-function
                 :override #'eglot-signature-eldoc-talkative))
 #+end_src
-** [[https://github.com/jadestrong/lsp-proxy][lsp-proxy]] rust製 LSPクランアント
+** [[https://github.com/jadestrong/lsp-proxy][Rust製 LSPクランアント lsp-proxy]]
 #+begin_src emacs-lisp :tangle yes
   (leaf lsp-proxy
     :ensure t
-    :require t
-    ;; :hook ((astro-ts-mode-hook . lsp-proxy-mode))
+    :hook (((jtsx-tsx-mode-hook jtsx-jsx-mode-hook jtsx-typescript-mode-hook nix-ts-mode-hook) . lsp-proxy-mode))
     :config
     (setopt lsp-proxy-user-languages-config (no-littering-expand-etc-file-name "languages.toml"))
     (setopt lsp-proxy-diagnostics-provider :flymake)
@@ -1318,9 +1450,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (setopt org-M-RET-may-split-line nil)
     (setopt org-use-speed-commands t)
     (setopt org-startup-indented t)
-
-    ;; begin_の後に続くブロックのテンプレートを追加
-    (add-to-list 'org-structure-template-alist '("," . "src emacs-lisp :tangle yes"))
+    (setopt org-startup-truncated nil)
 
     (defun my/setup-org-mode ()
       "保存前に行末のスペースを削除"
@@ -1395,97 +1525,6 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :ensure t)
   (org-babel-do-load-languages 'org-babel-load-languages '((typescript . t)))
   (add-to-list 'org-src-lang-modes '("typescript" . jtsx-typescript))
-#+end_src
-* AI
-** ellama
-#+begin_src emacs-lisp :tangle yes
-  (leaf ellama
-    :doc "Tool for interacting with LLMs"
-    :when (executable-find "ollama")
-    :ensure t
-    :require llm-ollama
-    :bind (("C-c e" . ellama))
-    :hook ((org-ctrl-c-ctrl-c-hook . ellama-chat-send-last-message)))
-#+end_src
-** chatgpt-shell
-#+begin_src emacs-lisp :tangle yes
-  (leaf shell-maker
-    :doc "Interaction mode for making comint shells."
-    :url "https://github.com/xenodium/shell-maker"
-    :ensure t)
-
-  (leaf chatgpt-shell
-    :doc "A family of utilities to interact with LLMs (ChatGPT, Claude, DeepSeek, Gemini, Kagi, Ollama, Perplexity)"
-    :url "https://github.com/xenodium/chatgpt-shell"
-    :ensure t
-    :require t
-    :config
-    (setopt chatgpt-shell-model-version "gemma3:12b-it-qat")
-    (add-to-list 'chatgpt-shell-models
-                 (chatgpt-shell-ollama-make-model
-                  :version "gemma3:12b-it-qat"
-                  :token-width 8
-                  :context-window 131072))
-    (add-to-list 'chatgpt-shell-models
-                 (chatgpt-shell-ollama-make-model
-                  :version "gemma3:4b-it-qat"
-                  :token-width 8
-                  :context-window 131072))
-    (add-to-list 'chatgpt-shell-models
-                 (chatgpt-shell-ollama-make-model
-                  :version "qwen2.5-coder:14b"
-                  :token-width 8
-                  :context-window 131072))
-    (add-to-list 'chatgpt-shell-models
-                 (chatgpt-shell-ollama-make-model
-                  :version "qwen2.5-coder:7b"
-                  :token-width 8
-                  :context-window 131072)))
-#+end_src
-** [[https://github.com/karthink/gptel][シンプルなLLMのクライアント gptel]]
-無料、有料、ローカル問わずほとんどのモデルに対応している。
-いかなるバッファからでもでサクッと使える。
-#+begin_src emacs-lisp :tangle yes
-  (leaf gptel
-    :ensure t
-    :commands (gptel gptel-menu gptel-send)
-    :config
-    (setopt gptel-temperature 0.0)
-    (setopt gptel-org-branching-context t)
-    (setopt gptel-default-mode 'org-mode)
-
-    (setopt gptel-model 'gpt-4.5-preview)
-    (setopt gptel-backend (gptel-make-gh-copilot "Copilot"))
-
-    (gptel-make-gemini "Gemini" :stream t))
-#+end_src
-** [[https://github.com/copilot-emacs/copilot.el?tab=readme-ov-file][copilot]] github copilotプラグイン
-#+begin_src emacs-lisp :tangle yes
-  (leaf copilot
-    :ensure t
-    :commands copilot-mode
-    :config
-    (add-to-list 'copilot-major-mode-alist '("jtsx-typescript" . "typescript"))
-    (add-to-list 'copilot-major-mode-alist '("jtsx-tsx" . "typescriptreact"))
-    (add-to-list 'copilot-major-mode-alist '("astro-ts" . "typescriptreact")))
-#+end_src
-** [[https://github.com/chep/copilot-chat.el][copilot-chat]] copilotとチャットできる
-#+begin_src emacs-lisp :tangle yes
-  (leaf copilot-chat
-    :ensure t
-    :hook ((git-commit-setup-hook . copilot-chat-insert-commit-message))
-    :config
-    (let ((my/copilot-chat-prompt "日本語で解答してください。\nあなたは一流のコーディングチューターです。コードの説明は、高レベルな概念と詳細な内容のバランスが完璧です。あなたのアプローチにより、学習者はコードの書き方だけでなく、効果的なプログラミングを導く基本原理も理解できます。\n名前を尋ねられた場合、必ず「GitHub Copilot」と答えてください。\nユーザーの要件を正確かつ厳密に守ってください。\n専門知識はソフトウェア開発トピックに厳密に限定されています。\nMicrosoft のコンテンツポリシーに従ってください。\n著作権を侵害する内容は避けてください。\nソフトウェア開発に関連しない質問には、AIプログラミングアシスタントであることを簡単に伝えるだけにしてください。\n回答は簡潔かつ非個人的なものにしてください。\nMarkdown形式を使用して回答してください。\nコードブロックの最初にプログラミング言語名を必ず記述してください。\n全体を三重バッククオートで囲まないようにしてください。\nユーザーは Neovim という IDE を使用しています。この IDE には、開いているファイルのエディタ、統合ユニットテストサポート、コード実行結果を表示する出力ペイン、統合ターミナルがあります。\nアクティブなドキュメントは、ユーザーが現在見ているソースコードです。\n1 回の会話で 1 つの回答しかできません。\n\n追加ルール\nステップごとに考えてください：\n1. 提供されたコード選択部分やユーザーの質問、関連するエラー、プロジェクトの詳細、クラス定義などを確認します。\n2. コードや概念、ユーザーの質問が不明確な場合は、明確化する質問を行います。\n3. ユーザーが特定の質問やエラーを提供している場合は、選択されたコードと追加のコンテキストに基づいて答えてください。それ以外の場合は、選択されたコードの説明に集中します。\n4. コードの可読性やパフォーマンス向上の機会があれば、提案を行ってください。\n\n簡潔でわかりやすく、かつ徹底的な説明を心がけ、広範な予備知識があると仮定しないでください。\n開発者に親しみやすい用語やアナロジーを使用してください。\n注意すべき点や、初心者が見落としがちな部分を指摘してください。\n提供されたコンテキストに沿った具体的で関連性の高い例を示してください。\n"))
-      (setopt copilot-chat-markdown-prompt my/copilot-chat-prompt)
-      (setopt copilot-chat-org-prompt my/copilot-chat-prompt))
-
-    (setopt copilot-chat-commit-prompt
-            (string-join (list
-                          "Step 1: Review the English commit message as instructed below.
-  Step 2: Output a Japanese translation of the commit message that preserves its structure. Do not include the original English text in the output."
-                          copilot-chat-commit-prompt)
-                         "\n\n"))
-    )
 #+end_src
 * ターミナル
 ** [[https://github.com/szermatt/mistty][mistty]]

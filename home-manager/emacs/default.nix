@@ -55,30 +55,32 @@ let
       };
     };
 
-  lsp-proxy-version = "0.4.2";
-  lsp-proxy-src = pkgs.fetchFromGitHub {
-    owner = "jadestrong";
-    repo = "lsp-proxy";
-    rev = "v${lsp-proxy-version}";
-    hash = "sha256-f/UVutoPlYZSioOV0OHTzQMBMf7Llqd9/FWhmZednns=";
-  };
-  lsp-proxy-cli = pkgs.rustPlatform.buildRustPackage {
-    pname = "lsp-proxy";
-    version = lsp-proxy-version;
-    src = lsp-proxy-src;
-    cargoHash = "sha256-9yHCvYTYtLLpAzE5QHomvnYRFZDY0NoyQGL+PaJ7Izw=";
-  };
-  lsp-proxy-pkg =
+  lsp-proxy =
+    let
+      version = "0.4.3";
+      src = pkgs.fetchFromGitHub {
+        owner = "jadestrong";
+        repo = "lsp-proxy";
+        rev = "v${version}";
+        hash = "sha256-kPTVWvd/c0Z49h82hDpgE5siXq7ERmPZyheV7hQpr5o=";
+      };
+      cli = pkgs.rustPlatform.buildRustPackage {
+        pname = "lsp-proxy";
+        version = version;
+        src = src;
+        cargoHash = "sha256-9yHCvYTYtLLpAzE5QHomvnYRFZDY0NoyQGL+PaJ7Izw=";
+      };
+    in
     { melpaBuild }:
     melpaBuild {
       pname = "lsp-proxy";
-      version = lsp-proxy-version;
-      nativeBuildInputs = [ lsp-proxy-cli ];
-      src = lsp-proxy-src;
+      version = version;
+      nativeBuildInputs = [ cli ];
+      src = src;
       # lsp-proxy.elと同じディレクトリにビルドした実行ファイルをおかないといけない
       postInstall = ''
-        ls $out/share/emacs/site-lisp/elpa/lsp-proxy-${lsp-proxy-version}
-        cp ${lsp-proxy-cli}/bin/lsp-proxy $out/share/emacs/site-lisp/elpa/lsp-proxy-${lsp-proxy-version}/lsp-proxy
+        ls $out/share/emacs/site-lisp/elpa/lsp-proxy-${version}
+        cp ${cli}/bin/lsp-proxy $out/share/emacs/site-lisp/elpa/lsp-proxy-${version}/lsp-proxy
       '';
 
     };
@@ -103,7 +105,7 @@ let
           inherit (pkgs) fetchFromGitHub;
           inherit (epkgs) melpaBuild;
         };
-        lsp-proxy = pkgs.callPackage lsp-proxy-pkg {
+        lsp-proxy = pkgs.callPackage lsp-proxy {
           inherit (epkgs) melpaBuild;
         };
         # lsp-modeのplists解析を有効にする。そのままだと、hash-tableになる。
@@ -145,6 +147,7 @@ in
     # gnuのlsを入れないと以下の警告が出る
     # ls does not support --dired; see ‘dired-use-ls-dired’ for more details.
     pkgs.coreutils
+    pkgs.pandoc
 
     # lsp
     pkgs.nodePackages.typescript
