@@ -1119,11 +1119,19 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
           (kill-buffer name))))
     )
 #+end_src
+*** embarkインテグレーション [[https://github.com/oantolin/embark/tree/master?tab=readme-ov-file#consult][embark-consult]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf embark-consult
+    :ensure t
+    :require t
+    :hook (embark-collect-mode-hook . consult-preview-at-point-mode))
+#+end_src
 *** ghコマンドと通じてgithubを操作する [[https://github.com/armindarvish/consult-gh][consult-gh]]
 #+begin_src emacs-lisp :tangle yes
   (leaf consult-gh
     :ensure t
-    :bind (("C-x M-r" . consult-gh-transient))
+    :bind (("C-x M-g m" . consult-gh-transient)
+           ("C-x M-g p" . my/consult-gh-pr-create-current-repo))
     :config
     (require 'consult-gh-transient)
 
@@ -1143,33 +1151,39 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 
     (add-to-list 'savehist-additional-variables 'consult-gh--known-orgs-list) ;;keep record of searched orgs
     (add-to-list 'savehist-additional-variables 'consult-gh--known-repos-list) ;;keep record of searched repos
-    (consult-gh-enable-default-keybindings))
+    (consult-gh-enable-default-keybindings)
 
-  (leaf consult-gh-forge
-    :ensure t
-    :after consult forge consult-gh
-    :config
-    (consult-gh-forge-mode +1)
-    (setopt consult-gh-forge-timeout-seconds 20))
+    (defun my/consult-gh-pr-create-current-repo ()
+      "今いるリポジトリのprを作る"
+      (interactive)
+      (if-let* ((name-with-owner (string-trim
+                                  (shell-command-to-string
+                                   "gh repo view --json nameWithOwner -q .nameWithOwner")))
+                (pr-title (string-trim
+                           (read-from-minibuffer (format "PR Title (%s): " name-with-owner)))))
+          (consult-gh-pr-create name-with-owner pr-title)))
 
-  (leaf consult-gh-embark
-    :ensure t
-    :after consult consult-gh embark-consult
-    :config
-    (consult-gh-embark-mode +1))
+    (leaf consult-gh-forge
+      :ensure t
+      :after consult forge consult-gh
+      :config
+      (consult-gh-forge-mode +1)
+      (setopt consult-gh-forge-timeout-seconds 20))
 
-  (leaf pr-review
-    :ensure t)
+    (leaf consult-gh-embark
+      :ensure t
+      :after consult consult-gh embark-consult
+      :config
+      (consult-gh-embark-mode +1))
 
-  (leaf consult-gh-with-pr-review
-    :ensure t)
-#+end_src
-*** embarkインテグレーション [[https://github.com/oantolin/embark/tree/master?tab=readme-ov-file#consult][embark-consult]]
-#+begin_src emacs-lisp :tangle yes
-  (leaf embark-consult
-    :ensure t
-    :require t
-    :hook (embark-collect-mode-hook . consult-preview-at-point-mode))
+    (leaf pr-review
+      :ensure t)
+
+    (leaf consult-gh-with-pr-review
+      :ensure t)
+    )
+
+
 #+end_src
 *** ブラウザの履歴を検索する [[https://github.com/agzam/browser-hist.el][browser-hist.el]]
 
@@ -1269,6 +1283,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 #+begin_src emacs-lisp :tangle yes
   (leaf diff-hl
     :ensure t
+    :require t
     :hook ((magit-post-refresh-hook . diff-hl-magit-post-refresh)
            (dired-mode-hook . diff-hl-dired-mode))
     :config
@@ -1383,9 +1398,18 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
            ("M-," . lsp-bridge-find-def-return)
            ("M-?" . lsp-bridge-find-references)
            ("C-c d" . lsp-bridge-popup-documentation)
+           ("s-l r r" . lsp-bridge-rename)
+           ("s-l a" . lsp-bridge-code-action)
+           ("s-l d n" . lsp-bridge-diagnostic-jump-next)
+           ("s-l d p" . lsp-bridge-diagnostic-jump-prev)
+           ("s-l d l" . lsp-bridge-diagnostic-jump-list)
+           ("s-l d c" . lsp-bridge-diagnostic-jump-copy)
            ("C-c l r r" . lsp-bridge-rename)
-           ("C-c l d l" . lsp-bridge-diagnostic-list)
-           ("C-c l a" . lsp-bridge-diagnostic-list))
+           ("C-c l a" . lsp-bridge-code-action)
+           ("C-c l d n" . lsp-bridge-diagnostic-jump-next)
+           ("C-c l d p" . lsp-bridge-diagnostic-jump-prev)
+           ("C-c l d l" . lsp-bridge-diagnostic-jump-list)
+           ("C-c l d c" . lsp-bridge-diagnostic-jump-copy))
     :config
     ;;lsp-bridge.el
     (setopt lsp-bridge-nix-lsp-server "nil")
@@ -1394,6 +1418,10 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (setopt lsp-bridge-enable-org-babel t)
     ;; acm.el
     (setopt acm-candidate-match-function 'orderless-flex)
+    ;; (setopt acm-enable-capf t)
+
+    (setopt lsp-bridge-user-multiserver-dir (expand-file-name "multiserver/" user-emacs-directory))
+    (add-to-list 'lsp-bridge-multi-lang-server-extension-list '(("tsx") . "typescriptreact_tailwindcss_eslint"))
 
     (global-lsp-bridge-mode))
 #+end_src
@@ -1496,6 +1524,27 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (setopt org-capture-templates `(("n" "Memo" entry
                                      (file+headline ,(expand-file-name "memo.org" org-directory) "Memos")
                                      "* %?\nEntered on %U\n %i\n %a"))))
+#+end_src
+** 第二の脳 [[https://github.com/org-roam/org-roam][org-roam]]
+
+- complation-at-pointでlinkを挿入できるらしいけどうまくいかない
+-
+
+#+begin_src emacs-lisp :tangle yes
+  (leaf org-roam
+    :doc "A database abstraction layer for Org-mode"
+    :url "https://github.com/org-roam/org-roam"
+    :ensure t
+    :bind (("C-c n l" . org-roam-buffer-toggle)
+           ("C-c n f" . org-roam-node-find)
+           ("C-c n i" . org-roam-node-insert)
+           (:org-mode-map
+            ("C-M-i" . completion-at-point)))
+    :config
+    (setopt org-roam-directory "~/ghq/github.com/yasushiasahi/org/roam")
+    (setopt org-roam-complete-everywhere t)
+
+    (org-roam-setup))
 #+end_src
 ** かっこいい見た目にする [[https://github.com/minad/org-modern/tree/main][org-modern]]
 #+begin_src emacs-lisp :tangle yes

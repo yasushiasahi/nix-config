@@ -1,4 +1,8 @@
-{ pkgs, mkAlias, ... }:
+{
+  pkgs,
+  mkAlias,
+  ...
+}:
 let
   emacs-mac = pkgs.emacs.overrideAttrs (old: {
     configureFlags = (old.configureFlags or [ ]) ++ [ "--with-xwidgets" ];
@@ -120,6 +124,7 @@ let
           }
         );
       };
+
     extraEmacsPackages = epkgs: [
       epkgs.treesit-grammars.with-all-grammars
       epkgs.lsp-bridge
@@ -148,18 +153,23 @@ in
     # gnuのlsを入れないと以下の警告が出る
     # ls does not support --dired; see ‘dired-use-ls-dired’ for more details.
     pkgs.coreutils
+
+    # org-web-toolsで使う。orgからmarkdownに変換する。
+    # TODO: もしかするとpakagesに同梱されてるかも。調べる。
     pkgs.pandoc
 
     # lsp
-    pkgs.nodePackages.typescript
-    pkgs.nodePackages.typescript-language-server
+    pkgs.typescript
+    pkgs.typescript-language-server
     pkgs.astro-language-server
     pkgs.yaml-language-server
     pkgs.tailwindcss-language-server
     pkgs.dockerfile-language-server-nodejs
-    pkgs.vscode-langservers-extracted
-    pkgs.nil
+    pkgs.vscode-langservers-extracted # html css json
+    pkgs.nil # nix
     pkgs.copilot-language-server
+    pkgs.vale-ls # markdown
+    pkgs.taplo # toml
 
     #formatter & linter
     pkgs.nodePackages.prettier
@@ -177,6 +187,8 @@ in
     "emacs/etc/templates".source = ./etc/templates;
     "emacs/etc/transient/values.el".source = ./etc/transient/values.el;
     "emacs/etc/languages.toml".source = ./etc/languages.toml;
+    "emacs/lsp-bridge/multiserver/typescriptreact_tailwindcss_eslint.json".source =
+      ./typescriptreact_tailwindcss_eslint.json;
   };
 
   # TODO emacs demon? client? service
