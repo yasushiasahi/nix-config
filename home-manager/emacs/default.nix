@@ -6,19 +6,15 @@
 let
   emacs-mac = pkgs.emacs.overrideAttrs (old: {
     configureFlags = (old.configureFlags or [ ]) ++ [ "--with-xwidgets" ];
-    buildInputs = (old.buildInputs or [ ]) ++ [ pkgs.darwin.apple_sdk.frameworks.WebKit ];
     patches = (old.patches or [ ]) ++ [ ./emacs-29.1-inline.patch ];
   });
 
   eglot-booster =
-    {
-      melpaBuild,
-      fetchFromGitHub,
-    }:
+    { melpaBuild }:
     melpaBuild {
       pname = "eglot-booster";
       version = "0-unstable-2024-10-29";
-      src = fetchFromGitHub {
+      src = pkgs.fetchFromGitHub {
         owner = "jdtsmith";
         repo = "eglot-booster";
         rev = "e6daa6bcaf4aceee29c8a5a949b43eb1b89900ed";
@@ -27,15 +23,12 @@ let
     };
 
   consult-omni =
-    {
-      melpaBuild,
-      fetchFromGitHub,
-    }:
+    { melpaBuild }:
     melpaBuild {
       pname = "consult-omni";
       version = "0-unstable-2025-02-19";
       files = ''("*.el" "sources/*.el")'';
-      src = fetchFromGitHub {
+      src = pkgs.fetchFromGitHub {
         owner = "armindarvish";
         repo = "consult-omni";
         rev = "d0a24058bf0dda823e5f1efcae5da7dc0efe6bda";
@@ -44,14 +37,11 @@ let
     };
 
   org-modern-indent =
-    {
-      melpaBuild,
-      fetchFromGitHub,
-    }:
+    { melpaBuild }:
     melpaBuild {
       pname = "org-modern-indent";
       version = "0-unstable-2025-04-13";
-      src = fetchFromGitHub {
+      src = pkgs.fetchFromGitHub {
         owner = "jdtsmith";
         repo = "org-modern-indent";
         rev = "9973bd3b91e4733a3edd1fca232208c837c05473";
@@ -92,30 +82,27 @@ let
   emacs-mac-with-epkgs = pkgs.emacsWithPackagesFromUsePackage {
     package = emacs-mac;
     config = ./init.org;
-
     override =
       epkgs:
       epkgs
       // {
         eglot-booster = pkgs.callPackage eglot-booster {
-          inherit (pkgs) fetchFromGitHub;
           inherit (epkgs) melpaBuild;
         };
         consult-omni = pkgs.callPackage consult-omni {
-          inherit (pkgs) fetchFromGitHub;
           inherit (epkgs) melpaBuild;
         };
         org-modern-indent = pkgs.callPackage org-modern-indent {
-          inherit (pkgs) fetchFromGitHub;
           inherit (epkgs) melpaBuild;
         };
         lsp-proxy = pkgs.callPackage lsp-proxy {
           inherit (epkgs) melpaBuild;
         };
+
         # lsp-modeのplists解析を有効にする。そのままだと、hash-tableになる。
         # https://emacs-lsp.github.io/lsp-mode/page/performance/#use-plists-for-deserialization
         lsp-mode = epkgs.lsp-mode.overrideAttrs (
-          f: p: {
+          _: p: {
             buildPhase =
               ''
                 export LSP_USE_PLISTS=true
@@ -127,7 +114,6 @@ let
 
     extraEmacsPackages = epkgs: [
       epkgs.treesit-grammars.with-all-grammars
-      epkgs.lsp-bridge
       # TODO astroのgrammarsも入れたいけど、grammarsのbuild方法がわからない。
     ];
   };
@@ -175,6 +161,7 @@ in
     pkgs.nodePackages.prettier
     pkgs.nixfmt-rfc-style
     pkgs.eslint
+
   ];
 
   # cliからemacsを起動した時にLANGがないと警告が出る。
@@ -184,11 +171,8 @@ in
   xdg.configFile = {
     "emacs/init.el".text = tangle (builtins.readFile ./init.org);
     "emacs/early-init.el".text = tangle (builtins.readFile ./early-init.org);
-    "emacs/etc/templates".source = ./etc/templates;
     "emacs/etc/transient/values.el".source = ./etc/transient/values.el;
     "emacs/etc/languages.toml".source = ./etc/languages.toml;
-    "emacs/lsp-bridge/multiserver/typescriptreact_tailwindcss_eslint.json".source =
-      ./typescriptreact_tailwindcss_eslint.json;
   };
 
   # TODO emacs demon? client? service

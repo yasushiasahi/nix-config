@@ -83,6 +83,8 @@
   # $ darwin-rebuild changelog
   system.stateVersion = 6;
 
+  system.primaryUser = "asahi";
+
   system.defaults = {
     NSGlobalDomain = {
       # メニューバーオートはいど

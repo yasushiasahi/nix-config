@@ -351,26 +351,7 @@
       :ensure t
       :hook prog-mode-hook)
 
-    (leaf puni
-      :doc "Parentheses Universalistic"
-      :url "https://github.com/AmaiKinono/puni"
-      :ensure t
-      :global-minor-mode puni-global-mode
-      :bind (;:puni-mode-map
-             ("C-)" . puni-slurp-forward)
-             ("C-}" . puni-barf-forward)
-             ("M-(" . puni-wrap-round)
-             ("M-s" . puni-splice)
-             ("M-r" . puni-raise)
-             ("M-U" . puni-splice-killing-backward)
-             ("M-z" . puni-squeeze)
-             ("C-=" . puni-expand-region))
-      :config
-      (leaf elec-pair
-        :doc "Automatic parenthesis pairing"
-        :tag "builtin"
-        :global-minor-mode electric-pair-mode)
-      )
+
 
     ;; (leaf flycheck
     ;;   :url "https://www.flycheck.org"
@@ -379,123 +360,7 @@
 
     )
 
-  (leaf *lsp
-    :config
-    (leaf eldoc-box
-      :doc "Display documentation in childframe"
-      :url "https://github.com/casouri/eldoc-box"
-      :ensure t
-      :defun (eldoc-box-prettify-ts-errors)
-      :custom ((eldoc-box-clear-with-C-g . t))
-      :bind (("C-c d" . eldoc-box-help-at-point))
-      :config
-      ;; TODO typescript以外のプロジェクトの時にこれ有効にしちゃダメよね
-      (add-hook 'eldoc-box-buffer-setup-hook #'eldoc-box-prettify-ts-errors 0 t))
 
-    (leaf lsp-mode
-      :doc "LSP mode"
-      :url "https://github.com/emacs-lsp/lsp-mode"
-      :ensure t
-      :defvar (lsp-use-plists)
-      :hook ((lsp-mode-hook . lsp-enable-which-key-integration)
-             (lsp-completion-mode-hook . my/lsp-mode-setup-completion))
-      :bind (:lsp-mode-map
-             ("C-c d" . eldoc-box-help-at-point))
-      :custom ((lsp-keymap-prefix . "C-c l")
-               (lsp-diagnostics-provider . :flymake)
-               (lsp-completion-provider . :none)
-               (lsp-enable-snippet . nil)
-               (lsp-headerline-breadcrumb-enable . nil)
-               (lsp-enable-dap-auto-configure . nil)
-               (lsp-enable-folding . nil)
-               (lsp-enable-indentation . nil)
-               (lsp-enable-suggest-server-download . nil)
-               (textDocument/documentColor . nil)
-               (lsp-before-save-edits . nil)
-               (lsp-lens-enable . nil) ; rustのときはtにしたい
-               (lsp-modeline-code-actions-enable . nil)
-               (lsp-apply-edits-after-file-operations . nil) ; https://www.reddit.com/r/emacs/comments/1b0ppls/anyone_using_lspmode_with_tsls_having_trouble/
-               (lsp-disabled-clients . (tailwindcss))
-               ;; eslint
-               (lsp-eslint-server-command . '("vscode-eslint-language-server" "--stdio"))
-               )
-      :init
-
-      (setopt lsp-eldoc-render-all t)
-
-      (defun my/lsp-mode-setup-completion ()
-        (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-              '(orderless)))
-      :config
-      (leaf lsp-tailwindcss
-        :doc "A lsp-mode client for tailwindcss"
-        :url "https://github.com/merrickluo/lsp-tailwindcss"
-        :ensure t
-        :custom ((lsp-tailwindcss-server-version . "0.14.4")
-                 (lsp-tailwindcss-major-modes . '(jtsx-jsx-mode jtsx-tsx-mode astro-ts-mode html-ts-mode))
-                 (lsp-tailwindcss-skip-config-check . t))
-        :defun (lsp-workspace-root
-                lsp-tailwindcss--has-config-file
-                lsp-register-client
-                make-lsp-client
-                lsp-stdio-connection
-                lsp-tailwindcss--activate-p
-                lsp-tailwindcss--initialization-options)
-        :config
-        ;; nixで入れたtailwindcss-language-serverを適用できるオプションがないので、本体を参考に自分で定義する。
-        (lsp-register-client (make-lsp-client
-                              :new-connection (lsp-stdio-connection
-                                               (lambda ()
-                                                 `("tailwindcss-language-server" "--stdio")))
-                              :activation-fn #'lsp-tailwindcss--activate-p
-                              :server-id 'my/tailwindcss
-                              :priority -1
-                              :add-on? t
-                              :initialization-options #'lsp-tailwindcss--initialization-options)))
-
-      ;; (leaf lsp-snippet
-      ;;   :doc "lsp-modeとtempelのインテグレーション"
-      ;;   :vc (:url "https://github.com/svaante/lsp-snippet")
-      ;;   :defun (lsp-snippet-tempel-lsp-mode-init)
-      ;;   :config
-      ;;   (when (featurep 'lsp-mode)
-      ;;     (lsp-snippet-tempel-lsp-mode-init)))
-
-      (leaf *emacs-lsp-booster
-        :defun (lsp-booster--advice-json-parse lsp-booster--advice-final-command)
-        :config
-        (defun lsp-booster--advice-json-parse (old-fn &rest args)
-          "Try to parse bytecode instead of json."
-          (or
-           (when (equal (following-char) ?#)
-             (let ((bytecode (read (current-buffer))))
-               (when (byte-code-function-p bytecode)
-                 (funcall bytecode))))
-           (apply old-fn args)))
-        (advice-add (if (progn (require 'json)
-                               (fboundp 'json-parse-buffer))
-                        'json-parse-buffer
-                      'json-read)
-                    :around
-                    #'lsp-booster--advice-json-parse)
-
-        (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
-          "Prepend emacs-lsp-booster command to lsp CMD."
-          (let ((orig-result (funcall old-fn cmd test?)))
-            (if (and (not test?)                             ;; for check lsp-server-present?
-                     (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
-                     lsp-use-plists
-                     (not (functionp 'json-rpc-connection))  ;; native json-rpc
-                     (executable-find "emacs-lsp-booster"))
-                (progn
-                  (when-let ((command-from-exec-path (executable-find (car orig-result))))  ;; resolve command from exec-path (in case not found in $PATH)
-                    (setcar orig-result command-from-exec-path))
-                  (message "Using emacs-lsp-booster for %s!" orig-result)
-                  (cons "emacs-lsp-booster" orig-result))
-              orig-result)))
-        (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command))
-      )
-    )
 
   (leaf *major-modes
     :config
@@ -691,6 +556,41 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
            ([remap Info-goto-emacs-command-node] . helpful-function)
            ("C-c C-d" . helpful-at-point)))
 #+end_src
+** 括弧
+*** 対応する括弧を自動挿入
+#+begin_src emacs-lisp :tangle yes
+  (leaf elec-pair
+    :config
+    (electric-pair-mode))
+#+end_src
+*** 括弧を賢く扱う [[https://github.com/AmaiKinono/puni][puni]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf puni
+    :ensure t
+    :require t
+    :bind (:puni-mode-map
+           ("C-)" . puni-slurp-forward)
+           ("C-}" . puni-barf-forward)
+           ("M-(" . puni-wrap-round)
+           ("M-s" . puni-splice)
+           ("M-r" . puni-raise)
+           ("M-U" . puni-splice-killing-backward)
+           ("M-z" . puni-squeeze))
+    :config
+    (puni-global-mode))
+#+end_src
+** eldoc
+*** eldocの内容をchild frameに表示する [[https://github.com/casouri/eldoc-box][eldoc-box]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf eldoc-box
+    :ensure t
+    :custom ((eldoc-box-clear-with-C-g . t))
+    :bind (("C-c d" . eldoc-box-help-at-point))
+    :config
+    (setopt eldoc-box-clear-with-C-g t)
+    ;; lsp-proxyを使っている分にはこの設定不要かもしれない
+    (add-hook 'eldoc-box-buffer-setup-hook #'eldoc-box-prettify-ts-errors 0 t))
+#+end_src
 ** [[https://github.com/abo-abo/avy][avy]] 劇的にカーソル移動を早くする
 [[https://emacs-jp.github.io/tips/avy-can-do-anything][Avyならなんでもできる]]
 #+begin_src emacs-lisp :tangle yes
@@ -729,14 +629,6 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
       :doc "Collection of yasnippet snippets"
       :url "https://github.com/AndreaCrotti/yasnippet-snippets"
       :ensure t))
-
-  (leaf consult-yasnippet
-    :doc "A consulting-read interface for yasnippet"
-    :url "https://github.com/mohkale/consult-yasnippet"
-    :ensure t
-    :after yasnippet consult)
-
-
 #+end_src
 ** flymake
 #+begin_src emacs-lisp :tangle yes
@@ -744,33 +636,6 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :doc "A universal on-the-fly syntax checker"
     :tag "builtin"
     :hook (prog-mode-hook conf-mode-hook))
-#+end_src
-*** flymake-eslint
-#+begin_src emacs-lisp :tangle yes
-  ;; (leaf flymake-eslint
-  ;;   :ensure t
-  ;;   :hook ((eglot-managed-mode-hook . my/setup-flymake-eslint))
-  ;;   :config
-  ;;   (defun my/eslint-config-p ()
-  ;;     "ディレクトリを遡ってESLintのconfigを探索する"
-  ;;     (if-let* ((current-path  (file-name-directory (buffer-file-name)))
-  ;;               (path-list  (split-string (string-trim current-path "/" "/") "/"))
-  ;;               (idx-list (seq-map-indexed (lambda (_ i) i)
-  ;;                                          path-list))
-  ;;               (list-length (seq-length path-list)))
-  ;;         (seq-some (lambda (idx)
-  ;;                     (let* ((sliced (cl-subseq path-list 0 (- list-length idx)))
-  ;;                            (seq-path  (concat "/" (string-join sliced "/"))))
-  ;;                       (directory-files seq-path nil "eslint")))
-  ;;                   idx-list)))
-
-  ;;   (defun my/setup-flymake-eslint ()
-  ;;     "eglotのbufferがtsかjsでそのプロジェクトがeslintの設定ファイルを持っているなら、flymakeにeslintを設定する"
-  ;;     (when (and (or (derived-mode-p 'typescript-ts-mode)
-  ;;                    (derived-mode-p 'js-ts-mode))
-  ;;                (my/eslint-config-p)
-  ;;                (executable-find "eslint"))
-  ;;       (flymake-eslint-enable))))
 #+end_src
 * AI
 ** ellama
@@ -1004,11 +869,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
             ("M-SPC" . corfu-insert-separator)))
     :hook ((corfu-mode-hook
             . (lambda ()
-                (setq-local completion-styles '(hotfuzz))
-                (corfu-popupinfo-mode)
-                (corfu-history-mode)))
-           ;; ((emacs-lisp-mode-hook lisp-interaction-mode) . corfu-mode)
-           )
+                (setq-local completion-styles '(hotfuzz)))))
     :config
     (leaf hotfuzz
       :doc "Fuzzy completion style."
@@ -1023,12 +884,9 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (setopt text-mode-ispell-word-completion nil)
     (setopt read-extended-command-predicate #'command-completion-default-include-p)
 
-    ;; (defun my/setup-corfu ()
-    ;;   (corfu-mode)
-    ;;   (setq-local completion-styles '(hotfuzz))
-    ;;   (corfu-popupinfo-mode)
-    ;;   (corfu-history-mode))
-    )
+    (global-corfu-mode)
+    (corfu-popupinfo-mode)
+    (corfu-history-mode))
 #+end_src
 *** corfuの補完候補にアイコンを表示する [[https://github.com/LuigiPiucco/nerd-icons-corfu][nerd-icons-corfu]]
 #+begin_src emacs-lisp :tangle yes
@@ -1050,7 +908,6 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
             ("C-x b" . consult-buffer)
             ("C-x M-p" . consult-project-buffer)
             ("C-x C-g" . my/consult-ghq-magit-status)
-            ("C-x M-s" . consult-yasnippet)
             ;; Other custom bindings
             ("M-y" . consult-yank-pop)
             ;; M-g bindings in `goto-map'
@@ -1185,15 +1042,6 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 
 
 #+end_src
-*** ブラウザの履歴を検索する [[https://github.com/agzam/browser-hist.el][browser-hist.el]]
-
-=browser-hist-default-browser= というカスタマイズ変数があるのだが =:type '(chrome chromium brave firefox safari qutebrowser)= となっていてvivaldiに設定できないので、デフォルトのchromeのpathをvivaldiにする。
-#+begin_src emacs-lisp :tangle yes
-  (leaf browser-hist
-    :ensure t
-    :config
-    (setopt browser-hist-db-paths '((chrome . "$HOME/Library/Application Support/Vivaldi/Default/History"))))
-#+end_src
 *** あらゆる検索の入り口 [[https://github.com/armindarvish/consult-omni][consult-omni]]
 #+begin_src emacs-lisp :tangle yes
   (leaf consult-omni
@@ -1203,6 +1051,11 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :config
     (leaf plz :ensure t)
     (leaf org-web-tools :ensure t)
+    (leaf browser-hist
+      :ensure t
+      :config
+      ;; :type '(chrome chromium brave firefox safari qutebrowser) となっていてvivaldiに設定できないので、デフォルトのchromeのpathをvivaldiにする。
+      (setopt browser-hist-db-paths '((chrome . "$HOME/Library/Application Support/Vivaldi/Default/History"))))
 
     (setq consult-omni-show-preview t)
     (setq consult-omni-preview-key "C-o")
@@ -1266,6 +1119,12 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
         (consult-omni-multi initial prompt sources no-callback args)))
     )
 #+end_src
+*** yasnippet連携 [[https://github.com/mohkale/consult-yasnippet][consult-yasnippet]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf consult-yasnippet
+    :ensure t
+    :bind (("C-x M-s" . consult-yasnippet)))
+#+end_src
 * git
 ** [[https://magit.vc/][magit]] gitクライアント
 #+begin_src emacs-lisp :tangle yes
@@ -1325,16 +1184,33 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
            ("C-M-z" . expreg-contract)))
 #+end_src
 * LSP
-** eglot
+** 標準LSPクライアント [[https://github.com/joaotavora/eglot][eglot]]
 #+begin_src emacs-lisp :tangle yes
   (leaf eglot
-    :disabled t
-    ;; :hook (((yaml-ts-mode-hook html-ts-mode-hook css-ts-mode-hook astro-ts-mode) . eglot-ensure))
+    :hook (((nix-ts-mode-hook) . eglot-ensure))
     :bind (:eglot-mode-map
            ("C-c l r r" . my/eglot-rename)
            ("C-c l a" . eglot-code-actions))
     :config
     (add-to-list 'eglot-server-programs '(nix-ts-mode . ("nil")))
+
+    (leaf eglot-booster
+      :ensure t
+      :config
+      (setopt eglot-booster-io-only t)
+      (eglot-booster-mode))
+
+    (leaf consult-eglot
+      :ensure t
+      :bind (:eglot-mode-map
+             ("M-g e" . consult-eglot-symbols)))
+
+    (leaf eglot-signature-eldoc-talkative
+      :ensure t
+      :require t
+      :config
+      (advice-add #'eglot-signature-eldoc-function
+                  :override #'eglot-signature-eldoc-talkative))
 
     (defun my/eglot-rename ()
       "eglot-renameの改良版"
@@ -1352,78 +1228,126 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
                  (eglot-rename newname)))
         (user-error "ポイントにシンボルがないです"))))
 #+end_src
-*** [[https://github.com/jdtsmith/eglot-booster][eglot-booster]]
-#+begin_src emacs-lisp :tangle yes
-  (leaf eglot-booster
-    :ensure t
-    :custom ((eglot-booster-io-only . t))
-    :global-minor-mode t)
-#+end_src
-*** [[https://github.com/mohkale/consult-eglot][consult-eglot]]
-#+begin_src emacs-lisp :tangle yes
-  (leaf consult-eglot
-    :ensure t
-    :bind (:eglot-mode-map
-           ("M-g e" . consult-eglot-symbols)))
-#+end_src
-*** [[https://codeberg.org/mekeor/eglot-signature-eldoc-talkative][eglot-signature-eldoc-talkative]]
-#+begin_src emacs-lisp :tangle yes
-  (leaf eglot-signature-eldoc-talkative
-    :ensure t
-    :commands eglot-signature-eldoc-talkative
-    :config
-    (advice-add #'eglot-signature-eldoc-function
-                :override #'eglot-signature-eldoc-talkative))
-#+end_src
-** [[https://github.com/jadestrong/lsp-proxy][Rust製 LSPクランアント lsp-proxy]]
+** Rust製 LSPクランアント [[https://github.com/jadestrong/lsp-proxy][lsp-proxy]]
 #+begin_src emacs-lisp :tangle yes
   (leaf lsp-proxy
-    :disabled t
     :ensure t
-    :hook (((jtsx-tsx-mode-hook jtsx-jsx-mode-hook jtsx-typescript-mode-hook nix-ts-mode-hook) . lsp-proxy-mode))
+    :bind (:lsp-proxy-mode-map
+           ("C-c l r r" . lsp-proxy-rename)
+           ("C-c l a" . lsp-proxy-execute-code-action)
+           ("C-c d" . lsp-proxy-describe-thing-at-point))
+    :hook (((jtsx-tsx-mode-hook jtsx-jsx-mode-hook jtsx-typescript-mode-hook astro-ts-mode-hook) . lsp-proxy-mode))
     :config
     (setopt lsp-proxy-user-languages-config (no-littering-expand-etc-file-name "languages.toml"))
     (setopt lsp-proxy-diagnostics-provider :flymake)
     (setopt lsp-proxy-log-file-directory (no-littering-expand-var-file-name "lsp-proxy-logs/"))
-    (setopt lsp-proxy-log-max 1000000)
-    (setopt lsp-proxy-log-level 3))
+    (setopt lsp-proxy-log-max 0)
+    (setopt lsp-proxy-log-buffer-max nil)
+    (setopt lsp-proxy-log-level 0)
+
+    ;; (setopt lsp-proxy-log-max 100000)
+    ;; (setopt lsp-proxy-log-level 3)
+    )
 #+end_src
-** 最速LSPクライアント [[https://github.com/manateelazycat/lsp-bridge][lsp-brigde]]
+** 結局はこれ [[https://github.com/casouri/eldoc-box][lsp-mode]]
 #+begin_src emacs-lisp :tangle yes
-  (leaf lsp-bridge
+  (leaf lsp-mode
+    :disabled t
+    :doc "LSP mode"
+    :url "https://github.com/emacs-lsp/lsp-mode"
     :ensure t
-    :require t
-    :bind (:lsp-bridge-mode-map
-           ("M-." . lsp-bridge-find-def)
-           ("M-," . lsp-bridge-find-def-return)
-           ("M-?" . lsp-bridge-find-references)
-           ("C-c d" . lsp-bridge-popup-documentation)
-           ("s-l r r" . lsp-bridge-rename)
-           ("s-l a" . lsp-bridge-code-action)
-           ("s-l d n" . lsp-bridge-diagnostic-jump-next)
-           ("s-l d p" . lsp-bridge-diagnostic-jump-prev)
-           ("s-l d l" . lsp-bridge-diagnostic-jump-list)
-           ("s-l d c" . lsp-bridge-diagnostic-jump-copy)
-           ("C-c l r r" . lsp-bridge-rename)
-           ("C-c l a" . lsp-bridge-code-action)
-           ("C-c l d n" . lsp-bridge-diagnostic-jump-next)
-           ("C-c l d p" . lsp-bridge-diagnostic-jump-prev)
-           ("C-c l d l" . lsp-bridge-diagnostic-jump-list)
-           ("C-c l d c" . lsp-bridge-diagnostic-jump-copy))
+    :defvar (lsp-use-plists)
+    :hook (;;(typescript-ts-mode-hook . lsp-deferred)
+           (lsp-mode-hook . lsp-enable-which-key-integration)
+           (lsp-completion-mode-hook . my/lsp-mode-setup-completion))
+    :bind (:lsp-mode-map
+           ("C-c d" . eldoc-box-help-at-point))
+    :custom ((lsp-keymap-prefix . "C-c l")
+             (lsp-diagnostics-provider . :flymake)
+             (lsp-completion-provider . :none)
+             (lsp-enable-snippet . nil)
+             (lsp-headerline-breadcrumb-enable . nil)
+             (lsp-enable-dap-auto-configure . nil)
+             (lsp-enable-folding . nil)
+             (lsp-enable-indentation . nil)
+             (lsp-enable-suggest-server-download . nil)
+             (textDocument/documentColor . nil)
+             (lsp-before-save-edits . nil)
+             (lsp-lens-enable . nil) ; rustのときはtにしたい
+             (lsp-modeline-code-actions-enable . nil)
+             (lsp-apply-edits-after-file-operations . nil) ; https://www.reddit.com/r/emacs/comments/1b0ppls/anyone_using_lspmode_with_tsls_having_trouble/
+             (lsp-disabled-clients . (tailwindcss))
+             ;; eslint
+             (lsp-eslint-server-command . '("vscode-eslint-language-server" "--stdio"))
+             )
+    :init
+
+    (setopt lsp-eldoc-render-all t)
+
+    (defun my/lsp-mode-setup-completion ()
+      (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+            '(orderless)))
     :config
-    ;;lsp-bridge.el
-    (setopt lsp-bridge-nix-lsp-server "nil")
-    (setopt lsp-bridge-default-mode-hooks (cons 'astro-ts-mode-hook lsp-bridge-default-mode-hooks))
-    ;; lsp-bridge-org-babel.el
-    (setopt lsp-bridge-enable-org-babel t)
-    ;; acm.el
-    (setopt acm-candidate-match-function 'orderless-flex)
-    ;; (setopt acm-enable-capf t)
+    (leaf lsp-tailwindcss
+      :doc "A lsp-mode client for tailwindcss"
+      :url "https://github.com/merrickluo/lsp-tailwindcss"
+      :ensure t
+      :custom ((lsp-tailwindcss-server-version . "0.14.4")
+               (lsp-tailwindcss-major-modes . '(jtsx-jsx-mode jtsx-tsx-mode astro-ts-mode html-ts-mode))
+               (lsp-tailwindcss-skip-config-check . t))
+      :defun (lsp-workspace-root
+              lsp-tailwindcss--has-config-file
+              lsp-register-client
+              make-lsp-client
+              lsp-stdio-connection
+              lsp-tailwindcss--activate-p
+              lsp-tailwindcss--initialization-options)
+      :config
+      ;; nixで入れたtailwindcss-language-serverを適用できるオプションがないので、本体を参考に自分で定義する。
+      (lsp-register-client (make-lsp-client
+                            :new-connection (lsp-stdio-connection
+                                             (lambda ()
+                                               `("tailwindcss-language-server" "--stdio")))
+                            :activation-fn #'lsp-tailwindcss--activate-p
+                            :server-id 'my/tailwindcss
+                            :priority -1
+                            :add-on? t
+                            :initialization-options #'lsp-tailwindcss--initialization-options)))
 
-    (setopt lsp-bridge-user-multiserver-dir (expand-file-name "multiserver/" user-emacs-directory))
-    (add-to-list 'lsp-bridge-multi-lang-server-extension-list '(("tsx") . "typescriptreact_tailwindcss_eslint"))
+    (leaf *emacs-lsp-booster
+      :defun (lsp-booster--advice-json-parse lsp-booster--advice-final-command)
+      :config
+      (defun lsp-booster--advice-json-parse (old-fn &rest args)
+        "Try to parse bytecode instead of json."
+        (or
+         (when (equal (following-char) ?#)
+           (let ((bytecode (read (current-buffer))))
+             (when (byte-code-function-p bytecode)
+               (funcall bytecode))))
+         (apply old-fn args)))
+      (advice-add (if (progn (require 'json)
+                             (fboundp 'json-parse-buffer))
+                      'json-parse-buffer
+                    'json-read)
+                  :around
+                  #'lsp-booster--advice-json-parse)
 
-    (global-lsp-bridge-mode))
+      (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
+        "Prepend emacs-lsp-booster command to lsp CMD."
+        (let ((orig-result (funcall old-fn cmd test?)))
+          (if (and (not test?)                             ;; for check lsp-server-present?
+                   (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
+                   lsp-use-plists
+                   (not (functionp 'json-rpc-connection))  ;; native json-rpc
+                   (executable-find "emacs-lsp-booster"))
+              (progn
+                (when-let ((command-from-exec-path (executable-find (car orig-result))))  ;; resolve command from exec-path (in case not found in $PATH)
+                  (setcar orig-result command-from-exec-path))
+                (message "Using emacs-lsp-booster for %s!" orig-result)
+                (cons "emacs-lsp-booster" orig-result))
+            orig-result)))
+      (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command))
+    )
 #+end_src
 * メジャーモード
 ** [[https://github.com/llemaitre19/jtsx][jtsx-mode]] jsx tsxに対応したモード
