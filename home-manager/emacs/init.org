@@ -924,12 +924,19 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
             ("M-s c" . consult-locate)
             ("M-s r" . consult-ripgrep)
             ("M-s g r" . my-consult-ghq-ripgrep)
-            ("M-s l" . consult-line)
+            ("M-s l" . my/consult-line)
             ("M-s L" . consult-line-multi))
     :hook (completion-list-mode-hook . consult-preview-at-point-mode)
     :config
     (setopt xref-show-xrefs-function #'consult-xref)
     (setopt xref-show-definitions-function #'consult-xref)
+
+    (defun my/consult-line (flag)
+      "prefix付きで呼び出された場合、カーソル位置のシンボルをデフォルトの検索文字列とする"
+      (interactive "P")
+      (if flag
+          (consult-line (thing-at-point 'symbol))
+        (consult-line)))
 
     (leaf *consult-ghq
       :defun (buffer-substring-no-propertie my-consult-ghq--list-candidates my-consult-ghq--read consult--file-preview)
@@ -1232,22 +1239,58 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 #+begin_src emacs-lisp :tangle yes
   (leaf lsp-proxy
     :ensure t
+    :require t
     :bind (:lsp-proxy-mode-map
            ("C-c l r r" . lsp-proxy-rename)
            ("C-c l a" . lsp-proxy-execute-code-action)
-           ("C-c d" . lsp-proxy-describe-thing-at-point))
+           ("C-c d" . my/lsp-proxy-help-tap))
     :hook (((jtsx-tsx-mode-hook jtsx-jsx-mode-hook jtsx-typescript-mode-hook astro-ts-mode-hook) . lsp-proxy-mode))
     :config
     (setopt lsp-proxy-user-languages-config (no-littering-expand-etc-file-name "languages.toml"))
     (setopt lsp-proxy-diagnostics-provider :flymake)
     (setopt lsp-proxy-log-file-directory (no-littering-expand-var-file-name "lsp-proxy-logs/"))
-    (setopt lsp-proxy-log-max 0)
+    (setopt lsp-proxy-log-max 0) ; 100000
     (setopt lsp-proxy-log-buffer-max nil)
-    (setopt lsp-proxy-log-level 0)
+    (setopt lsp-proxy-log-level 0) ; 3
 
-    ;; (setopt lsp-proxy-log-max 100000)
-    ;; (setopt lsp-proxy-log-level 3)
-    )
+
+    (defconst my/lsp-proxy-help-tap--buffer "*my-lsp-proxy-help*")
+    (defvar my/lsp-proxy-help-tap--last-point nil)
+
+    (defun my/lsp-proxy-help-tap--delete-frame ()
+      "表示中のposframeを削除する"
+      (posframe-delete my/lsp-proxy-help-tap--buffer)
+      (advice-remove 'my/keyboard-quit-dwim #'my/lsp-proxy-help-tap--delete-frame))
+
+    (defun my/lsp-proxy-help-tap--hidehandler (_info)
+      "カーソルを移動したらframeを消す"
+      (let ((should-close (not (equal my/lsp-proxy-help-tap--last-point
+                                      (point)))))
+        (when should-close
+          (my/lsp-proxy-help-tap--delete-frame))
+        should-close))
+
+    (defun my/lsp-proxy-help-tap ()
+      "lspのtextDocument/hover情報をposframeに表示する"
+      (interactive)
+      (if-let* ((help-text (lsp-proxy--request 'textDocument/hover
+                                               (lsp-proxy--request-or-notify-params
+                                                (eglot--TextDocumentPositionParams))))
+                (formated-help-text (eglot--format-markup help-text)))
+          (progn
+            (posframe-show my/lsp-proxy-help-tap--buffer
+                           :string formated-help-text
+                           :position (point)
+                           :max-width 80
+                           :max-height 160
+                           :border-width 4
+                           :background-color "#001e27"
+                           :hidehandler #'my/lsp-proxy-help-tap--hidehandler)
+
+            (setq my/lsp-proxy-help-tap--last-point (point))
+            (advice-add 'my/keyboard-quit-dwim
+                        :before
+                        #'my/lsp-proxy-help-tap--delete-frame)))))
 #+end_src
 ** 結局はこれ [[https://github.com/casouri/eldoc-box][lsp-mode]]
 #+begin_src emacs-lisp :tangle yes
