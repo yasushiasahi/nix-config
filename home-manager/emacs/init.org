@@ -1058,11 +1058,10 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :config
     (leaf plz :ensure t)
     (leaf org-web-tools :ensure t)
-    (leaf browser-hist
-      :ensure t
-      :config
-      ;; :type '(chrome chromium brave firefox safari qutebrowser) となっていてvivaldiに設定できないので、デフォルトのchromeのpathをvivaldiにする。
-      (setopt browser-hist-db-paths '((chrome . "$HOME/Library/Application Support/Vivaldi/Default/History"))))
+    ;; (leaf browser-hist
+    ;;   :ensure t
+    ;;   :config
+    ;;   (setq browser-hist-default-browser 'brave))
 
     (setq consult-omni-show-preview t)
     (setq consult-omni-preview-key "C-o")
@@ -1076,17 +1075,27 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (require 'consult-omni-google-autosuggest)
     (setopt consult-omni-default-autosuggest-command #'consult-omni-google-autosuggest)
 
+    (require 'consult-omni-google)
     (require 'consult-omni-embark)
     (require 'consult-omni-sources)
     (require 'consult-omni-ripgrep-all)
     (require 'consult-omni-fd)
-    (require 'consult-omni-browser-history)
+    ;; (require 'consult-omni-browser-history)
     (require 'consult-omni-gptel)
     (require 'consult-omni-gh)
     (require 'consult-omni-brave-autosuggest)
     (require 'consult-omni-brave)
     (require 'consult-omni-wikipedia)
     (require 'consult-omni-apps)
+
+
+    (setopt consult-omni-google-customsearch-key (auth-source-pick-first-password
+                                                  :host "cloud.google.com"
+                                                  :user "asahi1600@gmail.com"))
+
+    (setopt consult-omni-google-customsearch-cx (auth-source-pick-first-password
+                                                 :host "programmablesearchengine.google.com"
+                                                 :user "asahi1600@gmail.com"))
 
     ;; brave seach api keyの設定
     (setopt consult-omni-brave-api-key (auth-source-pick-first-password
@@ -1098,13 +1107,11 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     ;; app search home-managerのインストール先を検索対象に含める
     (setopt consult-omni-apps-paths (cons "~/Applications/Home Manager Apps/" consult-omni-apps-paths))
 
-
-
-    (defvar my/consult-omni-web-sources (list "gptel"
+    (defvar my/consult-omni-web-sources (list "Google"
                                               "Brave"
-                                              "Browser History"
                                               "GitHub"
-                                              "Wikipedia"                                                                                  ))
+                                              "Wikipedia"
+                                              "gptel"))
     (defun my/consult-omni-web (&optional initial prompt sources no-callback &rest args)
       "いろいろインターネット検索"
       (interactive "P")
@@ -1189,6 +1196,12 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :ensure t
     :bind (("C-z" . expreg-expand)
            ("C-M-z" . expreg-contract)))
+#+end_src
+** htmlタグを扱う [[https://github.com/magnars/tagedit][tagedit]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf tagedit
+    :ensure t
+    :bind ((("C-c k" . tagedit-kill))))
 #+end_src
 * LSP
 ** 標準LSPクライアント [[https://github.com/joaotavora/eglot][eglot]]
@@ -1493,25 +1506,36 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
                                      "* %?\nEntered on %U\n %i\n %a"))))
 #+end_src
 ** 第二の脳 [[https://github.com/org-roam/org-roam][org-roam]]
-
 - complation-at-pointでlinkを挿入できるらしいけどうまくいかない
 -
+#+begin_src emacs-lisp
+  ;; (leaf org-roam
+  ;;   :doc "A database abstraction layer for Org-mode"
+  ;;   :url "https://github.com/org-roam/org-roam"
+  ;;   :ensure t
+  ;;   :bind (("C-c n l" . org-roam-buffer-toggle)
+  ;;          ("C-c n f" . org-roam-node-find)
+  ;;          ("C-c n i" . org-roam-node-insert)
+  ;;          (:org-mode-map
+  ;;           ("C-M-i" . completion-at-point)))
+  ;;   :config
+  ;;   (setopt org-roam-directory "~/ghq/github.com/yasushiasahi/org/roam")
+  ;;   (setopt org-roam-complete-everywhere t)
 
+  ;;   (org-roam-setup))
+#+end_src
+** 第二の第二の脳 [[https://github.com/meedstrom/org-node][org-node]]
 #+begin_src emacs-lisp :tangle yes
-  (leaf org-roam
-    :doc "A database abstraction layer for Org-mode"
-    :url "https://github.com/org-roam/org-roam"
+  (leaf org-node
     :ensure t
-    :bind (("C-c n l" . org-roam-buffer-toggle)
-           ("C-c n f" . org-roam-node-find)
-           ("C-c n i" . org-roam-node-insert)
-           (:org-mode-map
-            ("C-M-i" . completion-at-point)))
+    :bind* (("M-s M-f" . org-node-find)
+            ("M-s M-i" . org-node-insert-link))
     :config
-    (setopt org-roam-directory "~/ghq/github.com/yasushiasahi/org/roam")
-    (setopt org-roam-complete-everywhere t)
-
-    (org-roam-setup))
+    (setopt org-mem-do-sync-with-org-id t)
+    (setopt org-node-data-dir "~/ghq/github.com/yasushiasahi/org/node")
+    (setopt org-mem-watch-dirs (list org-node-data-dir))
+    (org-mem-updater-mode)
+    (org-node-cache-mode))
 #+end_src
 ** かっこいい見た目にする [[https://github.com/minad/org-modern/tree/main][org-modern]]
 #+begin_src emacs-lisp :tangle yes
@@ -1570,6 +1594,23 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :ensure t)
   (org-babel-do-load-languages 'org-babel-load-languages '((typescript . t)))
   (add-to-list 'org-src-lang-modes '("typescript" . jtsx-typescript))
+
+
+  (leaf ob-shell
+    :doc "Babel Functions for Shell Evaluation"
+    :tag "builtin" "reproducible research" "literate programming"
+    :url "https://orgmode.org"
+    :added "2025-05-29")
+
+  (org-babel-do-load-languages 'org-babel-load-languages '((shell . t)))
+  (add-to-list 'org-src-lang-modes '("shell" . bash-ts))
+
+#+end_src
+** ox
+*** Github Flavored Markdown [[https://github.com/larstvei/ox-gfm][ox-gfm]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf ox-gfm
+    :ensure t)
 #+end_src
 * ターミナル
 ** [[https://github.com/szermatt/mistty][mistty]]

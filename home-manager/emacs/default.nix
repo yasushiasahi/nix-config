@@ -162,6 +162,9 @@ in
     pkgs.nixfmt-rfc-style
     pkgs.eslint
 
+    # shell-script-mode
+    pkgs.shellcheck
+
   ];
 
   # cliからemacsを起動した時にLANGがないと警告が出る。
