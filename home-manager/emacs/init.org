@@ -1205,7 +1205,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 #+end_src
 * LSP
 ** 標準LSPクライアント [[https://github.com/joaotavora/eglot][eglot]]
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
   (leaf eglot
     :hook (((nix-ts-mode-hook) . eglot-ensure))
     :bind (:eglot-mode-map
@@ -1249,7 +1249,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
         (user-error "ポイントにシンボルがないです"))))
 #+end_src
 ** Rust製 LSPクランアント [[https://github.com/jadestrong/lsp-proxy][lsp-proxy]]
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
   (leaf lsp-proxy
     :ensure t
     :require t
@@ -1308,102 +1308,62 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 ** 結局はこれ [[https://github.com/casouri/eldoc-box][lsp-mode]]
 #+begin_src emacs-lisp :tangle yes
   (leaf lsp-mode
-    :disabled t
-    :doc "LSP mode"
-    :url "https://github.com/emacs-lsp/lsp-mode"
     :ensure t
-    :defvar (lsp-use-plists)
-    :hook (;;(typescript-ts-mode-hook . lsp-deferred)
-           (lsp-mode-hook . lsp-enable-which-key-integration)
-           (lsp-completion-mode-hook . my/lsp-mode-setup-completion))
-    :bind (:lsp-mode-map
-           ("C-c d" . eldoc-box-help-at-point))
-    :custom ((lsp-keymap-prefix . "C-c l")
-             (lsp-diagnostics-provider . :flymake)
-             (lsp-completion-provider . :none)
-             (lsp-enable-snippet . nil)
-             (lsp-headerline-breadcrumb-enable . nil)
-             (lsp-enable-dap-auto-configure . nil)
-             (lsp-enable-folding . nil)
-             (lsp-enable-indentation . nil)
-             (lsp-enable-suggest-server-download . nil)
-             (textDocument/documentColor . nil)
-             (lsp-before-save-edits . nil)
-             (lsp-lens-enable . nil) ; rustのときはtにしたい
-             (lsp-modeline-code-actions-enable . nil)
-             (lsp-apply-edits-after-file-operations . nil) ; https://www.reddit.com/r/emacs/comments/1b0ppls/anyone_using_lspmode_with_tsls_having_trouble/
-             (lsp-disabled-clients . (tailwindcss))
-             ;; eslint
-             (lsp-eslint-server-command . '("vscode-eslint-language-server" "--stdio"))
-             )
-    :init
-
-    (setopt lsp-eldoc-render-all t)
-
-    (defun my/lsp-mode-setup-completion ()
-      (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-            '(orderless)))
+    :hook (((typescript-ts-mode-hook tsx-ts-mode-hook astro-ts-mode-hook nix-ts-mode-hook html-ts-mode-hook css-ts-mode-hook toml-ts-mode-hook json-ts-mode-hook) . lsp-deferred)
+           (lsp-mode-hook . lsp-enable-which-key-integration))
     :config
+    (setopt lsp-headerline-breadcrumb-enable nil)
+    (setopt lsp-modeline-diagnostics-enable nil)
+    (setopt lsp-modeline-workspace-status-enable nil)
+    (setopt lsp-modeline-code-actions-enable nil)
+    (setopt lsp-semantic-tokens-enable nil)
+
+    (setopt lsp-completion-provider :none)
+    (setopt lsp-diagnostics-provider :flymake)
+
+    (setopt lsp-typescript-format-enable nil)
+    (setopt lsp-javascript-format-enable nil)
+    (setopt lsp-html-format-enable nil)
+    (setopt lsp-yaml-format-enable nil)
+
     (leaf lsp-tailwindcss
-      :doc "A lsp-mode client for tailwindcss"
-      :url "https://github.com/merrickluo/lsp-tailwindcss"
       :ensure t
-      :custom ((lsp-tailwindcss-server-version . "0.14.4")
-               (lsp-tailwindcss-major-modes . '(jtsx-jsx-mode jtsx-tsx-mode astro-ts-mode html-ts-mode))
-               (lsp-tailwindcss-skip-config-check . t))
-      :defun (lsp-workspace-root
-              lsp-tailwindcss--has-config-file
-              lsp-register-client
-              make-lsp-client
-              lsp-stdio-connection
-              lsp-tailwindcss--activate-p
-              lsp-tailwindcss--initialization-options)
+      :init
+      (setq lsp-tailwindcss-add-on-mode t)
       :config
-      ;; nixで入れたtailwindcss-language-serverを適用できるオプションがないので、本体を参考に自分で定義する。
-      (lsp-register-client (make-lsp-client
-                            :new-connection (lsp-stdio-connection
-                                             (lambda ()
-                                               `("tailwindcss-language-server" "--stdio")))
-                            :activation-fn #'lsp-tailwindcss--activate-p
-                            :server-id 'my/tailwindcss
-                            :priority -1
-                            :add-on? t
-                            :initialization-options #'lsp-tailwindcss--initialization-options)))
+      (setq lsp-tailwindcss-major-modes '(tsx-ts-mode))
+      (setopt lsp-tailwindcss-server-path (string-trim (shell-command-to-string "which tailwindcss-language-server"))))
 
-    (leaf *emacs-lsp-booster
-      :defun (lsp-booster--advice-json-parse lsp-booster--advice-final-command)
-      :config
-      (defun lsp-booster--advice-json-parse (old-fn &rest args)
-        "Try to parse bytecode instead of json."
-        (or
-         (when (equal (following-char) ?#)
-           (let ((bytecode (read (current-buffer))))
-             (when (byte-code-function-p bytecode)
-               (funcall bytecode))))
-         (apply old-fn args)))
-      (advice-add (if (progn (require 'json)
-                             (fboundp 'json-parse-buffer))
-                      'json-parse-buffer
-                    'json-read)
-                  :around
-                  #'lsp-booster--advice-json-parse)
+    (defun lsp-booster--advice-json-parse (old-fn &rest args)
+      "Try to parse bytecode instead of json."
+      (or
+       (when (equal (following-char) ?#)
+         (let ((bytecode (read (current-buffer))))
+           (when (byte-code-function-p bytecode)
+             (funcall bytecode))))
+       (apply old-fn args)))
+    (advice-add (if (progn (require 'json)
+                           (fboundp 'json-parse-buffer))
+                    'json-parse-buffer
+                  'json-read)
+                :around
+                #'lsp-booster--advice-json-parse)
 
-      (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
-        "Prepend emacs-lsp-booster command to lsp CMD."
-        (let ((orig-result (funcall old-fn cmd test?)))
-          (if (and (not test?)                             ;; for check lsp-server-present?
-                   (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
-                   lsp-use-plists
-                   (not (functionp 'json-rpc-connection))  ;; native json-rpc
-                   (executable-find "emacs-lsp-booster"))
-              (progn
-                (when-let ((command-from-exec-path (executable-find (car orig-result))))  ;; resolve command from exec-path (in case not found in $PATH)
-                  (setcar orig-result command-from-exec-path))
-                (message "Using emacs-lsp-booster for %s!" orig-result)
-                (cons "emacs-lsp-booster" orig-result))
-            orig-result)))
-      (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command))
-    )
+    (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
+      "Prepend emacs-lsp-booster command to lsp CMD."
+      (let ((orig-result (funcall old-fn cmd test?)))
+        (if (and (not test?)                             ;; for check lsp-server-present?
+                 (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
+                 lsp-use-plists
+                 (not (functionp 'json-rpc-connection))  ;; native json-rpc
+                 (executable-find "emacs-lsp-booster"))
+            (progn
+              (when-let ((command-from-exec-path (executable-find (car orig-result))))  ;; resolve command from exec-path (in case not found in $PATH)
+                (setcar orig-result command-from-exec-path))
+              (message "Using emacs-lsp-booster for %s!" orig-result)
+              (cons "emacs-lsp-booster" orig-result))
+          orig-result)))
+    (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command))
 #+end_src
 * メジャーモード
 ** [[https://github.com/llemaitre19/jtsx][jtsx-mode]] jsx tsxに対応したモード
@@ -1508,34 +1468,19 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 ** 第二の脳 [[https://github.com/org-roam/org-roam][org-roam]]
 - complation-at-pointでlinkを挿入できるらしいけどうまくいかない
 -
-#+begin_src emacs-lisp
-  ;; (leaf org-roam
-  ;;   :doc "A database abstraction layer for Org-mode"
-  ;;   :url "https://github.com/org-roam/org-roam"
-  ;;   :ensure t
-  ;;   :bind (("C-c n l" . org-roam-buffer-toggle)
-  ;;          ("C-c n f" . org-roam-node-find)
-  ;;          ("C-c n i" . org-roam-node-insert)
-  ;;          (:org-mode-map
-  ;;           ("C-M-i" . completion-at-point)))
-  ;;   :config
-  ;;   (setopt org-roam-directory "~/ghq/github.com/yasushiasahi/org/roam")
-  ;;   (setopt org-roam-complete-everywhere t)
-
-  ;;   (org-roam-setup))
-#+end_src
-** 第二の第二の脳 [[https://github.com/meedstrom/org-node][org-node]]
 #+begin_src emacs-lisp :tangle yes
-  (leaf org-node
+  (leaf org-roam
     :ensure t
-    :bind* (("M-s M-f" . org-node-find)
-            ("M-s M-i" . org-node-insert-link))
+    :bind (("C-c n l" . org-roam-buffer-toggle)
+           ("C-c n f" . org-roam-node-find)
+           ("C-c n i" . org-roam-node-insert)
+           (:org-mode-map
+            ("C-M-i" . completion-at-point)))
     :config
-    (setopt org-mem-do-sync-with-org-id t)
-    (setopt org-node-data-dir "~/ghq/github.com/yasushiasahi/org/node")
-    (setopt org-mem-watch-dirs (list org-node-data-dir))
-    (org-mem-updater-mode)
-    (org-node-cache-mode))
+    (setopt org-roam-directory "~/ghq/github.com/yasushiasahi/org/roam")
+    (setopt org-roam-complete-everywhere t)
+
+    (org-roam-setup))
 #+end_src
 ** かっこいい見た目にする [[https://github.com/minad/org-modern/tree/main][org-modern]]
 #+begin_src emacs-lisp :tangle yes
@@ -1605,12 +1550,35 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
   (org-babel-do-load-languages 'org-babel-load-languages '((shell . t)))
   (add-to-list 'org-src-lang-modes '("shell" . bash-ts))
 
+  (add-to-list 'org-src-lang-modes '("html" . html-ts))
+
+  (org-babel-do-load-languages 'org-babel-load-languages '((css . t)))
+  (add-to-list 'org-src-lang-modes '("css" . css-ts))
+
+  (org-babel-do-load-languages 'org-babel-load-languages '((js . t)))
+  (add-to-list 'org-src-lang-modes '("js" . jtsx-jsx))
+
+  (add-to-list 'org-src-lang-modes '("markdown" . markdown))
+#+end_src
+
+#+begin_src html
+  <div></div>
+
 #+end_src
 ** ox
 *** Github Flavored Markdown [[https://github.com/larstvei/ox-gfm][ox-gfm]]
 #+begin_src emacs-lisp :tangle yes
   (leaf ox-gfm
     :ensure t)
+#+end_src
+** org-ai
+#+begin_src emacs-lisp :tangle yes
+  (leaf org-ai
+    :ensure t
+    :hook ((org-mode-hook . org-ai-mode))
+    :config
+    (setopt org-ai-default-chat-model "gpt-4.1")
+    (org-ai-install-yasnippets))
 #+end_src
 * ターミナル
 ** [[https://github.com/szermatt/mistty][mistty]]

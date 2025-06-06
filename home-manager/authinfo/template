@@ -2,8 +2,8 @@ machine api.github.com login {{ op://Personal/github-pat-emacs/username }}^forge
 machine api.github.com login {{ op://Personal/github-pat-emacs/username }}^emacs-pr-review password {{ op://Personal/github-pat-emacs/credential }}
 machine deepl.com login {{ op://Personal/deepl-api-key/username }} port deepl-api-key password {{ op://Personal/deepl-api-key/credential }}
 machine search.brave.com login asahi1600@gmail.com password {{ op://Personal/brave-search-api-key/credential }}
-machine api.openai.com login apikey password {{ op://Personal/openai-api-key/credential }}
 machine api.githubcopilot.com login apikey password {{ op://Personal/github-pat-emacs/credential }}
 machine generativelanguage.googleapis.com login apikey password {{ op://Personal/gemini-api-key/credential }}
 machine cloud.google.com login asahi1600@gmail.com password {{ op://Personal/google-api-key-for-emacs/credential }}
 machine programmablesearchengine.google.com login asahi1600@gmail.com password {{ op://Personal/google-api-key-for-emacs/searche-ngine-id }}
+machine api.openai.com login org-ai password {{ op://Personal/openai-api-key/credential }}

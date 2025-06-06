@@ -65,7 +65,14 @@ let
         cargoHash = "sha256-9yHCvYTYtLLpAzE5QHomvnYRFZDY0NoyQGL+PaJ7Izw=";
       };
     in
-    { melpaBuild }:
+    {
+      melpaBuild,
+      s,
+      f,
+      ht,
+      dash,
+      yasnippet,
+    }:
     melpaBuild {
       pname = "lsp-proxy";
       version = version;
@@ -76,6 +83,13 @@ let
         ls $out/share/emacs/site-lisp/elpa/lsp-proxy-${version}
         cp ${cli}/bin/lsp-proxy $out/share/emacs/site-lisp/elpa/lsp-proxy-${version}/lsp-proxy
       '';
+      packageRequires = [
+        s
+        f
+        ht
+        dash
+        yasnippet
+      ];
 
     };
 
@@ -96,7 +110,14 @@ let
           inherit (epkgs) melpaBuild;
         };
         lsp-proxy = pkgs.callPackage lsp-proxy {
-          inherit (epkgs) melpaBuild;
+          inherit (epkgs)
+            melpaBuild
+            s
+            f
+            ht
+            dash
+            yasnippet
+            ;
         };
 
         # lsp-modeのplists解析を有効にする。そのままだと、hash-tableになる。
