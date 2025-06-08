@@ -701,7 +701,8 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (gptel-make-gemini "Gemini" :stream t))
 #+end_src
 ** [[https://github.com/copilot-emacs/copilot.el?tab=readme-ov-file][copilot]] github copilotプラグイン
-#+begin_src emacs-lisp :tangle yes
+nixでbuildできない
+#+begin_src emacs-lisp :tangle no
   (leaf copilot
     :ensure t
     :commands copilot-mode
