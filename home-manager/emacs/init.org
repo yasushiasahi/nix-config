@@ -631,11 +631,17 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
       :ensure t))
 #+end_src
 ** flymake
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
   (leaf flymake
     :doc "A universal on-the-fly syntax checker"
     :tag "builtin"
     :hook (prog-mode-hook conf-mode-hook))
+#+end_src
+** シンタックスチェッカー [[https://www.flycheck.org][flycheck]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf flycheck
+    :ensure t
+    :hook ((after-init-hook . global-flycheck-mode)))
 #+end_src
 * AI
 ** ellama
@@ -868,19 +874,20 @@ nixでbuildできない
     :require t
     :bind ((corfu-map
             ("M-SPC" . corfu-insert-separator)))
-    :hook ((corfu-mode-hook
-            . (lambda ()
-                (setq-local completion-styles '(hotfuzz)))))
+    ;; :hook ((corfu-mode-hook
+    ;;         . (lambda ()
+    ;;             (setq-local completion-styles '(hotfuzz)))))
     :config
-    (leaf hotfuzz
-      :doc "Fuzzy completion style."
-      :url "https://github.com/axelf4/hotfuzz"
-      :ensure t)
+    ;; (leaf hotfuzz
+    ;;   :doc "Fuzzy completion style."
+    ;;   :url "https://github.com/axelf4/hotfuzz"
+    ;;   :ensure t)
 
     (setopt corfu-auto t)
     (setopt corfu-auto-delay 0.0)
     (setopt corfu-auto-prefix 1)
     (setopt corfu-popupinfo-delay 0.0)
+
     (setopt tab-always-indent 'complete)
     (setopt text-mode-ispell-word-completion nil)
     (setopt read-extended-command-predicate #'command-completion-default-include-p)
@@ -1058,7 +1065,10 @@ nixでbuildできない
             ("M-s h" . my/consult-omni-home))
     :config
     (leaf plz :ensure t)
-    (leaf org-web-tools :ensure t)
+    (leaf org-web-tools
+      :ensure t
+      :config
+      (setopt org-web-tools-pandoc-sleep-time 5.0))
     ;; (leaf browser-hist
     ;;   :ensure t
     ;;   :config
@@ -1313,19 +1323,38 @@ nixでbuildできない
     :hook (((typescript-ts-mode-hook tsx-ts-mode-hook astro-ts-mode-hook nix-ts-mode-hook html-ts-mode-hook css-ts-mode-hook toml-ts-mode-hook json-ts-mode-hook) . lsp-deferred)
            (lsp-mode-hook . lsp-enable-which-key-integration))
     :config
+    ;; 使わない機能をオフにする
     (setopt lsp-headerline-breadcrumb-enable nil)
     (setopt lsp-modeline-diagnostics-enable nil)
     (setopt lsp-modeline-workspace-status-enable nil)
     (setopt lsp-modeline-code-actions-enable nil)
     (setopt lsp-semantic-tokens-enable nil)
+    (setopt lsp-enable-folding nil)
+    (setopt lsp-progress-via-spinner nil) ; モードラインにスピナーを表示する
+    (setopt lsp-enable-dap-auto-configure nil) ; dap-modeを自動で設定する
+    (setopt lsp-enable-indentation nil)
+    (setopt lsp-enable-on-type-formatting nil) ; キーワード（`}'など）を入力時に自動フォーマットする
+    (setopt lsp-enable-text-document-color nil) ; カラーコードに色をつける
+    (setopt lsp-progress-function 'ignore)      ; modelineにプログレスを表示する
+    (setopt lsp-trim-trailing-whitespace nil)   ; aphaliaで賄うからイラン
+    (setopt lsp-insert-final-newline nil)       ; aphaliaで賄うからイラン
+    (setopt lsp-trim-final-newlines nil)        ; aphaliaで賄うからイラン
 
     (setopt lsp-completion-provider :none)
-    (setopt lsp-diagnostics-provider :flymake)
+    ;; (setopt lsp-diagnostics-provider :flymake)
+
+    (setopt lsp-auto-execute-action nil)  ; 可能なアクションが１つの場合、確認無しに実行する
+    (setopt lsp-eldoc-render-all t)       ; サーバーから返ってきたドキュメントを全て表示する
 
     (setopt lsp-typescript-format-enable nil)
     (setopt lsp-javascript-format-enable nil)
+
+    (setopt lsp-eslint-server-command '("vscode-eslint-language-server" "--stdio"))
+
     (setopt lsp-html-format-enable nil)
     (setopt lsp-yaml-format-enable nil)
+
+    (add-to-list 'lsp-language-id-configuration '(scss-ts-mode . "scss"))
 
     (leaf lsp-tailwindcss
       :ensure t
