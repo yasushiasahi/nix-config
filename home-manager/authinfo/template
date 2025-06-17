@@ -6,4 +6,4 @@ machine api.githubcopilot.com login apikey password {{ op://Personal/github-pat-
 machine generativelanguage.googleapis.com login apikey password {{ op://Personal/gemini-api-key/credential }}
 machine cloud.google.com login asahi1600@gmail.com password {{ op://Personal/google-api-key-for-emacs/credential }}
 machine programmablesearchengine.google.com login asahi1600@gmail.com password {{ op://Personal/google-api-key-for-emacs/searche-ngine-id }}
-machine api.openai.com login org-ai password {{ op://Personal/openai-api-key/credential }}
+machine api.openai.com login org-ai password {{ op://Personal/openai-api-key-2/credential }}

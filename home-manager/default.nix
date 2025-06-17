@@ -49,6 +49,7 @@ let
       # ai & llm
       pkgs.ollama
       pkgs.aider-chat
+      pkgs.claude-code
     ];
 
     # XDG_*の環境変数を設定する

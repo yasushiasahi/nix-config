@@ -450,8 +450,11 @@
     ;; [vertico]ignore-caseにバッファをミニバッファ補完
     (setq read-buffer-completion-ignore-case t)
     ;; [vertico]ignore-caseにコマンドをミニバッファ補完
-    (setq completion-ignore-case t))
+    (setq completion-ignore-case t)
 
+    ;;; terminal.c
+    ;; 警告音（ピープ音）をならさい
+    (setq ring-bell-function 'ignore))
 #+end_src
 ** 基本的なコマンド
 #+begin_src emacs-lisp :tangle yes
@@ -699,12 +702,17 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :config
     (setopt gptel-temperature 0.0)
     (setopt gptel-org-branching-context nil)
-    (setopt gptel-default-mode 'org-mode)
+    ;; (setopt gptel-default-mode 'org-mode)
 
+    (setopt gptel-api-key (auth-source-pick-first-password
+                           :host "api.openai.com"
+                           :user "org-ai"))
     (setopt gptel-model 'gpt-4.1)
-    (setopt gptel-backend (gptel-make-gh-copilot "Copilot"))
+    ;; (setopt gptel-backend (gptel-make-gh-copilot "Copilot"))
 
-    (gptel-make-gemini "Gemini" :stream t))
+    (gptel-make-gemini "Gemini" :stream t)
+
+    )
 #+end_src
 ** [[https://github.com/copilot-emacs/copilot.el?tab=readme-ov-file][copilot]] github copilotプラグイン
 nixでbuildできない
