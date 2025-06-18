@@ -16,6 +16,8 @@ in
       enable = true;
       ignores = [
         ".DS_Store"
+        ".claude/settings.local.json"
+        "CLAUDE.local.md"
       ];
       userEmail = "asahi1600@gmail.com";
       userName = "Yasushi Asahi";

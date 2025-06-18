@@ -34,7 +34,7 @@ let
       pkgs.darwin.trash
       pkgs.jq # programs.jq.enableでもいけるけど、設定することないのでこっち
       pkgs.gnused
-
+      pkgs.wget
       pkgs.ripgrep-all
 
       # docker

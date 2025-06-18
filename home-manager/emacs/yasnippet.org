@@ -1,0 +1,25 @@
+#+TITLE: Yasnippet Configurations
+#+AUTHOR: Yasushi Asahi
+#+EMAIL: asahi1600@gmail.com
+#+STARTUP: fold
+
+* snippets
+** org-mode/
+*** markdown-block
+#+begin_src snippet :tangle (expand-file-name "~/.config/emacs/etc/yasnippet/snippets/org-mode/markdown-block") :mkdirp yes :noweb yes
+  #name: markdown-block
+  #key: md-block
+  # --
+  ,#+begin_src markdown
+   $0
+  ,#+end_src
+#+end_src
+*** typescript-block
+#+begin_src snippet :tangle (expand-file-name "~/.config/emacs/etc/yasnippet/snippets/org-mode/typescript-block") :mkdirp yes :noweb yes
+  #name: typescript-block
+  #key: ts-block
+  # --
+  ,#+begin_src typescript
+   console.log($0)
+  ,#+end_src
+#+end_src
