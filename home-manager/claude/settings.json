@@ -1,0 +1,19 @@
+{
+  "env": {
+    "DISABLE_AUTOUPDATER": "1"
+  },
+  "includeCoAuthoredBy": false,
+  "permissions": {
+    "allow": [
+      "Bash(git diff:*)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(eza:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(fd:*)"
+    ]
+  }
+}
