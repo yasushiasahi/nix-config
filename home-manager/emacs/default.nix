@@ -49,6 +49,19 @@ let
       };
     };
 
+  claude-code =
+    { melpaBuild }:
+    melpaBuild {
+      pname = "claude-code";
+      version = "0-unstable-2025-07-18";
+      src = pkgs.fetchFromGitHub {
+        owner = "stevemolitor";
+        repo = "claude-code.el";
+        rev = "417ce9eeae6b3c0e316a5561fe16f4413d40822a";
+        hash = "sha256-FxuZc8eufed6in8BhX8Bs0GMttkOOj7+3LsrQttf7Ss=";
+      };
+    };
+
   lsp-proxy =
     let
       version = "0.4.3";
@@ -90,7 +103,6 @@ let
         dash
         yasnippet
       ];
-
     };
 
   emacs-mac-with-epkgs = pkgs.emacsWithPackagesFromUsePackage {
@@ -107,6 +119,9 @@ let
           inherit (epkgs) melpaBuild;
         };
         org-modern-indent = pkgs.callPackage org-modern-indent {
+          inherit (epkgs) melpaBuild;
+        };
+        claude-code = pkgs.callPackage claude-code {
           inherit (epkgs) melpaBuild;
         };
         lsp-proxy = pkgs.callPackage lsp-proxy {

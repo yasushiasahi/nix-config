@@ -743,6 +743,12 @@ nixでbuildできない
                          "\n\n"))
     )
 #+end_src
+** claude code連携 [[https://github.com/stevemolitor/claude-code.el][claude-code]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf eat :ensure t)
+
+  (leaf claude-code :ensure t)
+#+end_src
 * 補完インターフェイス minadさんシリーズ
 ** [[https://github.com/oantolin/orderless][orderless]] 順不同のテキストマッチングスタイル
 #+begin_src emacs-lisp :tangle yes

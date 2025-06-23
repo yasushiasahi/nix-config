@@ -5,17 +5,22 @@
   "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
+      "List(*)",
+      "Fetch(https://*)",
       "Bash(rg:*)",
       "Bash(fd:*)",
       "Bash(eza:*)",
+      "Bash(bat:*)",
       "Bash(git diff:*)",
       "Bash(git log:*)",
       "Bash(git status:*)",
+      "Bash(mv:*)",
       "Bash(curl:*)",
       "Bash(wget:*)",
       "Bash(grep:*)",
       "Bash(ls:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(cat:*)"
     ]
   }
 }

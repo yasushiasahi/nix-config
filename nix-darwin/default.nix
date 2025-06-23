@@ -45,7 +45,7 @@
       "firefox"
       "google-chrome"
       "brave-browser"
-      "vivaldi"
+      "figma"
     ];
     masApps = {
       LINE = 539883307;
