@@ -23,3 +23,12 @@
    console.log($0)
   ,#+end_src
 #+end_src
+*** html-block
+#+begin_src snippet :tangle (expand-file-name "~/.config/emacs/etc/yasnippet/snippets/org-mode/html-block") :mkdirp yes :noweb yes
+  #name: html-block
+  #key: html-block
+  # --
+  ,#+begin_src html
+   $0
+  ,#+end_src
+#+end_src

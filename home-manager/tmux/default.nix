@@ -1,5 +1,10 @@
 { pkgs, ... }:
 let
+  # tmux起動時にfishを使う。設定しないデフォルトシェル(zsh)が使われてしまう。
+  extraConfigDefaultShell = ''
+    set-option -g default-shell ${pkgs.fish}/bin/fish
+  '';
+
   extraConfigReroadConfig = ''
     bind r source-file "$XDG_CONFIG_HOME/tmux/tmux.conf" \; display "Reloaded!"
     set -g status-position top
@@ -54,7 +59,11 @@ in
       }
     ];
     extraConfig =
-      extraConfigReroadConfig + extraConfigStatusLine + extraConfigSeshFromGhq + extraConfigTmuxWhichKey;
+      extraConfigDefaultShell
+      + extraConfigReroadConfig
+      + extraConfigStatusLine
+      + extraConfigSeshFromGhq
+      + extraConfigTmuxWhichKey;
   };
 
   # セッションをいい感じに扱える

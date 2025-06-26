@@ -7,6 +7,9 @@
     ];
   };
 
+  # fishにnix関連のpathを通す
+  programs.fish.enable = true;
+
   fonts.packages = [
     # notoを一通り
     pkgs.noto-fonts

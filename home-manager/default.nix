@@ -9,6 +9,7 @@ let
   };
   mkAbbr = sets: {
     zsh.zsh-abbr.abbreviations = sets;
+    fish.shellAbbrs = sets;
   };
 
   miscModule = {
@@ -49,6 +50,8 @@ let
       # ai & llm
       pkgs.ollama
       pkgs.aider-chat
+
+      pkgs.nvfetcher
     ];
 
     # XDG_*の環境変数を設定する
@@ -72,6 +75,8 @@ let
       };
     };
 
+  sources = pkgs.callPackage ../_sources/generated.nix { };
+
 in
 home-manager.lib.homeManagerConfiguration {
   inherit pkgs;
@@ -83,6 +88,7 @@ home-manager.lib.homeManagerConfiguration {
     optionModule
     ./emacs
     ./zsh
+    ./fish
     ./git
     ./nix
     ./alacritty
@@ -109,6 +115,7 @@ home-manager.lib.homeManagerConfiguration {
   extraSpecialArgs = {
     inherit mkAlias;
     inherit mkAbbr;
+    inherit sources;
   };
 
 }

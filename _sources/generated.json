@@ -1,0 +1,107 @@
+{
+    "fish-autopair": {
+        "cargoLocks": null,
+        "date": "2022-07-04",
+        "extract": null,
+        "name": "fish-autopair",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "jorgebucaran",
+            "repo": "autopair.fish",
+            "rev": "4d1752ff5b39819ab58d7337c69220342e9de0e2",
+            "sha256": "sha256-qt3t1iKRRNuiLWiVoiAYOu+9E7jsyECyIqZJ/oRIT1A=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "4d1752ff5b39819ab58d7337c69220342e9de0e2"
+    },
+    "fish-bd": {
+        "cargoLocks": null,
+        "date": "2022-03-04",
+        "extract": null,
+        "name": "fish-bd",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "0rax",
+            "repo": "fish-bd",
+            "rev": "ab686e028bfe95fa561a4f4e57840e36902d4d7d",
+            "sha256": "sha256-GeWjoakXa0t2TsMC/wpLEmsSVGhHFhBVK3v9eyQdzv0=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "ab686e028bfe95fa561a4f4e57840e36902d4d7d"
+    },
+    "fish-done": {
+        "cargoLocks": null,
+        "date": "2025-05-15",
+        "extract": null,
+        "name": "fish-done",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "franciscolourenco",
+            "repo": "done",
+            "rev": "0bfe402753681f705a482694fcaf20c2bfc6deb7",
+            "sha256": "sha256-WA6DBrPBuXRIloO05UBunTJ9N01d6tO1K1uqojjO0mo=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "0bfe402753681f705a482694fcaf20c2bfc6deb7"
+    },
+    "fish-ghq": {
+        "cargoLocks": null,
+        "date": "2021-07-16",
+        "extract": null,
+        "name": "fish-ghq",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "decors",
+            "repo": "fish-ghq",
+            "rev": "cafaaabe63c124bf0714f89ec715cfe9ece87fa2",
+            "sha256": "sha256-6b1zmjtemNLNPx4qsXtm27AbtjwIZWkzJAo21/aVZzM=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "cafaaabe63c124bf0714f89ec715cfe9ece87fa2"
+    },
+    "fzf-fish": {
+        "cargoLocks": null,
+        "date": "2024-04-06",
+        "extract": null,
+        "name": "fzf-fish",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "PatrickF1",
+            "repo": "fzf.fish",
+            "rev": "8920367cf85eee5218cc25a11e209d46e2591e7a",
+            "sha256": "sha256-T8KYLA/r/gOKvAivKRoeqIwE2pINlxFQtZJHpOy9GMM=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "8920367cf85eee5218cc25a11e209d46e2591e7a"
+    }
+}

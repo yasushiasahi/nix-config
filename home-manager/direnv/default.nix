@@ -11,7 +11,7 @@ in
       nix-direnv.enable = true;
       silent = true;
       enableZshIntegration = true;
-      enableFishIntegration = true;
+      # enableFishIntegration = true;
       # direnvが作るキャッシュ(.direnv/)をプロジェクトフォルダに作らないようにする
       # https://github.com/direnv/direnv/wiki/Customizing-cache-location
       stdlib = ''

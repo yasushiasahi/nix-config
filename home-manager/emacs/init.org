@@ -1594,8 +1594,6 @@ nixでbuildできない
   (org-babel-do-load-languages 'org-babel-load-languages '((shell . t)))
   (add-to-list 'org-src-lang-modes '("shell" . bash-ts))
 
-  (add-to-list 'org-src-lang-modes '("html" . html-ts))
-
   (org-babel-do-load-languages 'org-babel-load-languages '((css . t)))
   (add-to-list 'org-src-lang-modes '("css" . css-ts))
 
@@ -1603,6 +1601,7 @@ nixでbuildできない
   (add-to-list 'org-src-lang-modes '("js" . jtsx-jsx))
 
   (add-to-list 'org-src-lang-modes '("markdown" . markdown))
+  (add-to-list 'org-src-lang-modes '("html" . html-ts))
 #+end_src
 
 #+begin_src html

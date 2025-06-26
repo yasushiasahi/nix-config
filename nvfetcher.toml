@@ -1,0 +1,28 @@
+# fish
+
+[fish-bd]
+src.git = "https://github.com/0rax/fish-bd"
+src.branch = "master"
+fetch.github = "0rax/fish-bd"
+
+[fish-ghq]
+src.git = "https://github.com/decors/fish-ghq"
+src.branch = "master"
+fetch.github = "decors/fish-ghq"
+
+[fzf-fish]
+src.git = "https://github.com/PatrickF1/fzf.fish"
+src.branch = "main"
+fetch.github = "PatrickF1/fzf.fish"
+
+[fish-done]
+src.git = "https://github.com/franciscolourenco/done"
+src.branch = "master"
+fetch.github = "franciscolourenco/done"
+
+[fish-autopair]
+src.git = "https://github.com/jorgebucaran/autopair.fish"
+src.branch = "main"
+fetch.github = "jorgebucaran/autopair.fish"
+
+
