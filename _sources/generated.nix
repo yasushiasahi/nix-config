@@ -15,15 +15,15 @@
   };
   emacs-claudemacs = {
     pname = "emacs-claudemacs";
-    version = "bbea60bb572cf83f013e209286f7ad86b959168d";
+    version = "bf0c2d6e3e41c965a552e6fc9ee16cffc2f79355";
     src = fetchFromGitHub {
       owner = "cpoile";
       repo = "claudemacs";
-      rev = "bbea60bb572cf83f013e209286f7ad86b959168d";
+      rev = "bf0c2d6e3e41c965a552e6fc9ee16cffc2f79355";
       fetchSubmodules = false;
-      sha256 = "sha256-iQqkOthxqVmoM73MD5NbV4DMAKA1dsRVFWYf4posC4Q=";
+      sha256 = "sha256-QxYHNDTHSBU6EmXFEsLrpJTSTJKQkwcd71hfLCqd3ak=";
     };
-    date = "2025-06-25";
+    date = "2025-06-26";
   };
   emacs-consult-omni = {
     pname = "emacs-consult-omni";
@@ -58,6 +58,12 @@
       rev = "a5fc5320577f625824c2ea507f4a35e15a9100de";
       fetchSubmodules = false;
       sha256 = "sha256-LYfacRLT3YxWzNWTKDvGObhF9zhadnHfV7X9RxkKvFQ=";
+    };
+    cargoLock."Cargo.lock" = {
+      lockFile = ./emacs-lsp-proxy-a5fc5320577f625824c2ea507f4a35e15a9100de/Cargo.lock;
+      outputHashes = {
+        
+      };
     };
     date = "2025-05-19";
   };
@@ -144,5 +150,41 @@
       sha256 = "sha256-6b1zmjtemNLNPx4qsXtm27AbtjwIZWkzJAo21/aVZzM=";
     };
     date = "2021-07-16";
+  };
+  zsh-autocomplete = {
+    pname = "zsh-autocomplete";
+    version = "77a4f9c1343d12d7cb3ae1e7efc7c37397ccb6b0";
+    src = fetchFromGitHub {
+      owner = "marlonrichert";
+      repo = "zsh-autocomplete";
+      rev = "77a4f9c1343d12d7cb3ae1e7efc7c37397ccb6b0";
+      fetchSubmodules = false;
+      sha256 = "sha256-YH5T9a9KbYbvY6FRBITlhXRmkTmnwGyCQpibLe3Dhwc=";
+    };
+    date = "2025-04-24";
+  };
+  zsh-enhancd = {
+    pname = "zsh-enhancd";
+    version = "5afb4eb6ba36c15821de6e39c0a7bb9d6b0ba415";
+    src = fetchFromGitHub {
+      owner = "babarot";
+      repo = "enhancd";
+      rev = "5afb4eb6ba36c15821de6e39c0a7bb9d6b0ba415";
+      fetchSubmodules = false;
+      sha256 = "sha256-pKQbwiqE0KdmRDbHQcW18WfxyJSsKfymWt/TboY2iic=";
+    };
+    date = "2025-01-24";
+  };
+  zsh-npm-scripts-autocomplete = {
+    pname = "zsh-npm-scripts-autocomplete";
+    version = "5d145e13150acf5dbb01dac6e57e57c357a47a4b";
+    src = fetchFromGitHub {
+      owner = "grigorii-zander";
+      repo = "zsh-npm-scripts-autocomplete";
+      rev = "5d145e13150acf5dbb01dac6e57e57c357a47a4b";
+      fetchSubmodules = false;
+      sha256 = "sha256-Y34VXOU7b5z+R2SssCmbooVwrlmSxUxkObTV0YtsS50=";
+    };
+    date = "2023-10-19";
   };
 }

@@ -1,4 +1,4 @@
-# emacs
+# emacs package
 
 [emacs-eglot-booster]
 src.git = "https://github.com/jdtsmith/eglot-booster"
@@ -29,7 +29,7 @@ fetch.github = "cpoile/claudemacs"
 src.git = "https://github.com/jadestrong/lsp-proxy"
 src.branch = "main"
 fetch.github = "jadestrong/lsp-proxy"
-
+cargo_locks = ["Cargo.lock"]
 
 
 # fish
@@ -63,4 +63,22 @@ fetch.github = "franciscolourenco/done"
 src.git = "https://github.com/jorgebucaran/autopair.fish"
 src.branch = "main"
 fetch.github = "jorgebucaran/autopair.fish"
+
+
+# zsh
+
+[zsh-autocomplete]
+src.git = "https://github.com/marlonrichert/zsh-autocomplete"
+src.branch = "main"
+fetch.github = "marlonrichert/zsh-autocomplete"
+
+[zsh-npm-scripts-autocomplete]
+src.git = "https://github.com/grigorii-zander/zsh-npm-scripts-autocomplete"
+src.branch = "main"
+fetch.github = "grigorii-zander/zsh-npm-scripts-autocomplete"
+
+[zsh-enhancd]
+src.git = "https://github.com/babarot/enhancd"
+src.branch = "main"
+fetch.github = "babarot/enhancd"
 

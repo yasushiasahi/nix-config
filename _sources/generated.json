@@ -22,7 +22,7 @@
     },
     "emacs-claudemacs": {
         "cargoLocks": null,
-        "date": "2025-06-25",
+        "date": "2025-06-26",
         "extract": null,
         "name": "emacs-claudemacs",
         "passthru": null,
@@ -34,12 +34,12 @@
             "name": null,
             "owner": "cpoile",
             "repo": "claudemacs",
-            "rev": "bbea60bb572cf83f013e209286f7ad86b959168d",
-            "sha256": "sha256-iQqkOthxqVmoM73MD5NbV4DMAKA1dsRVFWYf4posC4Q=",
+            "rev": "bf0c2d6e3e41c965a552e6fc9ee16cffc2f79355",
+            "sha256": "sha256-QxYHNDTHSBU6EmXFEsLrpJTSTJKQkwcd71hfLCqd3ak=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "bbea60bb572cf83f013e209286f7ad86b959168d"
+        "version": "bf0c2d6e3e41c965a552e6fc9ee16cffc2f79355"
     },
     "emacs-consult-omni": {
         "cargoLocks": null,
@@ -84,7 +84,12 @@
         "version": "1260d2f7dd18619b42359aa3e1ba6871aa52fd26"
     },
     "emacs-lsp-proxy": {
-        "cargoLocks": null,
+        "cargoLocks": {
+            "Cargo.lock": [
+                "./emacs-lsp-proxy-a5fc5320577f625824c2ea507f4a35e15a9100de/Cargo.lock",
+                {}
+            ]
+        },
         "date": "2025-05-19",
         "extract": null,
         "name": "emacs-lsp-proxy",
@@ -250,5 +255,68 @@
             "type": "github"
         },
         "version": "cafaaabe63c124bf0714f89ec715cfe9ece87fa2"
+    },
+    "zsh-autocomplete": {
+        "cargoLocks": null,
+        "date": "2025-04-24",
+        "extract": null,
+        "name": "zsh-autocomplete",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "marlonrichert",
+            "repo": "zsh-autocomplete",
+            "rev": "77a4f9c1343d12d7cb3ae1e7efc7c37397ccb6b0",
+            "sha256": "sha256-YH5T9a9KbYbvY6FRBITlhXRmkTmnwGyCQpibLe3Dhwc=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "77a4f9c1343d12d7cb3ae1e7efc7c37397ccb6b0"
+    },
+    "zsh-enhancd": {
+        "cargoLocks": null,
+        "date": "2025-01-24",
+        "extract": null,
+        "name": "zsh-enhancd",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "babarot",
+            "repo": "enhancd",
+            "rev": "5afb4eb6ba36c15821de6e39c0a7bb9d6b0ba415",
+            "sha256": "sha256-pKQbwiqE0KdmRDbHQcW18WfxyJSsKfymWt/TboY2iic=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "5afb4eb6ba36c15821de6e39c0a7bb9d6b0ba415"
+    },
+    "zsh-npm-scripts-autocomplete": {
+        "cargoLocks": null,
+        "date": "2023-10-19",
+        "extract": null,
+        "name": "zsh-npm-scripts-autocomplete",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "grigorii-zander",
+            "repo": "zsh-npm-scripts-autocomplete",
+            "rev": "5d145e13150acf5dbb01dac6e57e57c357a47a4b",
+            "sha256": "sha256-Y34VXOU7b5z+R2SssCmbooVwrlmSxUxkObTV0YtsS50=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "5d145e13150acf5dbb01dac6e57e57c357a47a4b"
     }
 }

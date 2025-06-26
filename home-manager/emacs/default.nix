@@ -16,7 +16,7 @@ let
         pname = "lsp-proxy";
         version = "0.0.1";
         src = sources.lsp-proxy.src;
-        cargoHash = "sha256-9yHCvYTYtLLpAzE5QHomvnYRFZDY0NoyQGL+PaJ7Izw=";
+        cargoLock = sources.lsp-proxy.cargoLock."Cargo.lock";
       };
     in
     {

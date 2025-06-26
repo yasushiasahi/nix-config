@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ sources, ... }:
 let
   initExtraFirstHomebrew = ''
     eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -52,31 +52,16 @@ in
     plugins = [
       {
         name = "zsh-autocomplete";
-        src = pkgs.fetchFromGitHub {
-          owner = "marlonrichert";
-          repo = "zsh-autocomplete";
-          rev = "24.09.04";
-          sha256 = "sha256-o8IQszQ4/PLX1FlUvJpowR2Tev59N8lI20VymZ+Hp4w=";
-        };
+        src = sources.zsh-autocomplete.src;
       }
       {
         name = "zsh-npm-scripts-autocomplete";
-        src = pkgs.fetchFromGitHub {
-          owner = "grigorii-zander";
-          repo = "zsh-npm-scripts-autocomplete";
-          rev = "5d145e13150acf5dbb01dac6e57e57c357a47a4b";
-          sha256 = "sha256-Y34VXOU7b5z+R2SssCmbooVwrlmSxUxkObTV0YtsS50=";
-        };
+        src = sources.zsh-npm-scripts-autocomplete.src;
       }
       {
         name = "enhancd";
+        src = sources.zsh-enhancd.src;
         file = "init.sh";
-        src = pkgs.fetchFromGitHub {
-          owner = "babarot";
-          repo = "enhancd";
-          rev = "5afb4eb6ba36c15821de6e39c0a7bb9d6b0ba415";
-          sha256 = "sha256-pKQbwiqE0KdmRDbHQcW18WfxyJSsKfymWt/TboY2iic=";
-        };
       }
     ];
     syntaxHighlighting.enable = true;
