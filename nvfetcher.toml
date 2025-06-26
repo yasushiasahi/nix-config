@@ -1,3 +1,37 @@
+# emacs
+
+[emacs-eglot-booster]
+src.git = "https://github.com/jdtsmith/eglot-booster"
+src.branch = "main"
+fetch.github = "jdtsmith/eglot-booster"
+
+[emacs-consult-omni]
+src.git = "https://github.com/armindarvish/consult-omni"
+src.branch = "main"
+fetch.github = "armindarvish/consult-omni"
+
+[emacs-org-modern-indent]
+src.git = "https://github.com/jdtsmith/org-modern-indent"
+src.branch = "main"
+fetch.github = "jdtsmith/org-modern-indent"
+
+[emacs-claude-code]
+src.git = "https://github.com/stevemolitor/claude-code.el"
+src.branch = "main"
+fetch.github = "stevemolitor/claude-code.el"
+
+[emacs-claudemacs]
+src.git = "https://github.com/cpoile/claudemacs"
+src.branch = "main"
+fetch.github = "cpoile/claudemacs"
+
+[emacs-lsp-proxy]
+src.git = "https://github.com/jadestrong/lsp-proxy"
+src.branch = "main"
+fetch.github = "jadestrong/lsp-proxy"
+
+
+
 # fish
 
 [fish-bd]
@@ -10,10 +44,15 @@ src.git = "https://github.com/decors/fish-ghq"
 src.branch = "master"
 fetch.github = "decors/fish-ghq"
 
-[fzf-fish]
+[fish-fzf]
 src.git = "https://github.com/PatrickF1/fzf.fish"
 src.branch = "main"
 fetch.github = "PatrickF1/fzf.fish"
+
+[fish-enhancd]
+src.git = "https://github.com/babarot/enhancd"
+src.branch = "main"
+fetch.github = "babarot/enhancd"
 
 [fish-done]
 src.git = "https://github.com/franciscolourenco/done"
@@ -24,5 +63,4 @@ fetch.github = "franciscolourenco/done"
 src.git = "https://github.com/jorgebucaran/autopair.fish"
 src.branch = "main"
 fetch.github = "jorgebucaran/autopair.fish"
-
 

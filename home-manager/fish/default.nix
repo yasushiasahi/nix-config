@@ -20,8 +20,12 @@
         src = sources.fish-ghq.src;
       }
       {
-        name = sources.fzf-fish.pname;
-        src = sources.fzf-fish.src;
+        name = sources.fish-fzf.pname;
+        src = sources.fish-fzf.src;
+      }
+      {
+        name = sources.fish-enhancd.pname;
+        src = sources.fish-enhancd.src;
       }
       {
         name = sources.fish-done.pname;

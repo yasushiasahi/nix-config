@@ -1,6 +1,7 @@
 {
   pkgs,
   mkAlias,
+  sources,
   ...
 }:
 let
@@ -9,72 +10,12 @@ let
     patches = (old.patches or [ ]) ++ [ ./emacs-29.1-inline.patch ];
   });
 
-  eglot-booster =
-    { melpaBuild }:
-    melpaBuild {
-      pname = "eglot-booster";
-      version = "0-unstable-2024-10-29";
-      src = pkgs.fetchFromGitHub {
-        owner = "jdtsmith";
-        repo = "eglot-booster";
-        rev = "e6daa6bcaf4aceee29c8a5a949b43eb1b89900ed";
-        hash = "sha256-PLfaXELkdX5NZcSmR1s/kgmU16ODF8bn56nfTh9g6bs=";
-      };
-    };
-
-  consult-omni =
-    { melpaBuild }:
-    melpaBuild {
-      pname = "consult-omni";
-      version = "0-unstable-2025-02-19";
-      files = ''("*.el" "sources/*.el")'';
-      src = pkgs.fetchFromGitHub {
-        owner = "armindarvish";
-        repo = "consult-omni";
-        rev = "d0a24058bf0dda823e5f1efcae5da7dc0efe6bda";
-        hash = "sha256-dzKkJ+3lMRkHRuwe43wpzqnFvF8Tl6j+6XHUsDhMX4o=";
-      };
-    };
-
-  org-modern-indent =
-    { melpaBuild }:
-    melpaBuild {
-      pname = "org-modern-indent";
-      version = "0-unstable-2025-04-13";
-      src = pkgs.fetchFromGitHub {
-        owner = "jdtsmith";
-        repo = "org-modern-indent";
-        rev = "9973bd3b91e4733a3edd1fca232208c837c05473";
-        hash = "sha256-st3338Jk9kZ5BLEPRJZhjqdncMpLoWNwp60ZwKEObyU=";
-      };
-    };
-
-  claude-code =
-    { melpaBuild }:
-    melpaBuild {
-      pname = "claude-code";
-      version = "0-unstable-2025-07-18";
-      src = pkgs.fetchFromGitHub {
-        owner = "stevemolitor";
-        repo = "claude-code.el";
-        rev = "417ce9eeae6b3c0e316a5561fe16f4413d40822a";
-        hash = "sha256-FxuZc8eufed6in8BhX8Bs0GMttkOOj7+3LsrQttf7Ss=";
-      };
-    };
-
   lsp-proxy =
     let
-      version = "0.4.3";
-      src = pkgs.fetchFromGitHub {
-        owner = "jadestrong";
-        repo = "lsp-proxy";
-        rev = "v${version}";
-        hash = "sha256-kPTVWvd/c0Z49h82hDpgE5siXq7ERmPZyheV7hQpr5o=";
-      };
       cli = pkgs.rustPlatform.buildRustPackage {
         pname = "lsp-proxy";
-        version = version;
-        src = src;
+        version = "0.0.1";
+        src = sources.lsp-proxy.src;
         cargoHash = "sha256-9yHCvYTYtLLpAzE5QHomvnYRFZDY0NoyQGL+PaJ7Izw=";
       };
     in
@@ -88,13 +29,13 @@ let
     }:
     melpaBuild {
       pname = "lsp-proxy";
-      version = version;
+      version = "0.0.1";
       nativeBuildInputs = [ cli ];
-      src = src;
+      src = sources.lsp-proxy.src;
       # lsp-proxy.elと同じディレクトリにビルドした実行ファイルをおかないといけない
       postInstall = ''
-        ls $out/share/emacs/site-lisp/elpa/lsp-proxy-${version}
-        cp ${cli}/bin/lsp-proxy $out/share/emacs/site-lisp/elpa/lsp-proxy-${version}/lsp-proxy
+        ls $out/share/emacs/site-lisp/elpa/lsp-proxy-0.0.1
+        cp ${cli}/bin/lsp-proxy $out/share/emacs/site-lisp/elpa/lsp-proxy-0.0.1/lsp-proxy
       '';
       packageRequires = [
         s
@@ -112,17 +53,30 @@ let
       epkgs:
       epkgs
       // {
-        eglot-booster = pkgs.callPackage eglot-booster {
-          inherit (epkgs) melpaBuild;
+        eglot-booster = epkgs.melpaBuild {
+          pname = "eglot-booster";
+          version = "0.0.1";
+          src = sources.emacs-eglot-booster.src;
         };
-        consult-omni = pkgs.callPackage consult-omni {
-          inherit (epkgs) melpaBuild;
+        consult-omni = epkgs.melpaBuild {
+          pname = "consult-omni";
+          version = "0.0.1";
+          src = sources.emacs-consult-omni.src;
         };
-        org-modern-indent = pkgs.callPackage org-modern-indent {
-          inherit (epkgs) melpaBuild;
+        org-modern-indent = epkgs.melpaBuild {
+          pname = "org-modern-indent";
+          version = "0.0.1";
+          src = sources.emacs-org-modern-indent.src;
         };
-        claude-code = pkgs.callPackage claude-code {
-          inherit (epkgs) melpaBuild;
+        claude-code = epkgs.melpaBuild {
+          pname = "claude-code";
+          version = "0.0.1";
+          src = sources.emacs-claude-code.src;
+        };
+        claudemacs = epkgs.melpaBuild {
+          pname = "claudemacs";
+          version = "0.0.1";
+          src = sources.emacs-claudemacs.src;
         };
         lsp-proxy = pkgs.callPackage lsp-proxy {
           inherit (epkgs)

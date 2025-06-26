@@ -1,4 +1,130 @@
 {
+    "emacs-claude-code": {
+        "cargoLocks": null,
+        "date": "2025-06-20",
+        "extract": null,
+        "name": "emacs-claude-code",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "stevemolitor",
+            "repo": "claude-code.el",
+            "rev": "8e37cfcf9d9aea2ba9bc5f162d5f71802213c37b",
+            "sha256": "sha256-E4Xt4ddwLBbplOWl3b4mqcLe5w2m8CMWRJZJRvVzHDc=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "8e37cfcf9d9aea2ba9bc5f162d5f71802213c37b"
+    },
+    "emacs-claudemacs": {
+        "cargoLocks": null,
+        "date": "2025-06-25",
+        "extract": null,
+        "name": "emacs-claudemacs",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "cpoile",
+            "repo": "claudemacs",
+            "rev": "bbea60bb572cf83f013e209286f7ad86b959168d",
+            "sha256": "sha256-iQqkOthxqVmoM73MD5NbV4DMAKA1dsRVFWYf4posC4Q=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "bbea60bb572cf83f013e209286f7ad86b959168d"
+    },
+    "emacs-consult-omni": {
+        "cargoLocks": null,
+        "date": "2025-02-18",
+        "extract": null,
+        "name": "emacs-consult-omni",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "armindarvish",
+            "repo": "consult-omni",
+            "rev": "d0a24058bf0dda823e5f1efcae5da7dc0efe6bda",
+            "sha256": "sha256-dzKkJ+3lMRkHRuwe43wpzqnFvF8Tl6j+6XHUsDhMX4o=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "d0a24058bf0dda823e5f1efcae5da7dc0efe6bda"
+    },
+    "emacs-eglot-booster": {
+        "cargoLocks": null,
+        "date": "2025-04-28",
+        "extract": null,
+        "name": "emacs-eglot-booster",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "jdtsmith",
+            "repo": "eglot-booster",
+            "rev": "1260d2f7dd18619b42359aa3e1ba6871aa52fd26",
+            "sha256": "sha256-teAKWDDL7IrCBiZUVIVlB3W22G9H6IrWiRV/P62dFy0=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "1260d2f7dd18619b42359aa3e1ba6871aa52fd26"
+    },
+    "emacs-lsp-proxy": {
+        "cargoLocks": null,
+        "date": "2025-05-19",
+        "extract": null,
+        "name": "emacs-lsp-proxy",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "jadestrong",
+            "repo": "lsp-proxy",
+            "rev": "a5fc5320577f625824c2ea507f4a35e15a9100de",
+            "sha256": "sha256-LYfacRLT3YxWzNWTKDvGObhF9zhadnHfV7X9RxkKvFQ=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "a5fc5320577f625824c2ea507f4a35e15a9100de"
+    },
+    "emacs-org-modern-indent": {
+        "cargoLocks": null,
+        "date": "2025-04-12",
+        "extract": null,
+        "name": "emacs-org-modern-indent",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "jdtsmith",
+            "repo": "org-modern-indent",
+            "rev": "9973bd3b91e4733a3edd1fca232208c837c05473",
+            "sha256": "sha256-st3338Jk9kZ5BLEPRJZhjqdncMpLoWNwp60ZwKEObyU=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "9973bd3b91e4733a3edd1fca232208c837c05473"
+    },
     "fish-autopair": {
         "cargoLocks": null,
         "date": "2022-07-04",
@@ -62,6 +188,48 @@
         },
         "version": "0bfe402753681f705a482694fcaf20c2bfc6deb7"
     },
+    "fish-enhancd": {
+        "cargoLocks": null,
+        "date": "2025-01-24",
+        "extract": null,
+        "name": "fish-enhancd",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "babarot",
+            "repo": "enhancd",
+            "rev": "5afb4eb6ba36c15821de6e39c0a7bb9d6b0ba415",
+            "sha256": "sha256-pKQbwiqE0KdmRDbHQcW18WfxyJSsKfymWt/TboY2iic=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "5afb4eb6ba36c15821de6e39c0a7bb9d6b0ba415"
+    },
+    "fish-fzf": {
+        "cargoLocks": null,
+        "date": "2024-04-06",
+        "extract": null,
+        "name": "fish-fzf",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "PatrickF1",
+            "repo": "fzf.fish",
+            "rev": "8920367cf85eee5218cc25a11e209d46e2591e7a",
+            "sha256": "sha256-T8KYLA/r/gOKvAivKRoeqIwE2pINlxFQtZJHpOy9GMM=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "8920367cf85eee5218cc25a11e209d46e2591e7a"
+    },
     "fish-ghq": {
         "cargoLocks": null,
         "date": "2021-07-16",
@@ -82,26 +250,5 @@
             "type": "github"
         },
         "version": "cafaaabe63c124bf0714f89ec715cfe9ece87fa2"
-    },
-    "fzf-fish": {
-        "cargoLocks": null,
-        "date": "2024-04-06",
-        "extract": null,
-        "name": "fzf-fish",
-        "passthru": null,
-        "pinned": false,
-        "src": {
-            "deepClone": false,
-            "fetchSubmodules": false,
-            "leaveDotGit": false,
-            "name": null,
-            "owner": "PatrickF1",
-            "repo": "fzf.fish",
-            "rev": "8920367cf85eee5218cc25a11e209d46e2591e7a",
-            "sha256": "sha256-T8KYLA/r/gOKvAivKRoeqIwE2pINlxFQtZJHpOy9GMM=",
-            "sparseCheckout": [],
-            "type": "github"
-        },
-        "version": "8920367cf85eee5218cc25a11e209d46e2591e7a"
     }
 }
