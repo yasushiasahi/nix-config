@@ -77,12 +77,6 @@
                (vundo-glyph-alist . vundo-unicode-symbols))
       :bind* ("C-M-/" . vundo))
 
-    (leaf mule-cmds
-      :doc "commands for multilingual environment"
-      :config
-      (set-language-environment "Japanese")
-      (prefer-coding-system 'utf-8-unix))
-
     (leaf ns-win
       :doc "lisp side of interface with NeXT/Open/GNUstep/macOS window system"
       :when (and (memq window-system '(ns nil))
@@ -546,6 +540,13 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :config
     (setopt auth-sources '("~/.authinfo")))
 #+end_src
+** プロジェクト管理
+*** =.dir-locals-2.el= があるディレクトリをプロジェクトのルートとする。gitのrootよりも優先される。
+#+begin_src emacs-lisp :tangle yes
+  (leaf project
+    :config
+    (setopt project-vc-extra-root-markers '(".dir-locals-2.el" ".dir-locals.el")))
+#+end_src
 * ユーティリティー
 ** [[https://github.com/Wilfred/helpful][Helpful]] より見やすい*help*バッファー
 #+begin_src emacs-lisp :tangle yes
@@ -745,10 +746,63 @@ nixでbuildできない
 #+end_src
 ** claude code連携 [[https://github.com/stevemolitor/claude-code.el][claude-code]]
 #+begin_src emacs-lisp :tangle yes
-  (leaf eat :ensure t)
-
-  (leaf claude-code :ensure t)
+  (leaf claude-code
+    :ensure t
+    :config
+    (claude-code-mode)
+    (global-set-key (kbd "C-c c") claude-code-command-map)
+    ;; claude-codeのREPL内では別のフォントを使う
+    (custom-set-faces '(claude-code-repl-face ((t (:family "JuliaMono"))))))
 #+end_src
+** claude code連携 [[https://github.com/cpoile/claudemacs][claudemacs]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf claudemacs
+    :ensure t
+    :after eat
+    :bind (("C-c a" . claudemacs-transient-menu)))
+
+  ;; font insanity for Claudemacs
+  ;; https://github.com/cpoile/claudemacs?tab=readme-ov-file#fonts
+  (defun my/setup-custom-font-fallbacks-mac ()
+    (interactive)
+    "Configure font fallbacks on mac for symbols and emojis.
+  This will need to be called every time you change your font size,
+  to load the new symbol and emoji fonts."
+
+    (setq use-default-font-for-symbols nil)
+
+    ;; --- Configure for 'symbol' script ---
+    ;; We add fonts one by one. Since we use 'prepend',
+    ;; the last one added here will be the first one Emacs tries.
+    ;; So, list them in reverse order of your preference.
+
+    ;; Least preferred among this list for symbols (will be at the end of our preferred list)
+    (set-fontset-font t 'symbol "Hiragino Sans" nil 'prepend)
+    (set-fontset-font t 'symbol "STIX Two Math" nil 'prepend)
+    (set-fontset-font t 'symbol "Zapf Dingbats" nil 'prepend)
+    (set-fontset-font t 'symbol "Monaco" nil 'prepend)
+    (set-fontset-font t 'symbol "Menlo" nil 'prepend)
+
+    ;; --- Configure for 'emoji' script ---
+    ;; Add fonts one by one, in reverse order of preference.
+
+    ;; Least preferred among this list for emojis
+    (set-fontset-font t 'emoji "Hiragino Sans" nil 'prepend)
+    (set-fontset-font t 'emoji "STIX Two Math" nil 'prepend)
+    (set-fontset-font t 'emoji "Zapf Dingbats" nil 'prepend)
+    (set-fontset-font t 'emoji "Monaco" nil 'prepend)
+    (set-fontset-font t 'emoji "Menlo" nil 'prepend)
+    (set-fontset-font t 'emoji "Noto Emoji" nil 'prepend) ;; If you install Noto Emoji
+    )
+
+  ;; Then, add the fonts after your setup is complete:
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (progn
+                (when (string-equal system-type "darwin")
+                  (my/setup-custom-font-fallbacks-mac)))))
+#+end_src
+
 * 補完インターフェイス minadさんシリーズ
 ** [[https://github.com/oantolin/orderless][orderless]] 順不同のテキストマッチングスタイル
 #+begin_src emacs-lisp :tangle yes
@@ -1498,7 +1552,7 @@ nixでbuildできない
       (add-hook 'before-save-hook 'delete-trailing-whitespace nil 'make-it-local)))
 #+end_src
 ** org-capture
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
   (leaf org-capture
     :doc "Fast note taking in Org"
     :tag "builtin" "text" "calendar" "hypermedia" "outlines"
@@ -1631,7 +1685,15 @@ nixでbuildできない
     :tag "unix" "convenience" "emacs>=29.1"
     :ensure t)
 #+end_src
-
+** eat [[https://codeberg.org/akib/emacs-eat][eat]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf eat
+    :ensure t
+    :config
+    (setopt eat-shell "~/.nix-profile/bin/fish")
+    ;; https://github.com/cpoile/claudemacs?tab=readme-ov-file#setup
+    (setopt eat-term-scrollback-size 40000))
+#+end_src
 * ユースケース
 ** 特定のバッファーのポイントを記録してどこからでもその位置にジャンプする
 - =C-x r SPC r=(point-to-register) ポイントの記録

@@ -88,6 +88,7 @@ home-manager.lib.homeManagerConfiguration {
     optionModule
     ./emacs
     ./zsh
+    ./bash
     ./fish
     ./git
     ./nix

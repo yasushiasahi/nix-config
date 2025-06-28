@@ -78,6 +78,18 @@ let
           version = "0.0.1";
           src = sources.emacs-claudemacs.src;
         };
+        eat = epkgs.melpaBuild {
+          pname = "eat";
+          version = "0.0.2";
+          src = sources.emacs-eat.src;
+          files = ''
+            ("*.el" ("term" "term/*.el") "*.texi"
+               "*.ti" ("terminfo/e" "terminfo/e/*")
+               ("terminfo/65" "terminfo/65/*")
+               ("integration" "integration/*")
+               (:exclude ".dir-locals.el" "*-tests.el"))
+          '';
+        };
         lsp-proxy = pkgs.callPackage lsp-proxy {
           inherit (epkgs)
             melpaBuild

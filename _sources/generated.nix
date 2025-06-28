@@ -37,6 +37,20 @@
     };
     date = "2025-02-18";
   };
+  emacs-eat = {
+    pname = "emacs-eat";
+    version = "c8d54d649872bfe7b2b9f49ae5c2addbf12d3b99";
+    src = fetchgit {
+      url = "https://codeberg.org/akib/emacs-eat";
+      rev = "c8d54d649872bfe7b2b9f49ae5c2addbf12d3b99";
+      fetchSubmodules = false;
+      deepClone = false;
+      leaveDotGit = false;
+      sparseCheckout = [ ];
+      sha256 = "sha256-9xG2rMlaMFY77JzUQ3JFrc7XKILZSL8TbP/BkzvBvMk=";
+    };
+    date = "2025-02-06";
+  };
   emacs-eglot-booster = {
     pname = "emacs-eglot-booster";
     version = "1260d2f7dd18619b42359aa3e1ba6871aa52fd26";

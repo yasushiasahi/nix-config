@@ -62,6 +62,26 @@
         },
         "version": "d0a24058bf0dda823e5f1efcae5da7dc0efe6bda"
     },
+    "emacs-eat": {
+        "cargoLocks": null,
+        "date": "2025-02-06",
+        "extract": null,
+        "name": "emacs-eat",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "rev": "c8d54d649872bfe7b2b9f49ae5c2addbf12d3b99",
+            "sha256": "sha256-9xG2rMlaMFY77JzUQ3JFrc7XKILZSL8TbP/BkzvBvMk=",
+            "sparseCheckout": [],
+            "type": "git",
+            "url": "https://codeberg.org/akib/emacs-eat"
+        },
+        "version": "c8d54d649872bfe7b2b9f49ae5c2addbf12d3b99"
+    },
     "emacs-eglot-booster": {
         "cargoLocks": null,
         "date": "2025-04-28",

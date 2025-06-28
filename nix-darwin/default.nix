@@ -28,6 +28,9 @@
     pkgs.emacs-all-the-icons-fonts
     pkgs.font-awesome
     pkgs.font-awesome_5
+    # for claude-code.el
+    pkgs.julia-mono
+    pkgs.nerd-fonts.jetbrains-mono
   ];
 
   homebrew = {

@@ -31,6 +31,12 @@ src.branch = "main"
 fetch.github = "jadestrong/lsp-proxy"
 cargo_locks = ["Cargo.lock"]
 
+[emacs-eat]
+src.git = "https://codeberg.org/akib/emacs-eat"
+src.branch = "master"
+fetch.git = "https://codeberg.org/akib/emacs-eat"
+
+
 
 # fish
 
