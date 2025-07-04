@@ -51,7 +51,11 @@ let
       pkgs.ollama
       pkgs.aider-chat
 
+      # nix tool
       pkgs.nvfetcher
+
+      # react native
+      pkgs.watchman
     ];
 
     # XDG_*の環境変数を設定する

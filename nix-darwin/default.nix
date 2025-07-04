@@ -52,12 +52,14 @@
       "google-chrome"
       "brave-browser"
       "figma"
+      "android-studio"
     ];
     masApps = {
       LINE = 539883307;
       amazon-kindle = 302584613;
       tailscale = 1475387142;
       yoink = 457622435;
+      Xcode = 497799835;
     };
   };
 

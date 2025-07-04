@@ -8,8 +8,15 @@
     shellInit = ''
       # 起動時の挨拶文を非表示にする
       set fish_greeting
-    '';
 
+      # https://docs.expo.dev/get-started/set-up-your-environment/?platform=android&device=simulated&mode=expo-go
+      set -gx ANDROID_HOME "$HOME/Library/Android/sdk"
+      fish_add_path -a $ANDROID_HOME/emulator
+      fish_add_path -a $ANDROID_HOME/platform-tools
+    '';
+    shellAliases = {
+      rm = "trash";
+    };
     plugins = [
       {
         name = sources.fish-bd.pname;

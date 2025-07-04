@@ -1,0 +1,457 @@
+{
+  "$schema": "https://ale.sh/karabiner-jsonschema.json",
+  "title": "Emacs-like key bindings",
+  "rules": [
+    {
+      "description": "Control+F/B/N/P to Arrow Keys",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "f",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "right_arrow"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_unless",
+              "bundle_identifiers": [
+                "^org\\.gnu\\.Emacs$",
+                "^com\\.mitchellh\\.ghostty$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "b",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "left_arrow"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_unless",
+              "bundle_identifiers": [
+                "^org\\.gnu\\.Emacs$",
+                "^com\\.mitchellh\\.ghostty$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "n",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "down_arrow"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_unless",
+              "bundle_identifiers": [
+                "^org\\.gnu\\.Emacs$",
+                "^com\\.mitchellh\\.ghostty$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "p",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "up_arrow"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_unless",
+              "bundle_identifiers": [
+                "^org\\.gnu\\.Emacs$",
+                "^com\\.mitchellh\\.ghostty$"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Control+A/E to Bigining of line/End of line",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "a",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "left_arrow",
+              "modifiers": ["command"]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_unless",
+              "bundle_identifiers": [
+                "^org\\.gnu\\.Emacs$",
+                "^com\\.mitchellh\\.ghostty$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "e",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "right_arrow",
+              "modifiers": ["command"]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_unless",
+              "bundle_identifiers": [
+                "^org\\.gnu\\.Emacs$",
+                "^com\\.mitchellh\\.ghostty$"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Control+M to Enter",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "m",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "return_or_enter"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_unless",
+              "bundle_identifiers": [
+                "^org\\.gnu\\.Emacs$",
+                "^com\\.mitchellh\\.ghostty$"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Control+H/D to Delete/Forward Delete",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "h",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "delete_or_backspace"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_unless",
+              "bundle_identifiers": [
+                "^org\\.gnu\\.Emacs$",
+                "^com\\.mitchellh\\.ghostty$"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "d",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "delete_forward"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_unless",
+              "bundle_identifiers": [
+                "^org\\.gnu\\.Emacs$",
+                "^com\\.mitchellh\\.ghostty$"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Option+W to Copy",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "w",
+            "modifiers": {
+              "mandatory": ["option"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "c",
+              "modifiers": ["command"]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_unless",
+              "bundle_identifiers": [
+                "^org\\.gnu\\.Emacs$",
+                "^com\\.mitchellh\\.ghostty$"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Control+W to Cut",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "w",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "x",
+              "modifiers": ["command"]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_unless",
+              "bundle_identifiers": [
+                "^org\\.gnu\\.Emacs$",
+                "^com\\.mitchellh\\.ghostty$"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Control+K to delete to end of line",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "k",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "right_arrow",
+              "modifiers": ["command", "shift"]
+            },
+            {
+              "key_code": "x",
+              "modifiers": ["command"]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_unless",
+              "bundle_identifiers": [
+                "^org\\.gnu\\.Emacs$",
+                "^com\\.mitchellh\\.ghostty$"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Control+Y to Paste",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "y",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "v",
+              "modifiers": ["command"]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_unless",
+              "bundle_identifiers": [
+                "^org\\.gnu\\.Emacs$",
+                "^com\\.mitchellh\\.ghostty$"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Control+Shift+/ to Redo",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "slash",
+            "modifiers": {
+              "mandatory": ["control", "shift"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "z",
+              "modifiers": ["command", "shift"]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_unless",
+              "bundle_identifiers": [
+                "^org\\.gnu\\.Emacs$",
+                "^com\\.mitchellh\\.ghostty$"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Control+/ to Undo",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "slash",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "z",
+              "modifiers": ["command"]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_unless",
+              "bundle_identifiers": [
+                "^org\\.gnu\\.Emacs$",
+                "^com\\.mitchellh\\.ghostty$"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Control+I to Tab",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "i",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "tab"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_unless",
+              "bundle_identifiers": [
+                "^org\\.gnu\\.Emacs$",
+                "^com\\.mitchellh\\.ghostty$"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
