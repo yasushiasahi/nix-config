@@ -62,6 +62,28 @@ let
           pname = "consult-omni";
           version = "0.0.1";
           src = sources.emacs-consult-omni.src;
+          files = ''
+            ("*.el"
+             "sources/consult-omni-google-autosuggest.el"
+             "sources/consult-omni-google.el"
+             "sources/consult-omni-sources.el"
+             "sources/consult-omni-ripgrep-all.el"
+             "sources/consult-omni-grep.el"
+             "sources/consult-omni-fd.el"
+             "sources/consult-omni-gptel.el"
+             "sources/consult-omni-gh.el"
+             "sources/consult-omni-brave-autosuggest.el"
+             "sources/consult-omni-brave.el"
+             "sources/consult-omni-wikipedia.el"
+             "sources/consult-omni-apps.el")
+          '';
+          packageRequires = [
+            epkgs.consult
+            epkgs.embark-consult
+            epkgs.gptel
+            epkgs.consult-gh
+            epkgs.yaml
+          ];
         };
         org-modern-indent = epkgs.melpaBuild {
           pname = "org-modern-indent";
@@ -72,6 +94,7 @@ let
           pname = "claude-code";
           version = "0.0.1";
           src = sources.emacs-claude-code.src;
+          files = ''("*.el" (:exclude "images/*"))'';
         };
         claudemacs = epkgs.melpaBuild {
           pname = "claudemacs";

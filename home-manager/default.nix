@@ -49,10 +49,6 @@ let
       pkgs.yarn
       pkgs.pnpm
 
-      # ai & llm
-      pkgs.ollama
-      pkgs.aider-chat
-
       # nix tool
       pkgs.nvfetcher
 
@@ -64,7 +60,6 @@ let
     # XDG_*の環境変数を設定する
     xdg.enable = true;
 
-    services.ollama.enable = true;
   };
 
   optionModule =
