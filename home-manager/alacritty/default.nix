@@ -23,7 +23,7 @@ in
         blinking = "On";
       };
       terminal.shell = {
-        program = "${pkgs.zsh}/bin/fish";
+        program = "${pkgs.fish}/bin/fish";
         args = [
           "-l"
           "-c"

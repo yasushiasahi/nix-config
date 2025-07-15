@@ -24,7 +24,8 @@
               "type": "frontmost_application_unless",
               "bundle_identifiers": [
                 "^org\\.gnu\\.Emacs$",
-                "^com\\.mitchellh\\.ghostty$"
+                "^com\\.mitchellh\\.ghostty$",
+                "^org\\.alacritty$"
               ]
             }
           ]
@@ -48,7 +49,8 @@
               "type": "frontmost_application_unless",
               "bundle_identifiers": [
                 "^org\\.gnu\\.Emacs$",
-                "^com\\.mitchellh\\.ghostty$"
+                "^com\\.mitchellh\\.ghostty$",
+                "^org\\.alacritty$"
               ]
             }
           ]
@@ -72,7 +74,8 @@
               "type": "frontmost_application_unless",
               "bundle_identifiers": [
                 "^org\\.gnu\\.Emacs$",
-                "^com\\.mitchellh\\.ghostty$"
+                "^com\\.mitchellh\\.ghostty$",
+                "^org\\.alacritty$"
               ]
             }
           ]
@@ -96,7 +99,8 @@
               "type": "frontmost_application_unless",
               "bundle_identifiers": [
                 "^org\\.gnu\\.Emacs$",
-                "^com\\.mitchellh\\.ghostty$"
+                "^com\\.mitchellh\\.ghostty$",
+                "^org\\.alacritty$"
               ]
             }
           ]
@@ -126,7 +130,8 @@
               "type": "frontmost_application_unless",
               "bundle_identifiers": [
                 "^org\\.gnu\\.Emacs$",
-                "^com\\.mitchellh\\.ghostty$"
+                "^com\\.mitchellh\\.ghostty$",
+                "^org\\.alacritty$"
               ]
             }
           ]
@@ -151,7 +156,8 @@
               "type": "frontmost_application_unless",
               "bundle_identifiers": [
                 "^org\\.gnu\\.Emacs$",
-                "^com\\.mitchellh\\.ghostty$"
+                "^com\\.mitchellh\\.ghostty$",
+                "^org\\.alacritty$"
               ]
             }
           ]
@@ -180,7 +186,8 @@
               "type": "frontmost_application_unless",
               "bundle_identifiers": [
                 "^org\\.gnu\\.Emacs$",
-                "^com\\.mitchellh\\.ghostty$"
+                "^com\\.mitchellh\\.ghostty$",
+                "^org\\.alacritty$"
               ]
             }
           ]
@@ -209,7 +216,8 @@
               "type": "frontmost_application_unless",
               "bundle_identifiers": [
                 "^org\\.gnu\\.Emacs$",
-                "^com\\.mitchellh\\.ghostty$"
+                "^com\\.mitchellh\\.ghostty$",
+                "^org\\.alacritty$"
               ]
             }
           ]
@@ -233,7 +241,8 @@
               "type": "frontmost_application_unless",
               "bundle_identifiers": [
                 "^org\\.gnu\\.Emacs$",
-                "^com\\.mitchellh\\.ghostty$"
+                "^com\\.mitchellh\\.ghostty$",
+                "^org\\.alacritty$"
               ]
             }
           ]
@@ -263,7 +272,8 @@
               "type": "frontmost_application_unless",
               "bundle_identifiers": [
                 "^org\\.gnu\\.Emacs$",
-                "^com\\.mitchellh\\.ghostty$"
+                "^com\\.mitchellh\\.ghostty$",
+                "^org\\.alacritty$"
               ]
             }
           ]
@@ -293,7 +303,8 @@
               "type": "frontmost_application_unless",
               "bundle_identifiers": [
                 "^org\\.gnu\\.Emacs$",
-                "^com\\.mitchellh\\.ghostty$"
+                "^com\\.mitchellh\\.ghostty$",
+                "^org\\.alacritty$"
               ]
             }
           ]
@@ -327,7 +338,8 @@
               "type": "frontmost_application_unless",
               "bundle_identifiers": [
                 "^org\\.gnu\\.Emacs$",
-                "^com\\.mitchellh\\.ghostty$"
+                "^com\\.mitchellh\\.ghostty$",
+                "^org\\.alacritty$"
               ]
             }
           ]
@@ -357,7 +369,8 @@
               "type": "frontmost_application_unless",
               "bundle_identifiers": [
                 "^org\\.gnu\\.Emacs$",
-                "^com\\.mitchellh\\.ghostty$"
+                "^com\\.mitchellh\\.ghostty$",
+                "^org\\.alacritty$"
               ]
             }
           ]
@@ -387,7 +400,8 @@
               "type": "frontmost_application_unless",
               "bundle_identifiers": [
                 "^org\\.gnu\\.Emacs$",
-                "^com\\.mitchellh\\.ghostty$"
+                "^com\\.mitchellh\\.ghostty$",
+                "^org\\.alacritty$"
               ]
             }
           ]
@@ -417,7 +431,8 @@
               "type": "frontmost_application_unless",
               "bundle_identifiers": [
                 "^org\\.gnu\\.Emacs$",
-                "^com\\.mitchellh\\.ghostty$"
+                "^com\\.mitchellh\\.ghostty$",
+                "^org\\.alacritty$"
               ]
             }
           ]
@@ -446,7 +461,8 @@
               "type": "frontmost_application_unless",
               "bundle_identifiers": [
                 "^org\\.gnu\\.Emacs$",
-                "^com\\.mitchellh\\.ghostty$"
+                "^com\\.mitchellh\\.ghostty$",
+                "^org\\.alacritty$"
               ]
             }
           ]

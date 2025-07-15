@@ -727,7 +727,7 @@ nixでbuildできない
     (add-to-list 'copilot-major-mode-alist '("astro-ts" . "typescriptreact")))
 #+end_src
 ** [[https://github.com/chep/copilot-chat.el][copilot-chat]] copilotとチャットできる
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
   (leaf copilot-chat
     :ensure t
     :hook ((git-commit-setup-hook . copilot-chat-insert-commit-message))
