@@ -45,4 +45,12 @@
     ];
   };
 
+  xdg.configFile = {
+    # completions
+    "fish/completions/" = {
+      source = ./completions;
+      recursive = true;
+    };
+  };
+
 }

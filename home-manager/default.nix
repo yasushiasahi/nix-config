@@ -46,6 +46,8 @@ let
 
       # node tools
       pkgs.nodejs_22
+      pkgs.yarn
+      pkgs.pnpm
 
       # ai & llm
       pkgs.ollama
@@ -56,6 +58,7 @@ let
 
       # react native
       pkgs.watchman
+      pkgs.cocoapods
     ];
 
     # XDG_*の環境変数を設定する

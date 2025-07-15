@@ -32,3 +32,13 @@
    $0
   ,#+end_src
 #+end_src
+*** ai-block
+#+begin_src snippet :tangle (expand-file-name "~/.config/emacs/etc/yasnippet/snippets/org-mode/ai-block") :mkdirp yes :noweb yes
+  #name: ai-block
+  #key: ai-block
+  # --
+  ,#+begin_ai
+   $0[SYS]:
+   [ME]:
+  ,#+end_ai
+#+end_src

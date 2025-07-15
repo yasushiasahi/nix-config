@@ -3,15 +3,15 @@
 {
   emacs-claude-code = {
     pname = "emacs-claude-code";
-    version = "8e37cfcf9d9aea2ba9bc5f162d5f71802213c37b";
+    version = "1196a66a73eca84d0d31f9ffa920cdde98953f4b";
     src = fetchFromGitHub {
       owner = "stevemolitor";
       repo = "claude-code.el";
-      rev = "8e37cfcf9d9aea2ba9bc5f162d5f71802213c37b";
+      rev = "1196a66a73eca84d0d31f9ffa920cdde98953f4b";
       fetchSubmodules = false;
-      sha256 = "sha256-E4Xt4ddwLBbplOWl3b4mqcLe5w2m8CMWRJZJRvVzHDc=";
+      sha256 = "sha256-FCeoI2KeJ5BxYdHZS79lvW0VPf6TIaqeTKm5xiBpO6Q=";
     };
-    date = "2025-06-20";
+    date = "2025-07-03";
   };
   emacs-claudemacs = {
     pname = "emacs-claudemacs";
@@ -167,15 +167,15 @@
   };
   zsh-autocomplete = {
     pname = "zsh-autocomplete";
-    version = "77a4f9c1343d12d7cb3ae1e7efc7c37397ccb6b0";
+    version = "c527f8b82fe9ed915c1dadc2f424d8ca957d249e";
     src = fetchFromGitHub {
       owner = "marlonrichert";
       repo = "zsh-autocomplete";
-      rev = "77a4f9c1343d12d7cb3ae1e7efc7c37397ccb6b0";
+      rev = "c527f8b82fe9ed915c1dadc2f424d8ca957d249e";
       fetchSubmodules = false;
-      sha256 = "sha256-YH5T9a9KbYbvY6FRBITlhXRmkTmnwGyCQpibLe3Dhwc=";
+      sha256 = "sha256-4EmX13lrwvx54hDFEoSbMoEefbR8xEfr6NNj8OfShy0=";
     };
-    date = "2025-04-24";
+    date = "2025-07-04";
   };
   zsh-enhancd = {
     pname = "zsh-enhancd";
