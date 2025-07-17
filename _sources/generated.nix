@@ -3,15 +3,15 @@
 {
   emacs-claude-code = {
     pname = "emacs-claude-code";
-    version = "7d60398612ba01ad44337c212d8a7ad2e3976ddf";
+    version = "4939a2e77fab0601396824c441c2c8f185cc2bbf";
     src = fetchFromGitHub {
       owner = "stevemolitor";
       repo = "claude-code.el";
-      rev = "7d60398612ba01ad44337c212d8a7ad2e3976ddf";
+      rev = "4939a2e77fab0601396824c441c2c8f185cc2bbf";
       fetchSubmodules = false;
-      sha256 = "sha256-LmDa6180zY5V+We0KHz6+QFNTUkgKyQJEaRKVfC8OzM=";
+      sha256 = "sha256-Il5blmrf5O5DJVYcz1O/bI05J2EP9/OF9KCODtQ3DDU=";
     };
-    date = "2025-07-15";
+    date = "2025-07-16";
   };
   emacs-claudemacs = {
     pname = "emacs-claudemacs";
@@ -53,15 +53,15 @@
   };
   emacs-eglot-booster = {
     pname = "emacs-eglot-booster";
-    version = "1260d2f7dd18619b42359aa3e1ba6871aa52fd26";
+    version = "cab7803c4f0adc7fff9da6680f90110674bb7a22";
     src = fetchFromGitHub {
       owner = "jdtsmith";
       repo = "eglot-booster";
-      rev = "1260d2f7dd18619b42359aa3e1ba6871aa52fd26";
+      rev = "cab7803c4f0adc7fff9da6680f90110674bb7a22";
       fetchSubmodules = false;
-      sha256 = "sha256-teAKWDDL7IrCBiZUVIVlB3W22G9H6IrWiRV/P62dFy0=";
+      sha256 = "sha256-xUBQrQpw+JZxcqT1fy/8C2tjKwa7sLFHXamBm45Fa4Y=";
     };
-    date = "2025-04-28";
+    date = "2025-07-16";
   };
   emacs-lsp-proxy = {
     pname = "emacs-lsp-proxy";

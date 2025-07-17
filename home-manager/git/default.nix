@@ -33,6 +33,12 @@ in
           autoSetupRemote = true;
         };
       };
+
+      difftastic = {
+        enable = true;
+        enableAsDifftool = true;
+        background = "dark";
+      };
     };
 
     gh = {

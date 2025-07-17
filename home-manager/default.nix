@@ -109,7 +109,7 @@ home-manager.lib.homeManagerConfiguration {
     ./vscode
     ./starship
     ./karabiner-elements
-    ./colima
+    # ./colima
     ./claude
   ];
 

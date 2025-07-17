@@ -11,6 +11,12 @@
   programs.fish.enable = true;
 
   fonts.packages = [
+    # 日本語対応プログラミングフォント
+    pkgs.plemoljp
+    pkgs.plemoljp-nf
+    pkgs.hackgen-nf-font
+    pkgs.hackgen-font
+
     # notoを一通り
     pkgs.noto-fonts
     pkgs.noto-fonts-lgc-plus
@@ -19,18 +25,18 @@
     pkgs.noto-fonts-color-emoji
     pkgs.noto-fonts-emoji-blob-bin
     pkgs.noto-fonts-monochrome-emoji
-    pkgs.hackgen-nf-font
-    pkgs.hackgen-font
-    pkgs.iosevka
+
     # nerdfontを入れたい nerd-icons.elでお勧めされているもの
     # https://github.com/rainstormstudio/nerd-icons.el?tab=readme-ov-file#installing-fonts
     pkgs.nerd-fonts.symbols-only
     pkgs.emacs-all-the-icons-fonts
     pkgs.font-awesome
     pkgs.font-awesome_5
+
     # for claude-code.el
     pkgs.julia-mono
     pkgs.nerd-fonts.jetbrains-mono
+    pkgs.iosevka
   ];
 
   homebrew = {

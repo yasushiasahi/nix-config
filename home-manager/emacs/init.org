@@ -750,7 +750,7 @@ nixでbuildできない
     :ensure t
     :config
     (claude-code-mode)
-    (global-set-key (kbd "C-c c") claude-code-command-map)
+    (global-set-key (kbd "C-q") claude-code-command-map)
     ;; claude-codeのREPL内では別のフォントを使う
     (custom-set-faces '(claude-code-repl-face ((t (:family "JuliaMono"))))))
 #+end_src
