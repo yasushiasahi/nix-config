@@ -15,7 +15,7 @@ in
       };
       scrolling.history = 100000;
       font = {
-        normal.family = "HackGen35 Console NF";
+        normal.family = "PlemolJP35 Console NF";
         size = 13;
       };
       cursor.style = {

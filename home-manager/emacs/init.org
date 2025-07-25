@@ -49,10 +49,7 @@
       :config
       (exec-path-from-shell-initialize))
 
-    (leaf autorevert
-      :doc "revert buffers when files on disk change"
-      :tag "builtin"
-      :global-minor-mode global-auto-revert-mode)
+
 
     (leaf delsel
       :doc "delete selection if you insert"
@@ -502,6 +499,15 @@
       (no-littering-theme-backups))
     )
 #+end_src
+** emacs外で表示中のfileが更新された時にbufferを再描画する
+#+begin_src emacs-lisp :tangle yes
+  (leaf autorevert
+    :config
+    (global-auto-revert-mode 1)
+    ;; https://github.com/stevemolitor/claude-code.el?tab=readme-ov-file#tips-and-tricks
+    (setopt auto-revert-use-notify nil))
+
+#+end_src
 ** タブ文字を使用しない
 ちなみに、untabifyでバッファ無いの全てのタブをスペースに置き換えられる。tabifyはその逆。
 #+begin_src emacs-lisp :tangle yes
@@ -752,7 +758,17 @@ nixでbuildできない
     (claude-code-mode)
     (global-set-key (kbd "C-q") claude-code-command-map)
     ;; claude-codeのREPL内では別のフォントを使う
-    (custom-set-faces '(claude-code-repl-face ((t (:family "JuliaMono"))))))
+    (custom-set-faces '(claude-code-repl-face ((t (:family "JuliaMono")))))
+
+    (setopt claude-code-newline-keybinding-style 'super-return-to-send)
+
+    (defun my-claude-notify (title message)
+      "Display a macOS notification with sound."
+      (call-process "osascript" nil nil nil
+                    "-e" (format "display notification \"%s\" with title \"%s\" sound name \"Glass\""
+                                 message title)))
+
+    (setopt claude-code-notification-function #'my-claude-notify))
 #+end_src
 ** claude code連携 [[https://github.com/cpoile/claudemacs][claudemacs]]
 #+begin_src emacs-lisp :tangle yes
@@ -1252,7 +1268,13 @@ nixでbuildできない
   (leaf vc-msg
     :ensure t)
 #+end_src
-
+** diffを見やすくする [[https://github.com/pkryger/difftastic.el][difftastic]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf difftastic
+    :ensure t
+    :config
+    (difftastic-bindings-mode))
+#+end_src
 * マイナーモード
 ** [[https://github.com/radian-software/apheleia][apheleia]] いろんな言語のフォーマッターインテグレーション
 #+begin_src emacs-lisp :tangle yes
@@ -1389,7 +1411,13 @@ nixでbuildできない
   (leaf lsp-mode
     :ensure t
     :hook (((typescript-ts-mode-hook tsx-ts-mode-hook astro-ts-mode-hook nix-ts-mode-hook html-ts-mode-hook css-ts-mode-hook toml-ts-mode-hook json-ts-mode-hook) . lsp-deferred)
-           (lsp-mode-hook . lsp-enable-which-key-integration))
+           (lsp-mode-hook . lsp-enable-which-key-integration)
+           (lsp-completion-mode-hook . my/lsp-mode-setup-completion))
+    :init
+    ;; https://github.com/minad/corfu/wiki#basic-example-configuration-with-orderless
+    (defun my/lsp-mode-setup-completion ()
+      (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+            '(orderless)))
     :config
     ;; 使わない機能をオフにする
     (setopt lsp-headerline-breadcrumb-enable nil)
@@ -1404,9 +1432,16 @@ nixでbuildできない
     (setopt lsp-enable-on-type-formatting nil) ; キーワード（`}'など）を入力時に自動フォーマットする
     (setopt lsp-enable-text-document-color nil) ; カラーコードに色をつける
     (setopt lsp-progress-function 'ignore)      ; modelineにプログレスを表示する
-    (setopt lsp-trim-trailing-whitespace nil)   ; aphaliaで賄うからイラン
-    (setopt lsp-insert-final-newline nil)       ; aphaliaで賄うからイラン
-    (setopt lsp-trim-final-newlines nil)        ; aphaliaで賄うからイラン
+
+    ;; フォーマットはaphalia&linterで賄うからイラン
+    (setopt lsp-trim-trailing-whitespace nil)   ; 行末のホワイトスペース削除
+    (setopt lsp-insert-final-newline nil)       ; ファイル末尾に一つだけ改行
+    (setopt lsp-trim-final-newlines nil)        ; ファイル末尾に一つだけ改行
+
+    ;; 勝手にlsp serverからの変更提案を反映しない
+    (setopt lsp-before-save-edits nil)
+    (setopt lsp-apply-edits-after-file-operations nil)
+
 
     (setopt lsp-completion-provider :none)
     ;; (setopt lsp-diagnostics-provider :flymake)
@@ -1414,9 +1449,18 @@ nixでbuildできない
     (setopt lsp-auto-execute-action nil)  ; 可能なアクションが１つの場合、確認無しに実行する
     (setopt lsp-eldoc-render-all t)       ; サーバーから返ってきたドキュメントを全て表示する
 
+    ;; typescript
     (setopt lsp-typescript-format-enable nil)
+    (setopt lsp-typescript-references-code-lens-enabled t)
+    (setopt lsp-typescript-implementations-code-lens-enabled t)
     (setopt lsp-javascript-format-enable nil)
+    (setopt lsp-javascript-display-return-type-hints t)
+    (setopt lsp-javascript-display-parameter-type-hints t)
+    (setopt lsp-javascript-display-parameter-name-hints-when-argument-matches-name t)
+    (setopt lsp-javascript-display-property-declaration-type-hints t)
+    (setopt lsp-javascript-display-variable-type-hints t)
 
+    ;; eslint
     (setopt lsp-eslint-server-command '("vscode-eslint-language-server" "--stdio"))
 
     (setopt lsp-html-format-enable nil)
@@ -1656,6 +1700,7 @@ nixでbuildできない
 
   (add-to-list 'org-src-lang-modes '("markdown" . markdown))
   (add-to-list 'org-src-lang-modes '("html" . html-ts))
+  (add-to-list 'org-src-lang-modes '("astro" . astro-ts))
 #+end_src
 
 #+begin_src html
@@ -1692,7 +1737,13 @@ nixでbuildできない
     :config
     (setopt eat-shell "~/.nix-profile/bin/fish")
     ;; https://github.com/cpoile/claudemacs?tab=readme-ov-file#setup
-    (setopt eat-term-scrollback-size 40000))
+    (setopt eat-term-scrollback-size 40000)
+    (message "コンフィグが呼ばれました")
+    :defer-config
+    ;; Preserve C-t for transpose-chars instead of sending to terminal
+    (add-to-list 'eat-semi-char-non-bound-keys [?\C-t])
+    (eat-update-semi-char-mode-map)
+    (message "でファーコンフィグが呼ばれました"))
 #+end_src
 * ユースケース
 ** 特定のバッファーのポイントを記録してどこからでもその位置にジャンプする
