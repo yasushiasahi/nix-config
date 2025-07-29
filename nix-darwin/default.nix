@@ -60,6 +60,7 @@
       "figma"
       "android-studio"
       "gitify"
+      "tableplus"
     ];
     masApps = {
       LINE = 539883307;

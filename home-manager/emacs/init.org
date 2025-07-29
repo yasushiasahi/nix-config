@@ -1264,6 +1264,14 @@ nixでbuildできない
     :config
     (difftastic-bindings-mode))
 #+end_src
+** diffを見やすくする [[https://github.com/dandavison/magit-delta][magit-delta]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf magit-delta
+    :ensure t
+    :hook ((magit-mode-hook . magit-delta-mode))
+    :config
+    (setopt  magit-delta-default-dark-theme "Solarized (dark)"))
+#+end_src
 * マイナーモード
 ** [[https://github.com/radian-software/apheleia][apheleia]] いろんな言語のフォーマッターインテグレーション
 #+begin_src emacs-lisp :tangle yes

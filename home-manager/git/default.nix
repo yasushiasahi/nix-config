@@ -34,10 +34,14 @@ in
         };
       };
 
-      difftastic = {
+      # difftastic = {
+      #   enable = true;
+      #   enableAsDifftool = true;
+      #   background = "dark";
+      # };
+
+      delta = {
         enable = true;
-        enableAsDifftool = true;
-        background = "dark";
       };
     };
 
@@ -49,5 +53,6 @@ in
       };
     };
 
-  } // abbr;
+  }
+  // abbr;
 }
