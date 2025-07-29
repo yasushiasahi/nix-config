@@ -1,8 +1,8 @@
-{ pkgs, ... }:
+{ nodePkgs, ... }:
 
 {
   home = {
-    packages = [ pkgs.claude-code ];
+    packages = [ nodePkgs."@anthropic-ai/claude-code" ];
 
     file = {
       ".claude/settings.json".source = ./settings.json;

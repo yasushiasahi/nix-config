@@ -230,8 +230,7 @@
       :require t
       :defvar (my/transient-window-operation)
       :defun (transient-define-prefix my/transient-window-operation)
-      :bind (("C-t" . my/transient-window-operation-with-pulse)
-             ("M-i" . my/transient-string-inflection))
+      :bind (("C-t" . my/transient-window-operation-with-pulse))
       :config
       (transient-define-prefix my/transient-window-operation ()
         "Window Operation"
@@ -263,40 +262,6 @@
         (interactive)
         (pulsar-highlight-line)
         (my/transient-window-operation))
-
-      (leaf string-inflection
-        :doc "Underscore>UPCASE>CamelCase>lowerCamelCase conversion"
-        :url "https://github.com/akicho8/string-inflection"
-        :ensure t
-        :defvar (my/transient-string-inflection)
-        :defun (string-inflection-underscore-function
-                string-inflection-pascal-case-function
-                string-inflection-camelcase-function
-                string-inflection-camelcase-function
-                string-inflection-upcase-function
-                string-inflection-upcase-function
-                string-inflection-kebab-case-function
-                string-inflection-capital-underscore-function
-                string-inflection-all-cycle)
-        :config
-        (transient-define-prefix my/transient-string-inflection ()
-          "Window Operation"
-          :transient-suffix     'transient--do-exit
-          [:class transient-columns
-                  ["Single word"
-                   ("u" "EMACS" upcase-word)
-                   ("d" "emacs" downcase-word)
-                   ("c" "Emacs" capitalize-word)]
-                  ["Mulchple Words"
-                   ("m" "FooBar" string-inflection-camelcase)
-                   ("l" "fooBar" string-inflection-lower-camelcase)
-                   ("u" "foo_bar" string-inflection-underscore)
-                   ("p" "Foo_Bar" string-inflection-capital-underscore)
-                   ("s" "FOO_BAR" string-inflection-upcase)
-                   ("k" "foo-bar" string-inflection-kebab-case)]
-                  ["Cycle"
-                   ("a" "cycle" string-inflection-all-cycle)]])
-        )
       )
 
     (leaf which-key
@@ -625,6 +590,30 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
                                                    :port "deepl-api-key"))
                                    :render (gt-buffer-render)))
     (setopt gt-buffer-render-follow-p t))
+#+end_src
+** Caseをいい感じに操作する [[https://github.com/akicho8/string-inflection][string-inflection]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf string-inflection
+    :ensure t
+    :bind (("M-i" . my/transient-string-inflection))
+    :config
+    (transient-define-prefix my/transient-string-inflection ()
+      "Window Operation"
+      :transient-suffix     'transient--do-exit
+      [:class transient-columns
+              ["Single word"
+               ("u" "EMACS" upcase-word)
+               ("d" "emacs" downcase-word)
+               ("c" "Emacs" capitalize-word)]
+              ["Mulchple Words"
+               ("m" "FooBar" string-inflection-camelcase)
+               ("l" "fooBar" string-inflection-lower-camelcase)
+               ("u" "foo_bar" string-inflection-underscore)
+               ("p" "Foo_Bar" string-inflection-capital-snake-case)
+               ("s" "FOO_BAR" string-inflection-upcase)
+               ("k" "foo-bar" string-inflection-kebab-case)]
+              ["Cycle"
+               ("a" "cycle" string-inflection-all-cycle)]]))
 #+end_src
 ** yasnippet
 #+begin_src emacs-lisp :tangle yes

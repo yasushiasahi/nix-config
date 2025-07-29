@@ -3,15 +3,15 @@
 {
   emacs-claude-code = {
     pname = "emacs-claude-code";
-    version = "4939a2e77fab0601396824c441c2c8f185cc2bbf";
+    version = "0197f15d592befd7d2550bb3376e983af412ba90";
     src = fetchFromGitHub {
       owner = "stevemolitor";
       repo = "claude-code.el";
-      rev = "4939a2e77fab0601396824c441c2c8f185cc2bbf";
+      rev = "0197f15d592befd7d2550bb3376e983af412ba90";
       fetchSubmodules = false;
-      sha256 = "sha256-Il5blmrf5O5DJVYcz1O/bI05J2EP9/OF9KCODtQ3DDU=";
+      sha256 = "sha256-qBvWoqHFpVbnmkTgPPGIe3mbgrg3WSHHnxS80GFVMVA=";
     };
-    date = "2025-07-16";
+    date = "2025-07-26";
   };
   emacs-claudemacs = {
     pname = "emacs-claudemacs";

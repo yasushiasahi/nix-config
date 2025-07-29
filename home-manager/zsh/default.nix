@@ -1,4 +1,4 @@
-{ sources, ... }:
+{ sources, config, ... }:
 let
   initExtraFirstHomebrew = ''
     eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -35,7 +35,7 @@ in
       highlight = "fg=#585858";
     };
     defaultKeymap = "emacs";
-    dotDir = ".config/zsh";
+    dotDir = config.xdg.configHome + "/zsh";
     history = {
       ignoreAllDups = true;
       save = 10000;

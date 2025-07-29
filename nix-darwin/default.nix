@@ -59,6 +59,7 @@
       "brave-browser"
       "figma"
       "android-studio"
+      "gitify"
     ];
     masApps = {
       LINE = 539883307;

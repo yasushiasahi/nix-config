@@ -12,6 +12,8 @@ let
     fish.shellAbbrs = sets;
   };
 
+  nodePkgs = pkgs.callPackage ../node2nix { inherit pkgs; };
+
   miscModule = {
     # Home Manager needs a bit of information about you and the paths it should
     # manage.
@@ -55,6 +57,8 @@ let
       # react native
       pkgs.watchman
       pkgs.cocoapods
+
+      nodePkgs."@google/gemini-cli"
     ];
 
     # XDG_*の環境変数を設定する
@@ -78,7 +82,6 @@ let
     };
 
   sources = pkgs.callPackage ../_sources/generated.nix { };
-
 in
 home-manager.lib.homeManagerConfiguration {
   inherit pkgs;
@@ -119,6 +122,7 @@ home-manager.lib.homeManagerConfiguration {
     inherit mkAlias;
     inherit mkAbbr;
     inherit sources;
+    inherit nodePkgs;
   };
 
 }
