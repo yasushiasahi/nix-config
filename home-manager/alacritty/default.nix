@@ -12,6 +12,7 @@ in
           x = 8;
           y = 24;
         };
+        option_as_alt = "Both";
       };
       scrolling.history = 100000;
       font = {
