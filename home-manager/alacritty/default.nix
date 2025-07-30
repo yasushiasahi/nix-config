@@ -106,21 +106,19 @@ in
         semantic_escape_chars = ",│`|:\"' ()[]{}<>\t";
       };
 
-
-      hints = {
-        enabled = [
-          {
-            regex = "(ipfs:|ipns:|magnet:|mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)[^\\u0000-\\u001F\\u007F-\\u009F<>\"\\s{-}\\^⟨⟩`]+";
-            command = "open";
-            post_processing = true;
-            mouse = {
-              enabled = true;
-              mods = "Command";
-            };
-          }
-        ];
-      };
-
+      # hints = {
+      #   enabled = [
+      #     {
+      #       regex = "(ipfs:|ipns:|magnet:|mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)[^\\u0000-\\u001F\\u007F-\\u009F<>\"\\s{-}\\^⟨⟩`]+";
+      #       command = "open";
+      #       post_processing = true;
+      #       mouse = {
+      #         enabled = true;
+      #         mods = "Command";
+      #       };
+      #     }
+      #   ];
+      # };
 
       bell = {
         animation = "EaseOutExpo";
