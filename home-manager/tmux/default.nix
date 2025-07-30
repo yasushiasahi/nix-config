@@ -44,7 +44,7 @@ in
     plugins = [
       pkgs.tmuxPlugins.pain-control
       pkgs.tmuxPlugins.tmux-fzf
-      pkgs.tmuxPlugins.extrakto
+      # pkgs.tmuxPlugins.extrakto # wl-clipboard dependency fails on macOS
       {
         plugin = pkgs.tmuxPlugins.tmux-colors-solarized;
         extraConfig = ''

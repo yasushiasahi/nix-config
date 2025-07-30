@@ -180,16 +180,6 @@
             {
               "key_code": "return_or_enter"
             }
-          ],
-          "conditions": [
-            {
-              "type": "frontmost_application_unless",
-              "bundle_identifiers": [
-                "^org\\.gnu\\.Emacs$",
-                "^com\\.mitchellh\\.ghostty$",
-                "^org\\.alacritty$"
-              ]
-            }
           ]
         }
       ]
