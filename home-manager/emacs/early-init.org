@@ -55,7 +55,7 @@ macbook air 13inchでええ感じな数字であって、特段意味のある�
 ~"{フォント名}-{フォントサイズ}"~の形式でフォントを指定する
 [[https://apribase.net/2024/07/06/emacs-default-frame-alist/][起動シーケンスを考慮して Emacs のフォント設定関数を正しく使い分ける]]を参考にしている
 #+begin_src emacs-lisp :tangle yes
-  (add-to-list 'default-frame-alist '(font . "PlemolJP-13"))
+  (add-to-list 'default-frame-alist '(font . "HackGen-13"))
 #+end_src
 ** GUIの無効化
 early-init.elでやるべき事の代表格②
