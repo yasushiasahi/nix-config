@@ -58,8 +58,8 @@
       "google-chrome"
       "brave-browser"
       "figma"
-      "android-studio"
       "gitify"
+      "cleanmymac"
       "alacritty"
     ];
     masApps = {

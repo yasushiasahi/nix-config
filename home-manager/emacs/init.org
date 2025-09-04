@@ -740,7 +740,7 @@ nixでbuildできない
     )
 #+end_src
 ** claude code連携 [[https://github.com/stevemolitor/claude-code.el][claude-code]]
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
   (leaf claude-code
     :ensure t
     :config
@@ -1277,7 +1277,7 @@ nixでbuildできない
 #+begin_src emacs-lisp :tangle yes
   (leaf apheleia
     :ensure t
-    :hook ((jtsx-tsx-mode-hook jtsx-jsx-mode-hook jtsx-typescript-mode-hook nix-ts-mode-hook astro-ts-mode-hook) . apheleia-mode)
+    :hook ((jtsx-tsx-mode-hook jtsx-jsx-mode-hook jtsx-typescript-mode-hook nix-ts-mode-hook astro-ts-mode-hook json-ts-mode) . apheleia-mode)
     :commands (apheleia-mode apheleia-format-buffer)
     :config
     (setopt apheleia-formatters-respect-indent-level nil)
@@ -1405,16 +1405,20 @@ nixでbuildできない
 #+end_src
 ** 結局はこれ [[https://github.com/casouri/eldoc-box][lsp-mode]]
 #+begin_src emacs-lisp :tangle yes
+
+  (leaf cape
+    :ensure t)
+
   (leaf lsp-mode
     :ensure t
     :hook (((typescript-ts-mode-hook tsx-ts-mode-hook astro-ts-mode-hook nix-ts-mode-hook html-ts-mode-hook css-ts-mode-hook toml-ts-mode-hook json-ts-mode-hook) . lsp-deferred)
            (lsp-mode-hook . lsp-enable-which-key-integration)
            (lsp-completion-mode-hook . my/lsp-mode-setup-completion))
     :init
-    ;; https://github.com/minad/corfu/wiki#basic-example-configuration-with-orderless
     (defun my/lsp-mode-setup-completion ()
       (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-            '(orderless)))
+            '(orderless))) ;; Configure orderless
+
     :config
     ;; 使わない機能をオフにする
     (setopt lsp-headerline-breadcrumb-enable nil)
@@ -1438,6 +1442,9 @@ nixでbuildできない
     ;; 勝手にlsp serverからの変更提案を反映しない
     (setopt lsp-before-save-edits nil)
     (setopt lsp-apply-edits-after-file-operations nil)
+
+    ;; ファイルを監視しない
+    (setopt lsp-enable-file-watchers nil)
 
 
     (setopt lsp-completion-provider :none)
@@ -1470,7 +1477,8 @@ nixでbuildできない
       :init
       (setq lsp-tailwindcss-add-on-mode t)
       :config
-      (setq lsp-tailwindcss-major-modes '(tsx-ts-mode))
+      (setq lsp-tailwindcss-major-modes '(tsx-ts-mode astro-ts-mode))
+      ;; (setopt lsp-tailwindcss-skip-config-check t)
       (setopt lsp-tailwindcss-server-path (string-trim (shell-command-to-string "which tailwindcss-language-server"))))
 
     (defun lsp-booster--advice-json-parse (old-fn &rest args)
