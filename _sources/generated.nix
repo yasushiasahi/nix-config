@@ -3,15 +3,15 @@
 {
   emacs-claude-code = {
     pname = "emacs-claude-code";
-    version = "0197f15d592befd7d2550bb3376e983af412ba90";
+    version = "41423459aa929460770c93e5ab6082439921f1d4";
     src = fetchFromGitHub {
       owner = "stevemolitor";
       repo = "claude-code.el";
-      rev = "0197f15d592befd7d2550bb3376e983af412ba90";
+      rev = "41423459aa929460770c93e5ab6082439921f1d4";
       fetchSubmodules = false;
-      sha256 = "sha256-qBvWoqHFpVbnmkTgPPGIe3mbgrg3WSHHnxS80GFVMVA=";
+      sha256 = "sha256-neRNHOI+4mRG04DcY1l9SS8kJGf9Zjb+RmaBWtx21/o=";
     };
-    date = "2025-07-26";
+    date = "2025-08-27";
   };
   emacs-claudemacs = {
     pname = "emacs-claudemacs";
@@ -65,21 +65,21 @@
   };
   emacs-lsp-proxy = {
     pname = "emacs-lsp-proxy";
-    version = "a5fc5320577f625824c2ea507f4a35e15a9100de";
+    version = "82df1b770b625cd97e4ef0aded2b02dd194682b1";
     src = fetchFromGitHub {
       owner = "jadestrong";
       repo = "lsp-proxy";
-      rev = "a5fc5320577f625824c2ea507f4a35e15a9100de";
+      rev = "82df1b770b625cd97e4ef0aded2b02dd194682b1";
       fetchSubmodules = false;
-      sha256 = "sha256-LYfacRLT3YxWzNWTKDvGObhF9zhadnHfV7X9RxkKvFQ=";
+      sha256 = "sha256-4ahhiZram3AuH9GNQq2WhF+GpB8DER+Fko2gh+q28Rk=";
     };
     cargoLock."Cargo.lock" = {
-      lockFile = ./emacs-lsp-proxy-a5fc5320577f625824c2ea507f4a35e15a9100de/Cargo.lock;
+      lockFile = ./emacs-lsp-proxy-82df1b770b625cd97e4ef0aded2b02dd194682b1/Cargo.lock;
       outputHashes = {
         
       };
     };
-    date = "2025-05-19";
+    date = "2025-09-04";
   };
   emacs-org-modern-indent = {
     pname = "emacs-org-modern-indent";

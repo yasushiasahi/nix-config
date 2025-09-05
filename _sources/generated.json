@@ -1,7 +1,7 @@
 {
     "emacs-claude-code": {
         "cargoLocks": null,
-        "date": "2025-07-26",
+        "date": "2025-08-27",
         "extract": null,
         "name": "emacs-claude-code",
         "passthru": null,
@@ -13,12 +13,12 @@
             "name": null,
             "owner": "stevemolitor",
             "repo": "claude-code.el",
-            "rev": "0197f15d592befd7d2550bb3376e983af412ba90",
-            "sha256": "sha256-qBvWoqHFpVbnmkTgPPGIe3mbgrg3WSHHnxS80GFVMVA=",
+            "rev": "41423459aa929460770c93e5ab6082439921f1d4",
+            "sha256": "sha256-neRNHOI+4mRG04DcY1l9SS8kJGf9Zjb+RmaBWtx21/o=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "0197f15d592befd7d2550bb3376e983af412ba90"
+        "version": "41423459aa929460770c93e5ab6082439921f1d4"
     },
     "emacs-claudemacs": {
         "cargoLocks": null,
@@ -106,11 +106,11 @@
     "emacs-lsp-proxy": {
         "cargoLocks": {
             "Cargo.lock": [
-                "./emacs-lsp-proxy-a5fc5320577f625824c2ea507f4a35e15a9100de/Cargo.lock",
+                "./emacs-lsp-proxy-82df1b770b625cd97e4ef0aded2b02dd194682b1/Cargo.lock",
                 {}
             ]
         },
-        "date": "2025-05-19",
+        "date": "2025-09-04",
         "extract": null,
         "name": "emacs-lsp-proxy",
         "passthru": null,
@@ -122,12 +122,12 @@
             "name": null,
             "owner": "jadestrong",
             "repo": "lsp-proxy",
-            "rev": "a5fc5320577f625824c2ea507f4a35e15a9100de",
-            "sha256": "sha256-LYfacRLT3YxWzNWTKDvGObhF9zhadnHfV7X9RxkKvFQ=",
+            "rev": "82df1b770b625cd97e4ef0aded2b02dd194682b1",
+            "sha256": "sha256-4ahhiZram3AuH9GNQq2WhF+GpB8DER+Fko2gh+q28Rk=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "a5fc5320577f625824c2ea507f4a35e15a9100de"
+        "version": "82df1b770b625cd97e4ef0aded2b02dd194682b1"
     },
     "emacs-org-modern-indent": {
         "cargoLocks": null,

@@ -576,7 +576,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (setopt avy-background t))
 #+end_src
 ** [[https://github.com/lorniu/go-translate][go-translate]] 翻訳
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
   (leaf go-translate
     :ensure t
     :bind (("C-c t" . gt-do-translate))

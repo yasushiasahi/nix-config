@@ -7,7 +7,7 @@
 let
   emacs-mac = pkgs.emacs.overrideAttrs (old: {
     configureFlags = (old.configureFlags or [ ]) ++ [ "--with-xwidgets" ];
-    patches = (old.patches or [ ]) ++ [ ./emacs-29.1-inline.patch ];
+    # patches = (old.patches or [ ]) ++ [ ./emacs-29.1-inline.patch ];
   });
 
   lsp-proxy =
@@ -128,11 +128,10 @@ let
         # https://emacs-lsp.github.io/lsp-mode/page/performance/#use-plists-for-deserialization
         lsp-mode = epkgs.lsp-mode.overrideAttrs (
           _: p: {
-            buildPhase =
-              ''
-                export LSP_USE_PLISTS=true
-              ''
-              + p.buildPhase;
+            buildPhase = ''
+              export LSP_USE_PLISTS=true
+            ''
+            + p.buildPhase;
           }
         );
       };
@@ -156,7 +155,8 @@ in
       enable = true;
       package = emacs-mac-with-epkgs;
     };
-  } // shellAlias;
+  }
+  // shellAlias;
 
   home.packages = [
     pkgs.emacs-lsp-booster
