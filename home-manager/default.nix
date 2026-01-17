@@ -12,8 +12,6 @@ let
     fish.shellAbbrs = sets;
   };
 
-  nodePkgs = pkgs.callPackage ../node2nix { inherit pkgs; };
-
   miscModule = {
     # Home Manager needs a bit of information about you and the paths it should
     # manage.
@@ -54,11 +52,7 @@ let
       # nix tool
       pkgs.nvfetcher
 
-      # react native
-      pkgs.watchman
-      pkgs.cocoapods
-
-      nodePkgs."@google/gemini-cli"
+      pkgs.claude-code
     ];
 
     # XDG_*の環境変数を設定する
@@ -111,9 +105,10 @@ home-manager.lib.homeManagerConfiguration {
     ./authinfo
     ./vscode
     ./starship
-    ./karabiner-elements
+    ./aerospace
+    # ./karabiner-elements
     # ./colima
-    ./claude
+    # ./claude
   ];
 
   # Optionally use extraSpecialArgs
@@ -122,7 +117,5 @@ home-manager.lib.homeManagerConfiguration {
     inherit mkAlias;
     inherit mkAbbr;
     inherit sources;
-    inherit nodePkgs;
   };
-
 }

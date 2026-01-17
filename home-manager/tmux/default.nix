@@ -22,11 +22,18 @@ let
     bind-key "P" run-shell "sesh connect \"$(ghq root)/$(ghq list | fzf-tmux -p 60%,60% --border-label ' select project ' --prompt='Create new session from > ' --preview='eza --icons always --color always --git-ignore --tree --level=2 $(ghq root)/{1}')\"";
   '';
 
+  # フルカラーサポート
+  # https://apribase.net/2025/05/28/term-terminfo/
+  extraConfigTerminalFeatures = ''
+    set -as terminal-features ",alacritty:RGB,xterm-ghostty:RGB,foot:RGB,wezterm:RGB"
+  '';
+
   # tmux-which-key
   # nix storeに入れてしまうとなぜか動かないので、一時凌ぎ。
   extraConfigTmuxWhichKey = ''
     run-shell $XDG_DATA_HOME/tmux/plugins/tmux-which-key/plugin.sh.tmux
   '';
+
 in
 {
   programs.tmux = {
@@ -63,6 +70,7 @@ in
       + extraConfigReroadConfig
       + extraConfigStatusLine
       + extraConfigSeshFromGhq
+      + extraConfigTerminalFeatures
       + extraConfigTmuxWhichKey;
   };
 

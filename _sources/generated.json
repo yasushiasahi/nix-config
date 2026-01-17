@@ -1,9 +1,9 @@
 {
-    "emacs-claude-code": {
+    "emacs-fzf-native": {
         "cargoLocks": null,
-        "date": "2025-08-27",
+        "date": "2024-12-24",
         "extract": null,
-        "name": "emacs-claude-code",
+        "name": "emacs-fzf-native",
         "passthru": null,
         "pinned": false,
         "src": {
@@ -11,20 +11,20 @@
             "fetchSubmodules": false,
             "leaveDotGit": false,
             "name": null,
-            "owner": "stevemolitor",
-            "repo": "claude-code.el",
-            "rev": "41423459aa929460770c93e5ab6082439921f1d4",
-            "sha256": "sha256-neRNHOI+4mRG04DcY1l9SS8kJGf9Zjb+RmaBWtx21/o=",
+            "owner": "dangduc",
+            "repo": "fzf-native",
+            "rev": "b159c581699e0661da015a845760578598880307",
+            "sha256": "sha256-ykLRASDpOJMIQvD5+xGyvsRmhtuRBuctUQcjOhRKypg=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "41423459aa929460770c93e5ab6082439921f1d4"
+        "version": "b159c581699e0661da015a845760578598880307"
     },
-    "emacs-claudemacs": {
+    "emacs-lsp-biome": {
         "cargoLocks": null,
-        "date": "2025-06-26",
+        "date": "2025-11-19",
         "extract": null,
-        "name": "emacs-claudemacs",
+        "name": "emacs-lsp-biome",
         "passthru": null,
         "pinned": false,
         "src": {
@@ -32,102 +32,14 @@
             "fetchSubmodules": false,
             "leaveDotGit": false,
             "name": null,
-            "owner": "cpoile",
-            "repo": "claudemacs",
-            "rev": "bf0c2d6e3e41c965a552e6fc9ee16cffc2f79355",
-            "sha256": "sha256-QxYHNDTHSBU6EmXFEsLrpJTSTJKQkwcd71hfLCqd3ak=",
+            "owner": "cxa",
+            "repo": "lsp-biome",
+            "rev": "9b3d523e3df2a9f686e1b15396987a0310b62a15",
+            "sha256": "sha256-SSqbr0HDosdWbaMduoTK10jrsR+ZzWgkaLj9tWkScGQ=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "bf0c2d6e3e41c965a552e6fc9ee16cffc2f79355"
-    },
-    "emacs-consult-omni": {
-        "cargoLocks": null,
-        "date": "2025-02-18",
-        "extract": null,
-        "name": "emacs-consult-omni",
-        "passthru": null,
-        "pinned": false,
-        "src": {
-            "deepClone": false,
-            "fetchSubmodules": false,
-            "leaveDotGit": false,
-            "name": null,
-            "owner": "armindarvish",
-            "repo": "consult-omni",
-            "rev": "d0a24058bf0dda823e5f1efcae5da7dc0efe6bda",
-            "sha256": "sha256-dzKkJ+3lMRkHRuwe43wpzqnFvF8Tl6j+6XHUsDhMX4o=",
-            "sparseCheckout": [],
-            "type": "github"
-        },
-        "version": "d0a24058bf0dda823e5f1efcae5da7dc0efe6bda"
-    },
-    "emacs-eat": {
-        "cargoLocks": null,
-        "date": "2025-02-06",
-        "extract": null,
-        "name": "emacs-eat",
-        "passthru": null,
-        "pinned": false,
-        "src": {
-            "deepClone": false,
-            "fetchSubmodules": false,
-            "leaveDotGit": false,
-            "name": null,
-            "rev": "c8d54d649872bfe7b2b9f49ae5c2addbf12d3b99",
-            "sha256": "sha256-9xG2rMlaMFY77JzUQ3JFrc7XKILZSL8TbP/BkzvBvMk=",
-            "sparseCheckout": [],
-            "type": "git",
-            "url": "https://codeberg.org/akib/emacs-eat"
-        },
-        "version": "c8d54d649872bfe7b2b9f49ae5c2addbf12d3b99"
-    },
-    "emacs-eglot-booster": {
-        "cargoLocks": null,
-        "date": "2025-07-16",
-        "extract": null,
-        "name": "emacs-eglot-booster",
-        "passthru": null,
-        "pinned": false,
-        "src": {
-            "deepClone": false,
-            "fetchSubmodules": false,
-            "leaveDotGit": false,
-            "name": null,
-            "owner": "jdtsmith",
-            "repo": "eglot-booster",
-            "rev": "cab7803c4f0adc7fff9da6680f90110674bb7a22",
-            "sha256": "sha256-xUBQrQpw+JZxcqT1fy/8C2tjKwa7sLFHXamBm45Fa4Y=",
-            "sparseCheckout": [],
-            "type": "github"
-        },
-        "version": "cab7803c4f0adc7fff9da6680f90110674bb7a22"
-    },
-    "emacs-lsp-proxy": {
-        "cargoLocks": {
-            "Cargo.lock": [
-                "./emacs-lsp-proxy-82df1b770b625cd97e4ef0aded2b02dd194682b1/Cargo.lock",
-                {}
-            ]
-        },
-        "date": "2025-09-04",
-        "extract": null,
-        "name": "emacs-lsp-proxy",
-        "passthru": null,
-        "pinned": false,
-        "src": {
-            "deepClone": false,
-            "fetchSubmodules": false,
-            "leaveDotGit": false,
-            "name": null,
-            "owner": "jadestrong",
-            "repo": "lsp-proxy",
-            "rev": "82df1b770b625cd97e4ef0aded2b02dd194682b1",
-            "sha256": "sha256-4ahhiZram3AuH9GNQq2WhF+GpB8DER+Fko2gh+q28Rk=",
-            "sparseCheckout": [],
-            "type": "github"
-        },
-        "version": "82df1b770b625cd97e4ef0aded2b02dd194682b1"
+        "version": "9b3d523e3df2a9f686e1b15396987a0310b62a15"
     },
     "emacs-org-modern-indent": {
         "cargoLocks": null,
@@ -194,7 +106,7 @@
     },
     "fish-done": {
         "cargoLocks": null,
-        "date": "2025-05-15",
+        "date": "2025-12-15",
         "extract": null,
         "name": "fish-done",
         "passthru": null,
@@ -206,12 +118,12 @@
             "name": null,
             "owner": "franciscolourenco",
             "repo": "done",
-            "rev": "0bfe402753681f705a482694fcaf20c2bfc6deb7",
-            "sha256": "sha256-WA6DBrPBuXRIloO05UBunTJ9N01d6tO1K1uqojjO0mo=",
+            "rev": "998ad4f5fc9cee36c09840a7e635b56428e554f9",
+            "sha256": "sha256-GZ1ZpcaEfbcex6XvxOFJDJqoD9C5out0W4bkkn768r0=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "0bfe402753681f705a482694fcaf20c2bfc6deb7"
+        "version": "998ad4f5fc9cee36c09840a7e635b56428e554f9"
     },
     "fish-enhancd": {
         "cargoLocks": null,
@@ -278,7 +190,7 @@
     },
     "zsh-autocomplete": {
         "cargoLocks": null,
-        "date": "2025-07-09",
+        "date": "2025-12-09",
         "extract": null,
         "name": "zsh-autocomplete",
         "passthru": null,
@@ -290,12 +202,12 @@
             "name": null,
             "owner": "marlonrichert",
             "repo": "zsh-autocomplete",
-            "rev": "316c588a92e3444e919ca9a341fc8894c82800a2",
-            "sha256": "sha256-7v8dkrwhEszl8mVIMe8oJdaqK0ZZtODdWaaO1Z4Ldhk=",
+            "rev": "bbba73ebdc7c01323e09d4d518e51e2d6847ccc2",
+            "sha256": "sha256-998rYEyYD67XleSDbqvnQptRrGuG2N2AgFvTpFWvoV8=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "316c588a92e3444e919ca9a341fc8894c82800a2"
+        "version": "bbba73ebdc7c01323e09d4d518e51e2d6847ccc2"
     },
     "zsh-enhancd": {
         "cargoLocks": null,

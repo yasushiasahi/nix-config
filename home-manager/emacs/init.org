@@ -45,7 +45,7 @@
       :url "https://github.com/purcell/exec-path-from-shell"
       :ensure t
       :custom ((exec-path-from-shell-arguments . nil)
-               (exec-path-from-shell-variables . '("PATH")))
+               (exec-path-from-shell-variables . '("PATH" "LSP_USE_PLISTS")))
       :config
       (exec-path-from-shell-initialize))
 
@@ -73,33 +73,6 @@
       :custom ((vundo-roll-back-on-quit . nil)
                (vundo-glyph-alist . vundo-unicode-symbols))
       :bind* ("C-M-/" . vundo))
-
-    (leaf ns-win
-      :doc "lisp side of interface with NeXT/Open/GNUstep/macOS window system"
-      :when (and (memq window-system '(ns nil))
-                 (fboundp 'mac-get-current-input-source))
-      :hook ((input-method-deactivate-hook . my-set-cursor-abc-style)
-             (input-method-activate-hook . my-set-cursor-japanese-style))
-      :defun (my-set-cursor-japanese-style my-set-cursor-abc-style)
-      :config
-      ;; https://github.com/takaxp/ns-inline-patch?tab=readme-ov-file#how-to-us
-      (setq mac-default-input-source "com.apple.inputmethod.Kotoeri.RomajiTyping.Japanese")
-      (mac-input-method-mode 1)
-
-      (defun my-set-cursor-japanese-style ()
-        "カーソルを日本語入力時の見た目に変更する."
-        (set-frame-parameter (window-frame) 'cursor-type 'hbar)
-        (setf (alist-get 'cursor-color default-frame-alist) "#CE7667"))
-
-      (defun my-set-cursor-abc-style ()
-        "カーソルを英語の見た目に変更する."
-        (set-frame-parameter (window-frame) 'cursor-type 'box)
-        (setf (alist-get 'cursor-color default-frame-alist) "#888dbc"))
-
-      (if (mac-ime-active-p)
-          (my-set-cursor-japanese-style)
-        (my-set-cursor-abc-style))
-      )
     )
 
   (leaf *looks
@@ -136,25 +109,7 @@
       :doc "Echo buffer status in minibuffer window"
       :url "https://github.com/liuyinz/mini-echo.el"
       :ensure t
-      :defvar (mini-echo-persistent-rule)
-      :defun (eglot-current-server jsonrpc--process)
-      :global-minor-mode t
-      :custom ((mini-echo-persistent-rule . '(:long ("major-mode" "shrink-path" "vcs" "buffer-position" "eglot" "flymake")
-                                                    :short ("buffer-name" "buffer-position" "flymake"))))
-      :config
-      (mini-echo-define-segment "eglot"
-        "eglotのcurrent serverを表示する"
-        :fetch
-        (when-let ((_  (fboundp 'jsonrpc--process))
-                   (_  (fboundp 'eglot-current-server))
-                   (current-server (eglot-current-server)))
-          (nth 4 (process-command (jsonrpc--process current-server)))))
-      ;; (if (and (fboundp 'jsonrpc--process)
-      ;;          (fboundp 'eglot-current-server))
-      ;;     (let ((current-server (eglot-current-server)))
-      ;;       (if current-server
-      ;;           (nth 4 (process-command (jsonrpc--process current-server))))))
-      )
+      :global-minor-mode t)
 
     (leaf *meigen
       :config
@@ -230,7 +185,7 @@
       :require t
       :defvar (my/transient-window-operation)
       :defun (transient-define-prefix my/transient-window-operation)
-      :bind (("C-t" . my/transient-window-operation-with-pulse))
+      :bind (("C-t" . my/transient-window-operation))
       :config
       (transient-define-prefix my/transient-window-operation ()
         "Window Operation"
@@ -256,13 +211,7 @@
                  ("0" "delete" delete-window)
                  ("1" "only" delete-other-windows)
                  ("t" "maxmaiz" toggle-frame-maximized)]])
-      (put 'my/transient-window-operation 'interactive-only nil)
-
-      (defun my/transient-window-operation-with-pulse ()
-        (interactive)
-        (pulsar-highlight-line)
-        (my/transient-window-operation))
-      )
+      (put 'my/transient-window-operation 'interactive-only nil))
 
     (leaf which-key
       :doc "Display available keybindings in popup"
@@ -505,6 +454,23 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :config
     (setopt help-window-select t))
 #+end_src
+** リガチャ設定
+#+begin_src emacs-lisp :tangle yes
+  (use-package ligature
+    :ensure t
+    :config
+    (ligature-set-ligatures 'prog-mode '("www" "**" "***" "**/" "*>" "*/" "\\\\" "\\\\\\" "{-" "::"
+                                         ":::" ":=" "!!" "!=" "!==" "-}" "----" "-->" "->" "->>"
+                                         "-<" "-<<" "-~" "#{" "#[" "##" "###" "####" "#(" "#?" "#_"
+                                         "#_(" ".-" ".=" ".." "..<" "..." "?=" "??" ";;" "/*" "/**"
+                                         "/=" "/==" "/>" "//" "///" "&&" "||" "||=" "|=" "|>" "^=" "$>"
+                                         "++" "+++" "+>" "=:=" "==" "===" "==>" "=>" "=>>" "<="
+                                         "=<<" "=/=" ">-" ">=" ">=>" ">>" ">>-" ">>=" ">>>" "<*"
+                                         "<*>" "<|" "<|>" "<$" "<$>" "<!--" "<-" "<--" "<->" "<+"
+                                         "<+>" "<=" "<==" "<=>" "<=<" "<>" "<<" "<<-" "<<=" "<<<"
+                                         "<~" "<~~" "</" "</>" "~@" "~-" "~>" "~~" "~~>" "%%"))
+    (global-ligature-mode 't))
+#+end_src
 ** auth-source Emacsデフォルトのシークレット管理
 #+begin_src emacs-lisp :tangle yes
   (leaf auth-source
@@ -642,172 +608,14 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :ensure t
     :hook ((after-init-hook . global-flycheck-mode)))
 #+end_src
-* AI
-** ellama
+** emmet-mode
 #+begin_src emacs-lisp :tangle yes
-  (leaf ellama
-    :doc "Tool for interacting with LLMs"
-    :when (executable-find "ollama")
+  (use-package emmet-mode
     :ensure t
-    :require llm-ollama
-    :bind (("C-c e" . ellama))
-    :hook ((org-ctrl-c-ctrl-c-hook . ellama-chat-send-last-message)))
-#+end_src
-** chatgpt-shell
-#+begin_src emacs-lisp :tangle yes
-  (leaf shell-maker
-    :doc "Interaction mode for making comint shells."
-    :url "https://github.com/xenodium/shell-maker"
-    :ensure t)
-
-  (leaf chatgpt-shell
-    :doc "A family of utilities to interact with LLMs (ChatGPT, Claude, DeepSeek, Gemini, Kagi, Ollama, Perplexity)"
-    :url "https://github.com/xenodium/chatgpt-shell"
-    :ensure t
-    :require t
+    :hook ((jtsx-tsx-mode jtsx-jsx-mode astro-ts-mode) . emmet-mode)
     :config
-    (setopt chatgpt-shell-model-version "gemma3:12b-it-qat")
-    (add-to-list 'chatgpt-shell-models
-                 (chatgpt-shell-ollama-make-model
-                  :version "gemma3:12b-it-qat"
-                  :token-width 8
-                  :context-window 131072))
-    (add-to-list 'chatgpt-shell-models
-                 (chatgpt-shell-ollama-make-model
-                  :version "gemma3:4b-it-qat"
-                  :token-width 8
-                  :context-window 131072))
-    (add-to-list 'chatgpt-shell-models
-                 (chatgpt-shell-ollama-make-model
-                  :version "qwen2.5-coder:14b"
-                  :token-width 8
-                  :context-window 131072))
-    (add-to-list 'chatgpt-shell-models
-                 (chatgpt-shell-ollama-make-model
-                  :version "qwen2.5-coder:7b"
-                  :token-width 8
-                  :context-window 131072)))
+    (add-to-list 'emmet-jsx-major-modes 'jtsx-tsx-mode))
 #+end_src
-** [[https://github.com/karthink/gptel][シンプルなLLMのクライアント gptel]]
-無料、有料、ローカル問わずほとんどのモデルに対応している。
-いかなるバッファからでもでサクッと使える。
-#+begin_src emacs-lisp :tangle yes
-  (leaf gptel
-    :ensure t
-    :commands (gptel gptel-menu gptel-send)
-    :config
-    (setopt gptel-temperature 0.0)
-    (setopt gptel-org-branching-context nil)
-    ;; (setopt gptel-default-mode 'org-mode)
-
-    (setopt gptel-api-key (auth-source-pick-first-password
-                           :host "api.openai.com"
-                           :user "org-ai"))
-    (setopt gptel-model 'gpt-4.1)
-    ;; (setopt gptel-backend (gptel-make-gh-copilot "Copilot"))
-
-    (gptel-make-gemini "Gemini" :stream t)
-
-    )
-#+end_src
-** [[https://github.com/copilot-emacs/copilot.el?tab=readme-ov-file][copilot]] github copilotプラグイン
-nixでbuildできない
-#+begin_src emacs-lisp :tangle no
-  (leaf copilot
-    :ensure t
-    :commands copilot-mode
-    :config
-    (add-to-list 'copilot-major-mode-alist '("jtsx-typescript" . "typescript"))
-    (add-to-list 'copilot-major-mode-alist '("jtsx-tsx" . "typescriptreact"))
-    (add-to-list 'copilot-major-mode-alist '("astro-ts" . "typescriptreact")))
-#+end_src
-** [[https://github.com/chep/copilot-chat.el][copilot-chat]] copilotとチャットできる
-#+begin_src emacs-lisp :tangle no
-  (leaf copilot-chat
-    :ensure t
-    :hook ((git-commit-setup-hook . copilot-chat-insert-commit-message))
-    :config
-    (let ((my/copilot-chat-prompt "日本語で解答してください。\nあなたは一流のコーディングチューターです。コードの説明は、高レベルな概念と詳細な内容のバランスが完璧です。あなたのアプローチにより、学習者はコードの書き方だけでなく、効果的なプログラミングを導く基本原理も理解できます。\n名前を尋ねられた場合、必ず「GitHub Copilot」と答えてください。\nユーザーの要件を正確かつ厳密に守ってください。\n専門知識はソフトウェア開発トピックに厳密に限定されています。\nMicrosoft のコンテンツポリシーに従ってください。\n著作権を侵害する内容は避けてください。\nソフトウェア開発に関連しない質問には、AIプログラミングアシスタントであることを簡単に伝えるだけにしてください。\n回答は簡潔かつ非個人的なものにしてください。\nMarkdown形式を使用して回答してください。\nコードブロックの最初にプログラミング言語名を必ず記述してください。\n全体を三重バッククオートで囲まないようにしてください。\nユーザーは Neovim という IDE を使用しています。この IDE には、開いているファイルのエディタ、統合ユニットテストサポート、コード実行結果を表示する出力ペイン、統合ターミナルがあります。\nアクティブなドキュメントは、ユーザーが現在見ているソースコードです。\n1 回の会話で 1 つの回答しかできません。\n\n追加ルール\nステップごとに考えてください：\n1. 提供されたコード選択部分やユーザーの質問、関連するエラー、プロジェクトの詳細、クラス定義などを確認します。\n2. コードや概念、ユーザーの質問が不明確な場合は、明確化する質問を行います。\n3. ユーザーが特定の質問やエラーを提供している場合は、選択されたコードと追加のコンテキストに基づいて答えてください。それ以外の場合は、選択されたコードの説明に集中します。\n4. コードの可読性やパフォーマンス向上の機会があれば、提案を行ってください。\n\n簡潔でわかりやすく、かつ徹底的な説明を心がけ、広範な予備知識があると仮定しないでください。\n開発者に親しみやすい用語やアナロジーを使用してください。\n注意すべき点や、初心者が見落としがちな部分を指摘してください。\n提供されたコンテキストに沿った具体的で関連性の高い例を示してください。\n"))
-      (setopt copilot-chat-markdown-prompt my/copilot-chat-prompt)
-      (setopt copilot-chat-org-prompt my/copilot-chat-prompt))
-
-    (setopt copilot-chat-commit-prompt
-            (string-join (list
-                          "Step 1: Review the English commit message as instructed below.
-  Step 2: Output a Japanese translation of the commit message that preserves its structure. Do not include the original English text in the output."
-                          copilot-chat-commit-prompt)
-                         "\n\n"))
-    )
-#+end_src
-** claude code連携 [[https://github.com/stevemolitor/claude-code.el][claude-code]]
-#+begin_src emacs-lisp :tangle no
-  (leaf claude-code
-    :ensure t
-    :config
-    (claude-code-mode)
-    (global-set-key (kbd "C-q") claude-code-command-map)
-    ;; claude-codeのREPL内では別のフォントを使う
-    (custom-set-faces '(claude-code-repl-face ((t (:family "JuliaMono")))))
-
-    (setopt claude-code-newline-keybinding-style 'super-return-to-send)
-
-    (defun my-claude-notify (title message)
-      "Display a macOS notification with sound."
-      (call-process "osascript" nil nil nil
-                    "-e" (format "display notification \"%s\" with title \"%s\" sound name \"Glass\""
-                                 message title)))
-
-    (setopt claude-code-notification-function #'my-claude-notify))
-#+end_src
-** claude code連携 [[https://github.com/cpoile/claudemacs][claudemacs]]
-#+begin_src emacs-lisp :tangle yes
-  (leaf claudemacs
-    :ensure t
-    :after eat
-    :bind (("C-c a" . claudemacs-transient-menu)))
-
-  ;; font insanity for Claudemacs
-  ;; https://github.com/cpoile/claudemacs?tab=readme-ov-file#fonts
-  (defun my/setup-custom-font-fallbacks-mac ()
-    (interactive)
-    "Configure font fallbacks on mac for symbols and emojis.
-  This will need to be called every time you change your font size,
-  to load the new symbol and emoji fonts."
-
-    (setq use-default-font-for-symbols nil)
-
-    ;; --- Configure for 'symbol' script ---
-    ;; We add fonts one by one. Since we use 'prepend',
-    ;; the last one added here will be the first one Emacs tries.
-    ;; So, list them in reverse order of your preference.
-
-    ;; Least preferred among this list for symbols (will be at the end of our preferred list)
-    (set-fontset-font t 'symbol "Hiragino Sans" nil 'prepend)
-    (set-fontset-font t 'symbol "STIX Two Math" nil 'prepend)
-    (set-fontset-font t 'symbol "Zapf Dingbats" nil 'prepend)
-    (set-fontset-font t 'symbol "Monaco" nil 'prepend)
-    (set-fontset-font t 'symbol "Menlo" nil 'prepend)
-
-    ;; --- Configure for 'emoji' script ---
-    ;; Add fonts one by one, in reverse order of preference.
-
-    ;; Least preferred among this list for emojis
-    (set-fontset-font t 'emoji "Hiragino Sans" nil 'prepend)
-    (set-fontset-font t 'emoji "STIX Two Math" nil 'prepend)
-    (set-fontset-font t 'emoji "Zapf Dingbats" nil 'prepend)
-    (set-fontset-font t 'emoji "Monaco" nil 'prepend)
-    (set-fontset-font t 'emoji "Menlo" nil 'prepend)
-    (set-fontset-font t 'emoji "Noto Emoji" nil 'prepend) ;; If you install Noto Emoji
-    )
-
-  ;; Then, add the fonts after your setup is complete:
-  (add-hook 'emacs-startup-hook
-            (lambda ()
-              (progn
-                (when (string-equal system-type "darwin")
-                  (my/setup-custom-font-fallbacks-mac)))))
-#+end_src
-
 * 補完インターフェイス minadさんシリーズ
 ** [[https://github.com/oantolin/orderless][orderless]] 順不同のテキストマッチングスタイル
 #+begin_src emacs-lisp :tangle yes
@@ -941,33 +749,77 @@ nixでbuildできない
 #+end_src
 ** [[https://github.com/minad/corfu][corfu]] コード補完
 #+begin_src emacs-lisp :tangle yes
-  (leaf corfu
-    :doc "コード補完機能"
+  ;; (leaf hotfuzz
+  ;;   :ensure t)
+
+  ;; (use-package fzf-native
+  ;;   :ensure
+  ;;   :config
+  ;;   (fzf-native-load-dyn)
+  ;;   (setq fussy-score-fn 'fussy-fzf-native-score))
+
+  ;; (use-package fussy
+  ;;   :ensure
+  ;;   :config
+  ;;   (setq fussy-score-ALL-fn 'fussy-fzf-score)
+  ;;   (setq fussy-filter-fn 'fussy-filter-default)
+  ;;   (setq fussy-use-cache t)
+  ;;   (setq fussy-compare-same-score-fn 'fussy-histlen->strlen<)
+  ;;   (fussy-setup)
+  ;;   (advice-add 'corfu--capf-wrapper :before 'fussy-wipe-cache))
+
+  ;; (leaf corfu
+  ;;   :doc "コード補完機能"
+  ;;   :ensure t
+  ;;   :require t
+  ;;   :bind ((corfu-map
+  ;;           ("M-SPC" . corfu-insert-separator)))
+  ;;   ;; :hook ((corfu-mode-hook
+  ;;   ;;         . (lambda ()
+  ;;   ;;             (setq-local fussy-max-candidate-limit 5000
+  ;;   ;;                         fussy-default-regex-fn 'fussy-pattern-first-letter
+  ;;   ;;                         fussy-prefer-prefix nil))))
+
+  ;;   :config
+  ;;   (setopt corfu-auto t)
+  ;;   (setopt corfu-auto-delay 0.0)
+  ;;   (setopt corfu-auto-prefix 1)
+  ;;   (setopt corfu-popupinfo-delay 0.0)
+
+  ;;   (setopt tab-always-indent 'complete)
+  ;;   (setopt text-mode-ispell-word-completion nil)
+  ;;   (setopt read-extended-command-predicate #'command-completion-default-include-p)
+
+  ;;   (global-corfu-mode)
+  ;;   (corfu-popupinfo-mode)
+  ;;   (corfu-history-mode))
+
+
+
+  (use-package hotfuzz
     :ensure t
-    :require t
-    :bind ((corfu-map
-            ("M-SPC" . corfu-insert-separator)))
-    ;; :hook ((corfu-mode-hook
-    ;;         . (lambda ()
-    ;;             (setq-local completion-styles '(hotfuzz)))))
-    :config
-    ;; (leaf hotfuzz
-    ;;   :doc "Fuzzy completion style."
-    ;;   :url "https://github.com/axelf4/hotfuzz"
-    ;;   :ensure t)
 
-    (setopt corfu-auto t)
-    (setopt corfu-auto-delay 0.0)
-    (setopt corfu-auto-prefix 1)
-    (setopt corfu-popupinfo-delay 0.0)
+    :hook ((corfu-mode . (lambda () (setq-local completion-styles '(hotfuzz))))))
 
-    (setopt tab-always-indent 'complete)
-    (setopt text-mode-ispell-word-completion nil)
-    (setopt read-extended-command-predicate #'command-completion-default-include-p)
+  (use-package corfu
+    :ensure t
 
+    :custom
+    (corfu-auto t)
+    (corfu-auto-delay 0.0)
+    (corfu-auto-prefix 1)
+    (corfu-popupinfo-delay 0.0)
+
+    :init
     (global-corfu-mode)
-    (corfu-popupinfo-mode)
-    (corfu-history-mode))
+    (corfu-history-mode)
+    (corfu-popupinfo-mode))
+
+  (use-package emacs
+    :custom
+    (tab-always-indent 'complete)
+    (text-mode-ispell-word-completion nil)
+    (read-extended-command-predicate #'command-completion-default-include-p))
 #+end_src
 *** corfuの補完候補にアイコンを表示する [[https://github.com/LuigiPiucco/nerd-icons-corfu][nerd-icons-corfu]]
 #+begin_src emacs-lisp :tangle yes
@@ -1071,152 +923,6 @@ nixでbuildできない
     :require t
     :hook (embark-collect-mode-hook . consult-preview-at-point-mode))
 #+end_src
-*** ghコマンドと通じてgithubを操作する [[https://github.com/armindarvish/consult-gh][consult-gh]]
-#+begin_src emacs-lisp :tangle yes
-  (leaf consult-gh
-    :ensure t
-    :bind (("C-x M-g m" . consult-gh-transient)
-           ("C-x M-g p" . my/consult-gh-pr-create-current-repo))
-    :config
-    (require 'consult-gh-transient)
-
-    (setopt consult-gh-default-clone-directory "~/ghq/github.com")
-    (setopt consult-gh-show-preview t)
-    (setopt consult-gh-preview-key "C-o")
-    (setopt consult-gh-repo-action #'consult-gh--repo-browse-files-action)
-    (setopt consult-gh-issue-action #'consult-gh--issue-view-action)
-    (setopt consult-gh-pr-action #'consult-gh--pr-view-action)
-    (setopt consult-gh-code-action #'consult-gh--code-view-action)
-    (setopt consult-gh-file-action #'consult-gh--files-view-action)
-    (setopt consult-gh-notifications-action #'consult-gh--notifications-action)
-    (setopt consult-gh-dashboard-action #'consult-gh--dashboard-action)
-    (setopt consult-gh-default-interactive-command #'consult-gh-transient)
-    (setopt consult-gh-large-file-warning-threshold 2500000)
-    (setopt consult-gh-favorite-orgs-list '("karabiner-inc" "deltaXinc" ))
-
-    (add-to-list 'savehist-additional-variables 'consult-gh--known-orgs-list) ;;keep record of searched orgs
-    (add-to-list 'savehist-additional-variables 'consult-gh--known-repos-list) ;;keep record of searched repos
-    (consult-gh-enable-default-keybindings)
-
-    (defun my/consult-gh-pr-create-current-repo ()
-      "今いるリポジトリのprを作る"
-      (interactive)
-      (if-let* ((name-with-owner (string-trim
-                                  (shell-command-to-string
-                                   "gh repo view --json nameWithOwner -q .nameWithOwner")))
-                (pr-title (string-trim
-                           (read-from-minibuffer (format "PR Title (%s): " name-with-owner)))))
-          (consult-gh-pr-create name-with-owner pr-title)))
-
-    (leaf consult-gh-forge
-      :ensure t
-      :after consult forge consult-gh
-      :config
-      (consult-gh-forge-mode +1)
-      (setopt consult-gh-forge-timeout-seconds 20))
-
-    (leaf consult-gh-embark
-      :ensure t
-      :after consult consult-gh embark-consult
-      :config
-      (consult-gh-embark-mode +1))
-
-    (leaf pr-review
-      :ensure t)
-
-    (leaf consult-gh-with-pr-review
-      :ensure t)
-    )
-
-
-#+end_src
-*** あらゆる検索の入り口 [[https://github.com/armindarvish/consult-omni][consult-omni]]
-#+begin_src emacs-lisp :tangle yes
-  (leaf consult-omni
-    :ensure t
-    :bind* (("M-s w" . my/consult-omni-web)
-            ("M-s h" . my/consult-omni-home))
-    :config
-    (leaf plz :ensure t)
-    (leaf org-web-tools
-      :ensure t
-      :config
-      (setopt org-web-tools-pandoc-sleep-time 5.0))
-    ;; (leaf browser-hist
-    ;;   :ensure t
-    ;;   :config
-    ;;   (setq browser-hist-default-browser 'brave))
-
-    (setq consult-omni-show-preview t)
-    (setq consult-omni-preview-key "C-o")
-    (setopt consult-omni-dynamic-input-debounce 0.8)
-    (setopt consult-omni-dynamic-input-throttle 1.6)
-    (setopt consult-omni-dynamic-refresh-delay 0.8)
-    (setopt consult-omni-http-retrieve-backend #'plz)
-    (setopt consult-omni-default-preview-function #'xwidget-webkit-browse-url)
-    (setopt consult-omni-default-browse-function #'org-web-tools-read-url-as-org)
-
-    (require 'consult-omni-google-autosuggest)
-    (setopt consult-omni-default-autosuggest-command #'consult-omni-google-autosuggest)
-
-    (require 'consult-omni-google)
-    (require 'consult-omni-embark)
-    (require 'consult-omni-sources)
-    (require 'consult-omni-ripgrep-all)
-    (require 'consult-omni-fd)
-    ;; (require 'consult-omni-browser-history)
-    (require 'consult-omni-gptel)
-    (require 'consult-omni-gh)
-    (require 'consult-omni-brave-autosuggest)
-    (require 'consult-omni-brave)
-    (require 'consult-omni-wikipedia)
-    (require 'consult-omni-apps)
-
-
-    (setopt consult-omni-google-customsearch-key (auth-source-pick-first-password
-                                                  :host "cloud.google.com"
-                                                  :user "asahi1600@gmail.com"))
-
-    (setopt consult-omni-google-customsearch-cx (auth-source-pick-first-password
-                                                 :host "programmablesearchengine.google.com"
-                                                 :user "asahi1600@gmail.com"))
-
-    ;; brave seach api keyの設定
-    (setopt consult-omni-brave-api-key (auth-source-pick-first-password
-                                        :host "search.brave.com"
-                                        :user "asahi1600@gmail.com"))
-    ;; wiki search 検索結果の日本語化
-    (setq consult-omni-wikipedia-url "https://ja.wikipedia.org/")              ; なぜかdefverで宣言されている
-    (setq consult-omni-wikipedia-api-url "https://ja.wikipedia.org/w/api.php") ; なぜかdefverで宣言されている
-    ;; app search home-managerのインストール先を検索対象に含める
-    (setopt consult-omni-apps-paths (cons "~/Applications/Home Manager Apps/" consult-omni-apps-paths))
-
-    (defvar my/consult-omni-web-sources (list "Google"
-                                              "Brave"
-                                              "GitHub"
-                                              "Wikipedia"
-                                              "gptel"))
-    (defun my/consult-omni-web (&optional initial prompt sources no-callback &rest args)
-      "いろいろインターネット検索"
-      (interactive "P")
-      (let ((prompt (or prompt (concat (nerd-icons-mdicon "nf-md-cloud_search" :face 'nerd-icons-pink)  ": ")))
-            (sources (or sources my/consult-omni-web-sources)))
-        (consult-omni-multi initial prompt sources no-callback args)))
-
-
-    ;; consult-omni-local
-    (defvar my/consult-omni-home-sources (list "Apps"
-                                               "fd"
-                                               ;; "ripgrep-all"
-                                               ))
-    (defun my/consult-omni-home (&optional initial prompt sources no-callback &rest args)
-      "ホームフォルダ内を検索"
-      (interactive "P")
-      (let ((prompt (or prompt (concat (nerd-icons-mdicon "nf-md-home_search" :face 'nerd-icons-green)  ": ")))
-            (sources (or sources my/consult-omni-home-sources)))
-        (consult-omni-multi initial prompt sources no-callback args)))
-    )
-#+end_src
 *** yasnippet連携 [[https://github.com/mohkale/consult-yasnippet][consult-yasnippet]]
 #+begin_src emacs-lisp :tangle yes
   (leaf consult-yasnippet
@@ -1277,7 +983,7 @@ nixでbuildできない
 #+begin_src emacs-lisp :tangle yes
   (leaf apheleia
     :ensure t
-    :hook ((jtsx-tsx-mode-hook jtsx-jsx-mode-hook jtsx-typescript-mode-hook nix-ts-mode-hook astro-ts-mode-hook json-ts-mode) . apheleia-mode)
+    :hook ((jtsx-tsx-mode-hook jtsx-jsx-mode-hook jtsx-typescript-mode-hook nix-ts-mode-hook astro-ts-mode-hook json-ts-mode terraform-mode-hook) . apheleia-mode)
     :commands (apheleia-mode apheleia-format-buffer)
     :config
     (setopt apheleia-formatters-respect-indent-level nil)
@@ -1405,19 +1111,18 @@ nixでbuildできない
 #+end_src
 ** 結局はこれ [[https://github.com/casouri/eldoc-box][lsp-mode]]
 #+begin_src emacs-lisp :tangle yes
-
   (leaf cape
     :ensure t)
 
   (leaf lsp-mode
     :ensure t
-    :hook (((typescript-ts-mode-hook tsx-ts-mode-hook astro-ts-mode-hook nix-ts-mode-hook html-ts-mode-hook css-ts-mode-hook toml-ts-mode-hook json-ts-mode-hook) . lsp-deferred)
+    :hook (((typescript-ts-mode-hook tsx-ts-mode-hook astro-ts-mode-hook nix-ts-mode-hook html-ts-mode-hook css-ts-mode-hook toml-ts-mode-hook json-ts-mode-hook terraform-mode-hook) . lsp-deferred)
            (lsp-mode-hook . lsp-enable-which-key-integration)
            (lsp-completion-mode-hook . my/lsp-mode-setup-completion))
     :init
     (defun my/lsp-mode-setup-completion ()
       (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-            '(orderless))) ;; Configure orderless
+            '(hotfuzz)))
 
     :config
     ;; 使わない機能をオフにする
@@ -1481,6 +1186,15 @@ nixでbuildできない
       ;; (setopt lsp-tailwindcss-skip-config-check t)
       (setopt lsp-tailwindcss-server-path (string-trim (shell-command-to-string "which tailwindcss-language-server"))))
 
+    (use-package lsp-biome
+      :ensure t
+      :preface
+      (defun my/lsp-biome-active-hook ()
+        (setq-local apheleia-formatter '(biome)))
+
+      :config
+      (add-hook 'lsp-biome-active-hook #'my/lsp-biome-active-hook))
+
     (defun lsp-booster--advice-json-parse (old-fn &rest args)
       "Try to parse bytecode instead of json."
       (or
@@ -1510,33 +1224,26 @@ nixでbuildできない
               (message "Using emacs-lsp-booster for %s!" orig-result)
               (cons "emacs-lsp-booster" orig-result))
           orig-result)))
-    (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command))
+    (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
+    )
 #+end_src
 * メジャーモード
 ** [[https://github.com/llemaitre19/jtsx][jtsx-mode]] jsx tsxに対応したモード
 #+begin_src emacs-lisp :tangle yes
-  (leaf jtsx
-    :doc "Extends JSX/TSX built-in support"
-    :url "https://github.com/llemaitre19/jtsx"
+  (use-package jtsx
     :ensure t
-    :defvar (jtsx-jsx-mode-map jtsx-tsx-mode-map)
-    :defun (my-jtsx-bind-keys-to-mode-map)
-    :mode ((("\\.jsx?\\'" "\\.mjs\\'" "\\.cjs\\'") . jtsx-jsx-mode)
+    :mode (("\\.jsx?\\'" . jtsx-jsx-mode)
            ("\\.tsx\\'" . jtsx-tsx-mode)
            ("\\.ts\\'" . jtsx-typescript-mode))
-    :hook ((jtsx-jsx-mode-hook . my-jtsx-bind-keys-to-jtsx-jsx-mode-map)
-           (jtsx-tsx-mode-hook . my-jtsx-bind-keys-to-jtsx-tsx-mode-map))
-    :custom ((js-indent-level . 2)
-             (typescript-ts-mode-indent-offset . 2)
-             (jtsx-switch-indent-offset . 0)
-             (jtsx-indent-statement-block-regarding-standalone-parent . nil)
-             (jtsx-jsx-element-move-allow-step-out . t)
-             (jtsx-enable-jsx-electric-closing-element . t)
-             (jtsx-enable-electric-open-newline-between-jsx-element-tags . t)
-             ;; (jtsx-enable-jsx-element-tags-auto-sync . nil)
-             (jtsx-enable-all-syntax-highlighting-features . t))
+    :commands jtsx-install-treesit-language
+    :hook ((jtsx-jsx-mode . hs-minor-mode)
+           (jtsx-tsx-mode . hs-minor-mode)
+           (jtsx-typescript-mode . hs-minor-mode))
+    :custom
+    (js-indent-level 2)
+    (typescript-ts-mode-indent-offset 2)
     :config
-    (defun my-jtsx-bind-keys-to-mode-map (mode-map)
+    (defun jtsx-bind-keys-to-mode-map (mode-map)
       "Bind keys to MODE-MAP."
       (define-key mode-map (kbd "C-c C-j") 'jtsx-jump-jsx-element-tag-dwim)
       (define-key mode-map (kbd "C-c j o") 'jtsx-jump-jsx-opening-tag)
@@ -1556,11 +1263,14 @@ nixでbuildできない
       (define-key mode-map (kbd "C-c j h") 'jtsx-rearrange-jsx-attributes-horizontally)
       (define-key mode-map (kbd "C-c j v") 'jtsx-rearrange-jsx-attributes-vertically))
 
-    (defun my-jtsx-bind-keys-to-jtsx-jsx-mode-map ()
-      (my-jtsx-bind-keys-to-mode-map jtsx-jsx-mode-map))
+    (defun jtsx-bind-keys-to-jtsx-jsx-mode-map ()
+      (jtsx-bind-keys-to-mode-map jtsx-jsx-mode-map))
 
-    (defun my-jtsx-bind-keys-to-jtsx-tsx-mode-map ()
-      (my-jtsx-bind-keys-to-mode-map jtsx-tsx-mode-map)))
+    (defun jtsx-bind-keys-to-jtsx-tsx-mode-map ()
+      (jtsx-bind-keys-to-mode-map jtsx-tsx-mode-map))
+
+    (add-hook 'jtsx-jsx-mode-hook 'jtsx-bind-keys-to-jtsx-jsx-mode-map)
+    (add-hook 'jtsx-tsx-mode-hook 'jtsx-bind-keys-to-jtsx-tsx-mode-map))
 #+end_src
 ** [[https://github.com/Sorixelle/astro-ts-mode][astro-ts-mode]]
 #+begin_src emacs-lisp :tangle yes
@@ -1573,6 +1283,11 @@ nixでbuildできない
   (leaf mermaid-mode
     :doc "Major mode for working with mermaid graphs"
     :url "https://github.com/abrochard/mermaid-mode"
+    :ensure t)
+#+end_src
+** terraform-mode [[https://github.com/hcl-emacs/terraform-mode][terraform-mode]]
+#+begin_src emacs-lisp :tangle yes
+  (leaf terraform-mode
     :ensure t)
 #+end_src
 * org-mode
@@ -1594,7 +1309,6 @@ nixでbuildできない
     (setopt org-M-RET-may-split-line nil)
     (setopt org-use-speed-commands t)
     (setopt org-startup-indented t)
-    (setopt org-startup-truncated nil)
 
     (defun my/setup-org-mode ()
       "保存前に行末のスペースを削除"
@@ -1734,21 +1448,6 @@ nixでbuildできない
     :doc "Shell/Comint alternative based on term.el."
     :tag "unix" "convenience" "emacs>=29.1"
     :ensure t)
-#+end_src
-** eat [[https://codeberg.org/akib/emacs-eat][eat]]
-#+begin_src emacs-lisp :tangle yes
-  (leaf eat
-    :ensure t
-    :config
-    (setopt eat-shell "~/.nix-profile/bin/fish")
-    ;; https://github.com/cpoile/claudemacs?tab=readme-ov-file#setup
-    (setopt eat-term-scrollback-size 40000)
-    (message "コンフィグが呼ばれました")
-    :defer-config
-    ;; Preserve C-t for transpose-chars instead of sending to terminal
-    (add-to-list 'eat-semi-char-non-bound-keys [?\C-t])
-    (eat-update-semi-char-mode-map)
-    (message "でファーコンフィグが呼ばれました"))
 #+end_src
 * ユースケース
 ** 特定のバッファーのポイントを記録してどこからでもその位置にジャンプする

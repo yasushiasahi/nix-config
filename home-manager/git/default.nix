@@ -20,9 +20,11 @@ in
         "settings.local.json"
         "CLAUDE.local.md"
       ];
-      userEmail = "asahi1600@gmail.com";
-      userName = "Yasushi Asahi";
-      extraConfig = {
+      settings = {
+        user = {
+          email = "asahi1600@gmail.com";
+          name = "Yasushi Asahi";
+        };
         github = {
           user = "yasushiasahi";
         };
@@ -32,6 +34,9 @@ in
         push = {
           autoSetupRemote = true;
         };
+        delta = {
+          side-by-side = true;
+        };
       };
 
       # difftastic = {
@@ -40,9 +45,11 @@ in
       #   background = "dark";
       # };
 
-      delta = {
-        enable = true;
-      };
+    };
+
+    delta = {
+      enable = true;
+      enableGitIntegration = true;
     };
 
     gh = {

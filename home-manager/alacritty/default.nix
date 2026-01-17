@@ -19,7 +19,7 @@ in
       };
       scrolling.history = 100000;
       font = {
-        normal.family = "HackGen Console NF";
+        normal.family = "Maple Mono NF CN";
         size = 13;
       };
       cursor = {

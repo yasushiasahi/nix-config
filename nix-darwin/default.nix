@@ -16,6 +16,7 @@
     pkgs.plemoljp-nf
     pkgs.hackgen-nf-font
     pkgs.hackgen-font
+    pkgs.maple-mono.NF-CN-unhinted
 
     # notoを一通り
     pkgs.noto-fonts
@@ -54,13 +55,12 @@
       "karabiner-elements"
       "raycast"
       "arc"
-      "firefox"
       "google-chrome"
       "brave-browser"
-      "figma"
-      "gitify"
       "cleanmymac"
       "alacritty"
+      "postman"
+      "nikitabobko/tap/aerospace"
     ];
     masApps = {
       LINE = 539883307;
