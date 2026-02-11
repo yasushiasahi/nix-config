@@ -1,0 +1,16 @@
+#    -*- mode: org -*-
+
+
+Archived entries from file /Users/asahi/ghq/github.com/yasushiasahi/nix-config/home-manager/emacs/init.org
+
+
+* delsel 選択状態でペーストした時に上書きされる
+:PROPERTIES:
+:ARCHIVE_TIME: 2026-02-12 Thu 02:00
+:ARCHIVE_FILE: ~/ghq/github.com/yasushiasahi/nix-config/home-manager/emacs/init.org
+:ARCHIVE_OLPATH: 雑多なグローバル設定
+:ARCHIVE_CATEGORY: init
+:END:
+#+begin_src emacs-lisp :tangle yes
+
+#+end_src
