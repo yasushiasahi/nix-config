@@ -12,20 +12,7 @@
 
   fonts.packages = [
     # 日本語対応プログラミングフォント
-    pkgs.plemoljp
-    pkgs.plemoljp-nf
-    pkgs.hackgen-nf-font
-    pkgs.hackgen-font
     pkgs.maple-mono.NF-CN-unhinted
-
-    # notoを一通り
-    pkgs.noto-fonts
-    pkgs.noto-fonts-lgc-plus
-    pkgs.noto-fonts-cjk-sans
-    pkgs.noto-fonts-cjk-serif
-    pkgs.noto-fonts-color-emoji
-    pkgs.noto-fonts-emoji-blob-bin
-    pkgs.noto-fonts-monochrome-emoji
 
     # nerdfontを入れたい nerd-icons.elでお勧めされているもの
     # https://github.com/rainstormstudio/nerd-icons.el?tab=readme-ov-file#installing-fonts
@@ -33,11 +20,6 @@
     pkgs.emacs-all-the-icons-fonts
     pkgs.font-awesome
     pkgs.font-awesome_5
-
-    # for claude-code.el
-    pkgs.julia-mono
-    pkgs.nerd-fonts.jetbrains-mono
-    pkgs.iosevka
   ];
 
   homebrew = {
@@ -47,20 +29,27 @@
       upgrade = true;
       cleanup = "uninstall";
     };
+    brews = [
+      # プロジェクトで一時的に必要
+      { name = "unixodbc"; }
+    ];
     casks = [
-      # osと結びつきが強いアプリをnixで入れても上手く動作しない。
-      # 力技でどうにかできることもありそうだけど、日々不安に苛まれることになるので諦めるのが無難と判断。
+      # システム系
       "logi-options+"
       "1password"
-      "karabiner-elements"
-      "raycast"
-      "arc"
-      "google-chrome"
-      "brave-browser"
       "cleanmymac"
+      # ブラウザ
+      "arc"
+      "brave-browser"
+      "google-chrome"
+      # ターミナル
       "alacritty"
+      "ghostty"
+      # エディタ
+      "visual-studio-code"
+      "coteditor"
+      # ターミナル
       "postman"
-      "nikitabobko/tap/aerospace"
     ];
     masApps = {
       LINE = 539883307;
@@ -71,23 +60,14 @@
     };
   };
 
-  # List packages installed in system profile. To search by name, run:
-  # $ nix-env -qaP | grep wget
-  # environment.systemPackages = [
-  #   pkgs.vim
-  # ];
-
   nix = {
     optimise.automatic = true;
     settings = {
-      # Necessary for using flakes on this system.
+      # これを設定しないとflakeが使えない
       experimental-features = "nix-command flakes";
       max-jobs = 8;
     };
   };
-
-  # Enable alternative shell support in nix-darwin.
-  # programs.fish.enable = true;
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
@@ -109,6 +89,7 @@
       InitialKeyRepeat = 11;
       # キー長押し時の速さ（最小に）
       KeyRepeat = 1;
+      # トラックパッドのフォースクリック無効化
       "com.apple.trackpad.forceClick" = false;
     };
     dock = {
@@ -164,7 +145,7 @@
       # デスクトップクリックでデスクトップ表示
       EnableStandardClickToShowDesktop = false;
       # アプリを画面端にドラッグすると左右半分にスナップする
-      EnableTilingByEdgeDrag = false;
+      # EnableTilingByEdgeDrag = false;
       # アプリを画面上橋にドラッグするとフススクリーンにする
       EnableTopTilingByEdgeDrag = false;
     };

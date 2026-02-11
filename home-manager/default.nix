@@ -1,6 +1,7 @@
 {
   pkgs,
   home-manager,
+  mac-app-util,
 }:
 let
   mkAlias = sets: {
@@ -45,9 +46,7 @@ let
       pkgs.docker-buildx
 
       # node tools
-      pkgs.nodejs_22
-      pkgs.yarn
-      pkgs.pnpm
+      pkgs.nodejs_24
 
       # nix tool
       pkgs.nvfetcher
@@ -83,6 +82,7 @@ home-manager.lib.homeManagerConfiguration {
   # Specify your home configuration modules here, for example,
   # the path to your home.nix.
   modules = [
+    mac-app-util.homeManagerModules.default
     miscModule
     optionModule
     ./emacs
@@ -102,13 +102,8 @@ home-manager.lib.homeManagerConfiguration {
     ./bat
     ./zoxide
     ./aws
-    ./authinfo
-    ./vscode
     ./starship
-    ./aerospace
-    # ./karabiner-elements
-    # ./colima
-    # ./claude
+
   ];
 
   # Optionally use extraSpecialArgs

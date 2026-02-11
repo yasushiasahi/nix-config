@@ -1,6 +1,6 @@
 {
     "emacs-fzf-native": {
-        "cargoLocks": null,
+        "cargoLock": null,
         "date": "2024-12-24",
         "extract": null,
         "name": "emacs-fzf-native",
@@ -21,7 +21,7 @@
         "version": "b159c581699e0661da015a845760578598880307"
     },
     "emacs-lsp-biome": {
-        "cargoLocks": null,
+        "cargoLock": null,
         "date": "2025-11-19",
         "extract": null,
         "name": "emacs-lsp-biome",
@@ -42,8 +42,8 @@
         "version": "9b3d523e3df2a9f686e1b15396987a0310b62a15"
     },
     "emacs-org-modern-indent": {
-        "cargoLocks": null,
-        "date": "2025-04-12",
+        "cargoLock": null,
+        "date": "2026-01-02",
         "extract": null,
         "name": "emacs-org-modern-indent",
         "passthru": null,
@@ -55,15 +55,15 @@
             "name": null,
             "owner": "jdtsmith",
             "repo": "org-modern-indent",
-            "rev": "9973bd3b91e4733a3edd1fca232208c837c05473",
-            "sha256": "sha256-st3338Jk9kZ5BLEPRJZhjqdncMpLoWNwp60ZwKEObyU=",
+            "rev": "ebf9a8e571db523dc6e4cd9ed80d0e0626983ae4",
+            "sha256": "sha256-+q7KmbU8A+uR61BSa528vYbdFSj2WGsFWYW/5q7J9Kw=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "9973bd3b91e4733a3edd1fca232208c837c05473"
+        "version": "ebf9a8e571db523dc6e4cd9ed80d0e0626983ae4"
     },
     "fish-autopair": {
-        "cargoLocks": null,
+        "cargoLock": null,
         "date": "2022-07-04",
         "extract": null,
         "name": "fish-autopair",
@@ -84,7 +84,7 @@
         "version": "4d1752ff5b39819ab58d7337c69220342e9de0e2"
     },
     "fish-bd": {
-        "cargoLocks": null,
+        "cargoLock": null,
         "date": "2022-03-04",
         "extract": null,
         "name": "fish-bd",
@@ -105,7 +105,7 @@
         "version": "ab686e028bfe95fa561a4f4e57840e36902d4d7d"
     },
     "fish-done": {
-        "cargoLocks": null,
+        "cargoLock": null,
         "date": "2025-12-15",
         "extract": null,
         "name": "fish-done",
@@ -126,7 +126,7 @@
         "version": "998ad4f5fc9cee36c09840a7e635b56428e554f9"
     },
     "fish-enhancd": {
-        "cargoLocks": null,
+        "cargoLock": null,
         "date": "2025-01-24",
         "extract": null,
         "name": "fish-enhancd",
@@ -147,7 +147,7 @@
         "version": "5afb4eb6ba36c15821de6e39c0a7bb9d6b0ba415"
     },
     "fish-fzf": {
-        "cargoLocks": null,
+        "cargoLock": null,
         "date": "2024-04-06",
         "extract": null,
         "name": "fish-fzf",
@@ -168,7 +168,7 @@
         "version": "8920367cf85eee5218cc25a11e209d46e2591e7a"
     },
     "fish-ghq": {
-        "cargoLocks": null,
+        "cargoLock": null,
         "date": "2021-07-16",
         "extract": null,
         "name": "fish-ghq",
@@ -189,7 +189,7 @@
         "version": "cafaaabe63c124bf0714f89ec715cfe9ece87fa2"
     },
     "zsh-autocomplete": {
-        "cargoLocks": null,
+        "cargoLock": null,
         "date": "2025-12-09",
         "extract": null,
         "name": "zsh-autocomplete",
@@ -210,7 +210,7 @@
         "version": "bbba73ebdc7c01323e09d4d518e51e2d6847ccc2"
     },
     "zsh-enhancd": {
-        "cargoLocks": null,
+        "cargoLock": null,
         "date": "2025-01-24",
         "extract": null,
         "name": "zsh-enhancd",
@@ -231,7 +231,7 @@
         "version": "5afb4eb6ba36c15821de6e39c0a7bb9d6b0ba415"
     },
     "zsh-npm-scripts-autocomplete": {
-        "cargoLocks": null,
+        "cargoLock": null,
         "date": "2023-10-19",
         "extract": null,
         "name": "zsh-npm-scripts-autocomplete",

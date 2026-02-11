@@ -471,12 +471,6 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
                                          "<~" "<~~" "</" "</>" "~@" "~-" "~>" "~~" "~~>" "%%"))
     (global-ligature-mode 't))
 #+end_src
-** auth-source Emacsデフォルトのシークレット管理
-#+begin_src emacs-lisp :tangle yes
-  (leaf auth-source
-    :config
-    (setopt auth-sources '("~/.authinfo")))
-#+end_src
 ** プロジェクト管理
 *** =.dir-locals-2.el= があるディレクトリをプロジェクトのルートとする。gitのrootよりも優先される。
 #+begin_src emacs-lisp :tangle yes
@@ -540,22 +534,6 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :bind (("C-s" . avy-goto-char-timer))
     :config
     (setopt avy-background t))
-#+end_src
-** [[https://github.com/lorniu/go-translate][go-translate]] 翻訳
-#+begin_src emacs-lisp :tangle no
-  (leaf go-translate
-    :ensure t
-    :bind (("C-c t" . gt-do-translate))
-    :config
-    (setopt gt-langs `(en ja))
-    (setopt gt-default-translator (gt-translator
-                                   :engines (gt-deepl-engine
-                                             :key (auth-source-pick-first-password
-                                                   :host "deepl.com"
-                                                   :user "asahi1600@gmail.com"
-                                                   :port "deepl-api-key"))
-                                   :render (gt-buffer-render)))
-    (setopt gt-buffer-render-follow-p t))
 #+end_src
 ** Caseをいい感じに操作する [[https://github.com/akicho8/string-inflection][string-inflection]]
 #+begin_src emacs-lisp :tangle yes
@@ -989,6 +967,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (setopt apheleia-formatters-respect-indent-level nil)
     (add-to-list 'apheleia-formatters '(prettier-astro . ("apheleia-npx" "prettier" "--stdin-filepath" filepath
                                                           "--plugin=prettier-plugin-astro" "--parser=astro")))
+    (add-to-list 'apheleia-formatters '(biome . ("apheleia-npx" "biome" "check" "--write" "--stdin-file-path" filepath)))
     (add-to-list 'apheleia-mode-alist '(astro-ts-mode . prettier-astro))
     (add-to-list 'apheleia-mode-alist '(scss-ts-mode . prettier-scss)))
 #+end_src
@@ -1328,7 +1307,6 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 #+end_src
 ** 第二の脳 [[https://github.com/org-roam/org-roam][org-roam]]
 - complation-at-pointでlinkを挿入できるらしいけどうまくいかない
--
 #+begin_src emacs-lisp :tangle yes
   (leaf org-roam
     :ensure t
@@ -1431,15 +1409,6 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 #+begin_src emacs-lisp :tangle yes
   (leaf ox-gfm
     :ensure t)
-#+end_src
-** org-ai
-#+begin_src emacs-lisp :tangle yes
-  (leaf org-ai
-    :ensure t
-    :hook ((org-mode-hook . org-ai-mode))
-    :config
-    (setopt org-ai-default-chat-model "gpt-4.1")
-    (org-ai-install-yasnippets))
 #+end_src
 * ターミナル
 ** [[https://github.com/szermatt/mistty][mistty]]
