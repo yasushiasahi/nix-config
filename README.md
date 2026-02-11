@@ -1,5 +1,8 @@
 # My Nix Configuration for Mac OS
 
+## prerequirment
+FireVolte is off
+
 ## Initial set up
 ### install xcode tools(git, etc)
 ```
@@ -17,15 +20,16 @@ sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install)
 ```
 git clone https://github.com/yasushiasahi/nix-config.git
 ```
+### update nix-darwin
+```
+sudo nix --extra-experimental-features nix-command --extra-experimental-features flakes run nix-darwin/master#darwin-rebuild -- switch --flake .#darwin
+```
 ### update home-manager
 ```
 nix run nixpkgs#nvfetcher
 nix run home-manager/master -- switch --flake .#home
 ```
-### update nix-darwin
-```
-nix run nix-darwin/master#darwin-rebuild -- switch --flake .#darwin
-```
+
 
 
 

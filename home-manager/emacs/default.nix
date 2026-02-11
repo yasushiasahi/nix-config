@@ -87,13 +87,12 @@ in
 
     #formatter & linter
     pkgs.nodePackages.prettier
-    pkgs.nixfmt-rfc-style
+    pkgs.nixfmt
     pkgs.eslint
     pkgs.biome
 
     # shell-script-mode
     pkgs.shellcheck
-
   ];
 
   # cliからemacsを起動した時にLANGがないと警告が出る。
