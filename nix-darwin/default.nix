@@ -17,9 +17,6 @@
     # nerdfontを入れたい nerd-icons.elでお勧めされているもの
     # https://github.com/rainstormstudio/nerd-icons.el?tab=readme-ov-file#installing-fonts
     pkgs.nerd-fonts.symbols-only
-    pkgs.emacs-all-the-icons-fonts
-    pkgs.font-awesome
-    pkgs.font-awesome_5
   ];
 
   homebrew = {

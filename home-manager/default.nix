@@ -51,6 +51,10 @@ let
       # nix tool
       pkgs.nvfetcher
 
+      # python tool
+      pkgs.python315
+      pkgs.uv
+
       pkgs.claude-code
     ];
 

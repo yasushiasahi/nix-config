@@ -6,6 +6,20 @@
   dockerTools,
 }:
 {
+  emacs-astro-ts-mode = {
+    pname = "emacs-astro-ts-mode";
+    version = "886d692378d0da2071e710c1e6db02e5b2e0dd30";
+    src = fetchgit {
+      url = "https://git.isincredibly.gay/srxl/astro-ts-mode.git";
+      rev = "886d692378d0da2071e710c1e6db02e5b2e0dd30";
+      fetchSubmodules = false;
+      deepClone = false;
+      leaveDotGit = false;
+      sparseCheckout = [ ];
+      sha256 = "sha256-DAHuFZX8sQVbTKU6ZnQkHEnFqcdicH9a4thpwxmdDR8=";
+    };
+    date = "2025-03-09";
+  };
   emacs-fzf-native = {
     pname = "emacs-fzf-native";
     version = "b159c581699e0661da015a845760578598880307";

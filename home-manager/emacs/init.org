@@ -3,319 +3,126 @@
 #+EMAIL: asahi1600@gmail.com
 #+STARTUP: content
 
-* Header
-#+begin_src emacs-lisp :tangle yes
-  ;;; init --- My init.el  -*- lexical-binding: t; -*-
-
-  ;; Copyright (C) 2025 Yasushi Asahi
-
-  ;; Author: Yasushi Asahi <asahi1600@gmail.com>
-
-  ;; This program is free software: you can redistribute it and/or modify
-  ;; it under the terms of the GNU General Public License as published by
-  ;; the Free Software Foundation, either version 3 of the License, or
-  ;; (at your option) any later version.
-
-  ;; This program is distributed in the hope that it will be useful,
-  ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ;; GNU General Public License for more details.
-
-  ;; You should have received a copy of the GNU General Public License
-  ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-  ;;; Commentary:
-
-  ;; My init.el.
-
-  ;;; Code:
-  (eval-and-compile
-    (customize-set-variable
-     'package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                         ("melpa" . "https://melpa.org/packages/")
-                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
-    (package-initialize))
-
-  (use-package leaf :ensure t)
-
-
-
-  (leaf *looks
-    :config
-    (leaf solarized-theme
-      :doc "The Solarized color theme"
-      :url "https://github.com/bbatsov/solarized-emacs"
-      :ensure t
-      :custom ((solarized-emphasize-indicators . nil)
-               (solarized-use-less-bold . t))
-      :config
-      (load-theme 'solarized-dark t))
-
-    (leaf nerd-icons
-      :doc "nerdアイコンをいろんなところに表示できるようになる"
-      :ensure t
-      :require
-      :config
-                                          ; (nerd-icons-install-fonts t)
-      (leaf nerd-icons-dired
-        :doc "Shows icons for each file in dired mode"
-        :url "https://github.com/rainstormstudio/nerd-icons-dired"
-        :ensure t
-        :hook (dired-mode-mode))
-      )
-
-    (leaf pulsar
-      :doc "Pulse highlight on demand or after select functions"
-      :url "https://github.com/protesilaos/pulsar"
-      :ensure t
-      :global-minor-mode pulsar-global-mode)
-
-    (leaf mini-echo
-      :doc "Echo buffer status in minibuffer window"
-      :url "https://github.com/liuyinz/mini-echo.el"
-      :ensure t
-      :global-minor-mode t)
-
-    (leaf *meigen
-      :config
-      (leaf request
-        :doc "Compatible layer for URL request"
-        :url "https://github.com/tkf/emacs-request"
-        :ensure t
-        :config
-        (defun display-startup-echo-area-message ()
-          (request "https://meigen.doodlenote.net/api/json.php"
-            :parser 'json-read
-            :success (cl-function
-                      (lambda (&key data &allow-other-keys)
-                        (let* ((item (aref data 0))
-                               (meigen (alist-get 'meigen item))
-                               (auther (alist-get 'auther item)))
-                          (message "%s\nby %s" meigen auther))))))
-        )
-      )
-    )
-
-  (leaf *key-binding
-    :defun (my/beginning-of-line-text-or-line my/keyboard-quit-dwim)
-    :config
-    ;; C-hはバックスペースにする https://www.emacswiki.org/emacs/BackspaceKey
-    (define-key key-translation-map [?\C-?] [?\C-h])
-    (define-key key-translation-map [?\M-\d] [?\M-h])
-    (define-key key-translation-map [?\C-h] [?\C-?])
-    (define-key key-translation-map [?\M-h] [?\M-\d])
-
-
-    (defun my/beginning-of-line-text-or-line ()
-      "行の最初の文字の位置に移動。すでに最初の文字だったら行頭に移動。"
-      (interactive)
-      (let ((curr-point (point))                        ; コマンド実行前のカーソル位置
-            (curr-column (current-column))) ; コマンド実行前の行番号
-        (back-to-indentation)                       ; 一旦行の最初の文字の位置に移動
-        (when (and (/= curr-column 0)         ; 元々行頭にいなかった
-                   (<= curr-point (point))) ; 最初の文字の位置よりも前にいた
-          (beginning-of-line))))            ; その場合は行頭に移動
-    (define-key global-map (kbd "C-a") #'my/beginning-of-line-text-or-line)
-
-    ;; https://protesilaos.com/codelog/2024-11-28-basic-emacs-configuration/#h:83c8afc4-2359-4ebe-8b5c-f2e5257bdda3
-    (defun my/keyboard-quit-dwim ()
-      "Do-What-I-Mean behaviour for a general `keyboard-quit'.
-
-  The generic `keyboard-quit' does not do the expected thing when
-  the minibuffer is open.  Whereas we want it to close the
-  minibuffer, even without explicitly focusing it.
-
-  The DWIM behaviour of this command is as follows:
-
-  - When the region is active, disable it.
-  - When a minibuffer is open, but not focused, close the minibuffer.
-  - When the Completions buffer is selected, close it.
-  - In every other case use the regular `keyboard-quit'."
-      (interactive)
-      (cond
-       ((region-active-p)
-        (keyboard-quit))
-       ((derived-mode-p 'completion-list-mode)
-        (delete-completion-window))
-       ((> (minibuffer-depth) 0)
-        (abort-recursive-edit))
-       (t
-        (keyboard-quit))))
-    (define-key global-map (kbd "C-g") #'my/keyboard-quit-dwim)
-
-    (leaf transient
-      :doc "Transient commands."
-      :url "https://github.com/magit/transient"
-      :ensure t
-      :require t
-      :defvar (my/transient-window-operation)
-      :defun (transient-define-prefix my/transient-window-operation)
-      :bind (("C-t" . my/transient-window-operation))
-      :config
-      (transient-define-prefix my/transient-window-operation ()
-        "Window Operation"
-        :transient-suffix     'transient--do-stay
-        :transient-non-suffix 'transient--do-exit
-        [:class transient-columns
-                ["Move"
-                 ("p" "↑" windmove-up)
-                 ("n" "↓" windmove-down)
-                 ("b" "←" windmove-left)
-                 ("f" "→" windmove-right)]
-                ["Ajust"
-                 ("<up>" "↑" shrink-window)
-                 ("<down>" "↓" enlarge-window)
-                 ("<left>" "←" shrink-window-horizontally)
-                 ("<right>" "→" enlarge-window-horizontally)]
-                ["Split"
-                 ("\\" "vertical" split-window-right)
-                 ("-" "horizontal" split-window-below)
-                 ("s" "swap" window-swap-states)
-                 ("e" "balance" balance-windows)]
-                ["Ohter"
-                 ("0" "delete" delete-window)
-                 ("1" "only" delete-other-windows)
-                 ("t" "maxmaiz" toggle-frame-maximized)]])
-      (put 'my/transient-window-operation 'interactive-only nil))
-
-    (leaf which-key
-      :doc "Display available keybindings in popup"
-      :url "https://github.com/justbur/emacs-which-key"
-      :ensure t
-      :global-minor-mode t)
-    )
-
-  (leaf *utility-functions
-    :config
-    ;;; visual-replaceを試してみる
-    ;; (leaf visual-regexp
-    ;;   :doc "A regexp/replace command for Emacs with interactive visual feedback"
-    ;;   :url "https://github.com/benma/visual-regexp.el/"
-    ;;   :ensure t)
-
-    (leaf visual-replace
-      :doc "A prompt for replace-string and query-replace"
-      :url "http://github.com/szermatt/visual-replace"
-      :ensure t
-      :global-minor-mode visual-replace-global-mode)
-
-    (leaf restart-emacs
-      :doc "Restart emacs from within emacs"
-      :tag "convenience"
-      :url "https://github.com/iqbalansari/restart-emacs"
-      :ensure t
-      :custom (restart-emacs-restore-frames . t))
-
-    (leaf open-junk-file
-      :doc "Open a junk (memo) file to try-and-error"
-      :url "http://www.emacswiki.org/cgi-bin/wiki/download/open-junk-file.el"
-      :ensure t
-      :custom ((open-junk-file-format . "~/ghq/github.com/yasushiasahi/junkfiles/%Y/%m/%d-%H%M%S.")))
-    )
-
-  (leaf *programing-minar-modes
-    :config
-    (leaf rainbow-delimiters
-      :doc "Highlight brackets according to their depth"
-      :url "https://github.com/Fanael/rainbow-delimiters"
-      :ensure t
-      :hook prog-mode-hook)
-
-
-
-    ;; (leaf flycheck
-    ;;   :url "https://www.flycheck.org"
-    ;;   :ensure t
-    ;;   :global-minor-mode global-flycheck-mode)
-
-    )
-
-
-
-  (leaf *major-modes
-    :config
-    (leaf treesit
-      :doc "tree-sitter utilities"
-      :tag "builtin"
-      :defvar (treesit-language-source-alist)
-      :mode (("\\.html\\'" . html-ts-mode)
-             ("\\.css\\'" . css-ts-mode)
-             ("\\.scss\\'" . scss-ts-mode)
-             ("\\.ya?ml\\'" . yaml-ts-mode)
-             ("\\.toml\\'" . toml-ts-mode)
-             ("\\.json\\'" . json-ts-mode)
-             ("\\.php\\'" . php-ts-mode)
-             ("\\Dockerfile\\'" . dockerfile-ts-mode)
-             ("\\make\\'" . cmake-ts-mode))
-      :custom (treesit-font-lock-level . 4)
-      :config
-      ;; astro意外nixで入れている
-      (let ((treesit-language-source-alist  '((astro "https://github.com/virchau13/tree-sitter-astro"))))
-        (mapc (lambda (lang)
-                (unless (treesit-language-available-p lang nil)
-                  (treesit-install-language-grammar lang)))
-              (mapcar #'car treesit-language-source-alist)))
-
-      ;; scss-ts-modeを定義する。apheleiaで引っかけるだけもの目的。
-      (define-derived-mode scss-ts-mode css-ts-mode "SCSS")
-      )
-
-    (leaf macrostep
-      :doc "マクロを展開する。leafがどう実行されるのか確認できる。"
-      :ensure t)
-
-    (leaf leaf-convert
-      :doc "Convert many format to leaf format"
-      :commands leaf-convert-insert-template
-      :ensure t)
-
-    (leaf leaf-tree
-      :ensure t
-      :custom (imenu-list-sizeleaf-tree-click-group-to-hide . t))
-
-    (leaf aggressive-indent
-      :doc "Minor mode to aggressively keep your code always indented."
-      :url "https://github.com/Malabarba/aggressive-indent-mode"
-      :ensure t
-      :hook (emacs-lisp-mode-hook))
-
-    (leaf elisp-mode
-      :doc "Emacs Lisp mode"
-      :hook ((emacs-lisp-mode-hook . my/setup-emacs-lisp-mode))
-      :config
-
-      (defun my/setup-emacs-lisp-mode ()
-        "保存前に行末のスペースを削除"
-        (add-hook 'before-save-hook 'delete-trailing-whitespace nil 'make-it-local))
-      )
-
-    (leaf css-mode
-      :doc "Major mode to edit CSS files"
-      :custom ((css-indent-offset . 2)))
-
-    (leaf nix-ts-mode
-      :doc "Major mode for Nix expressions, powered by tree-sitter"
-      :url "https://github.com/nix-community/nix-ts-mode"
-      :ensure t
-      :mode ("\\.nix\\'"))
-
-    )
-#+end_src
 * 雑多なグローバル設定
-** [[https://github.com/purcell/exec-path-from-shell][exec-path-from-shell]] ShellとEmacsの環境変数を同期する
+** package.ei 標準パッケージマネージャー
+外部パッケージのソースはすべてnixで入れているのでミニマムでやる気ない設定。
+[[https://qiita.com/nobuyuki86/items/e392b642189d755dd113#packageel][このような]]凝った設定もあるみたい。「built-inパッケージも更新対象にする」が気になる。
+#+begin_src emacs-lisp :tangle yes
+  (require 'package)
+  (package-initialize)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+#+end_src
+** [[https://github.com/conao3/leaf.el][leaf.el]] オルタナティブuse-package
+#+begin_src emacs-lisp :tangle yes
+(use-package leaf :ensure t)
+#+end_src
+** [[https://github.com/purcell/exec-path-from-shell][exec-path-from-shell]] Shellの環境変数をEmacsに同期する
 #+begin_src emacs-lisp :tangle yes
   (use-package exec-path-from-shell
     :ensure t
-    
+
     :custom
-    ;; デフォルは-i。シェルをインタラクティブに起動すると時間かかるので何も指定しない。
+    ;; デフォルは-i。シェルをインタラクティブに起動すると時間かかるので引数なしにする。
     ;; https://github.com/purcell/exec-path-from-shell?tab=readme-ov-file#making-exec-path-from-shell-faster
     (exec-path-from-shell-arguments nil)
     ;; どの環境変数を取り込むか
     (exec-path-from-shell-variables '("PATH" "LSP_USE_PLISTS"))
-    
+
     :config
     (exec-path-from-shell-initialize))
+#+end_src
+** 起動時に名言を表示する（ [[https://github.com/tkf/emacs-request][request]] HTTPクライアント）
+#+begin_src emacs-lisp :tangle yes
+  (use-package request :ensure t)
+
+  (defun display-startup-echo-area-message ()
+    "スタートアップメッセージとして名言を表示する"
+    (request "https://meigen.doodlenote.net/api/json.php"
+      :parser 'json-read
+      :success (cl-function
+                (lambda (&key data &allow-other-keys)
+                  (let* ((item (aref data 0))
+                         (meigen (alist-get 'meigen item))
+                         (auther (alist-get 'auther item)))
+                    (message "%s\nby %s" meigen auther))))))
+
+  ;; 表示を高速化しようと頑張った残骸
+  ;; (setq my/startup-msg nil)
+  ;;
+  ;; (request "https://meigen.doodlenote.net/api/json.php"
+  ;;   :parser 'json-read
+  ;;   :success (cl-function
+  ;;             (lambda (&key data &allow-other-keys)
+  ;;               (let* ((item (aref data 0))
+  ;;                      (meigen (alist-get 'meigen item))
+  ;;                      (auther (alist-get 'auther item)))
+  ;;                 (setq my/startup-msg (format "%s\nby %s" meigen auther))))))
+  ;;
+  ;; (defun display-startup-echo-area-message ()
+  ;;   "スタートアップメッセージとして名言を表示する"
+  ;;   (let ((count 0))
+  ;;     (while (and (not my/startup-msg) (< count 6))
+  ;;       (sleep-for 0.25)
+  ;;       (setq count (1+ count)))
+  ;;     (message my/startup-msg)))
+#+end_src
+** キーバインド
+| C-h | バックスペース           |
+| M-h | 単語単位のバックスペース |
+| C-d | デリート                 |
+| M-d | 単語単位のデリート       |
+#+begin_src emacs-lisp :tangle yes
+  ;; https://www.emacswiki.org/emacs/BackspaceKey
+  (define-key key-translation-map [?\C-?] [?\C-h])
+  (define-key key-translation-map [?\M-\d] [?\M-h])
+  (define-key key-translation-map [?\C-h] [?\C-?])
+  (define-key key-translation-map [?\M-h] [?\M-\d])
+#+end_src
+
+| C-a | 行頭、文頭に行き来する |
+#+begin_src emacs-lisp :tangle yes
+  (defun my/beginning-of-line-text-or-line ()
+    "行の最初の文字の位置に移動。すでに最初の文字だったら行頭に移動。"
+    (interactive)
+    (let ((curr-point (point))            ; コマンド実行前のカーソル位置
+          (curr-column (current-column))) ; コマンド実行前の行番号
+      (back-to-indentation)               ; 一旦行の最初の文字の位置に移動
+      (when (and (/= curr-column 0)       ; 元々行頭にいなかった
+                 (<= curr-point (point))) ; 最初の文字の位置よりも前にいた
+        (beginning-of-line))))            ; その場合は行頭に移動
+
+  (define-key global-map (kbd "C-a") #'my/beginning-of-line-text-or-line)
+#+end_src
+
+| C-g | 汎用キャンセル |
+#+begin_src emacs-lisp :tangle yes
+  ;; 関数名とコメント以外はそのまま使わせていただいている
+  ;; https://protesilaos.com/codelog/2024-11-28-basic-emacs-configuration/#h:83c8afc4-2359-4ebe-8b5c-f2e5257bdda3
+  (defun my/keyboard-quit-dwim ()
+    "一般的な `keyboard-quit' のための「意図を汲んだ」動作。
+
+  汎用的な `keyboard-quit' は、ミニバッファが開いているときに
+  期待される動作をしません。私たちが望むのは、明示的にフォーカスを
+  当てなくても、ミニバッファを閉じることです。
+
+  このコマンドのDWIM動作は以下の通りです：
+
+  - リージョンがアクティブな場合、それを無効化する。
+  - ミニバッファが開いているがフォーカスされていない場合、ミニバッファを閉じる。
+  - Completionsバッファが選択されている場合、それを閉じる。
+  - その他すべての場合は、通常の `keyboard-quit' を使用する。"
+    (interactive)
+    (cond
+     ((region-active-p)
+      (keyboard-quit))
+     ((derived-mode-p 'completion-list-mode)
+      (delete-completion-window))
+     ((> (minibuffer-depth) 0)
+      (abort-recursive-edit))
+     (t
+      (keyboard-quit))))
+
+  (define-key global-map (kbd "C-g") #'my/keyboard-quit-dwim)
 #+end_src
 ** delsel 選択状態で入力した時に選択箇所を削除する
 #+begin_src emacs-lisp :tangle yes
@@ -468,29 +275,138 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :config
     (setopt help-window-select t))
 #+end_src
-** リガチャ設定
-#+begin_src emacs-lisp :tangle yes
-  (use-package ligature
-    :ensure t
-    :config
-    (ligature-set-ligatures 'prog-mode '("www" "**" "***" "**/" "*>" "*/" "\\\\" "\\\\\\" "{-" "::"
-                                         ":::" ":=" "!!" "!=" "!==" "-}" "----" "-->" "->" "->>"
-                                         "-<" "-<<" "-~" "#{" "#[" "##" "###" "####" "#(" "#?" "#_"
-                                         "#_(" ".-" ".=" ".." "..<" "..." "?=" "??" ";;" "/*" "/**"
-                                         "/=" "/==" "/>" "//" "///" "&&" "||" "||=" "|=" "|>" "^=" "$>"
-                                         "++" "+++" "+>" "=:=" "==" "===" "==>" "=>" "=>>" "<="
-                                         "=<<" "=/=" ">-" ">=" ">=>" ">>" ">>-" ">>=" ">>>" "<*"
-                                         "<*>" "<|" "<|>" "<$" "<$>" "<!--" "<-" "<--" "<->" "<+"
-                                         "<+>" "<=" "<==" "<=>" "<=<" "<>" "<<" "<<-" "<<=" "<<<"
-                                         "<~" "<~~" "</" "</>" "~@" "~-" "~>" "~~" "~~>" "%%"))
-    (global-ligature-mode 't))
-#+end_src
 ** プロジェクト管理
 *** =.dir-locals-2.el= があるディレクトリをプロジェクトのルートとする。gitのrootよりも優先される。
 #+begin_src emacs-lisp :tangle yes
   (leaf project
     :config
     (setopt project-vc-extra-root-markers '(".dir-locals-2.el" ".dir-locals.el")))
+#+end_src
+* 見た目
+** [[https://github.com/bbatsov/solarized-emacs][solarized-theme]] 定番のカラーテーマ
+#+begin_src emacs-lisp :tangle yes
+  (use-package solarized-theme
+    :ensure t
+
+    :custom
+    ;; flycheckなどの警告表示を抑えめに表示する
+    (solarized-emphasize-indicators nil)
+    ;; 太字を多用しない
+    (solarized-use-less-bold t)
+
+    :config
+    (load-theme 'solarized-dark t))
+#+end_src
+** [[https://github.com/eki3z/mini-echo.el][mini-echo]] モードラインを非表示にして、echoエリアで最低限の情報表示をする
+#+begin_src emacs-lisp :tangle yes
+  (use-package mini-echo
+    :ensure t
+
+    :config
+    (mini-echo-mode))
+#+end_src
+** [[https://github.com/protesilaos/pulsar][pulsar]] バッファが書き換わった場所を強調表示する
+#+begin_src emacs-lisp :tangle yes
+  (use-package pulsar
+    :ensure t
+
+    :init
+    (pulsar-global-mode 1)
+
+    :config
+    (add-hook 'minibuffer-setup-hook #'pulsar-pulse-line)
+    (add-hook 'consult-after-jump-hook #'pulsar-recenter-top)
+    (add-hook 'consult-after-jump-hook #'pulsar-reveal-entry)
+    (add-hook 'imenu-after-jump-hook #'pulsar-recenter-top)
+    (add-hook 'imenu-after-jump-hook #'pulsar-reveal-entry))
+#+end_src
+** [[https://github.com/rainstormstudio/nerd-icons.el?tab=readme-ov-file#installing-fonts][nerd-icons]] Nerdアイコンを扱いやすくする
+#+begin_src emacs-lisp :tangle yes
+  (use-package nerd-icons
+    :ensure t
+
+    :custom
+    ;; デフォルトの設定が"Symbols Nerd Font Mono"。
+    ;; nix-darwinでインストールしないといけないので明示的書いている。
+    ;; https://github.com/rainstormstudio/nerd-icons.el?tab=readme-ov-file#installing-fonts
+    (nerd-icons-font-family "Symbols Nerd Font Mono"))
+#+end_src
+** [[https://github.com/rainstormstudio/nerd-icons-dired][nerd-icons-dired]] DiredにNerdアイコンを表示する
+#+begin_src emacs-lisp :tangle yes
+  (use-package nerd-icons-dired
+    :ensure t
+
+    :hook
+    (dired-mode . nerd-icons-dired-mode))
+#+end_src
+** [[https://github.com/mickeynp/ligature.el][ligature]] Maple Monoフォントのリガチャを設定する
+#+begin_src emacs-lisp :tangle yes
+  (use-package ligature
+    :ensure t
+
+    :config
+    ;; 書き方の参考
+    ;; https://github.com/mickeynp/ligature.el/wiki
+    ;; 対象のリガチャされる文字列。"0xA12 0x56 1920x1080"と"\\ \\' \\."は多分書き方間違ってる。
+    ;; https://github.com/subframe7536/maple-font/blob/variable/source/features/README.md#ligatures
+    (ligature-set-ligatures 'prog-mode
+                            '("::"      "?."                    "<#--"
+                              ":::"     "..<"                   "<!---->"
+                              "?:"      ".="                    "<->"
+                              ":?"      "<~"                    "<-->"
+                              ":?>"     "~>"                    "->"
+                              "<:"      "~~"                    "<-"
+                              ":>"      "<~>"                   "-->"
+                              ":<"      "<~~"                   "<--"
+                              "<:<"     "~~>"                   ">->"
+                              ">:>"     "-~"                    "<-<"
+                              "__"      "~-"                    "|->"
+                              "#{"      "~@"                    "<-|"
+                              "#["      "~~~~~~~"               "-------"
+                              "#("      "0xA12 0x56 1920x1080"  ">--"
+                              "#?"      "<>"                    "--<"
+                              "#!"      "</"                    "<|||"
+                              "#:"      "/>"                    "|||>"
+                              "#="      "</>"                   "<||"
+                              "#_"      "<+"                    "||>"
+                              "#__"     "+>"                    "<|"
+                              "#_("     "<+>"                   "|>"
+                              "]#"      "<*"                    "<|>"
+                              "#######" "*>"                    "_|_"
+                              "<<"      "<*>"                   "[TRACE]"
+                              "<<<"     ">="                    "[DEBUG]"
+                              ">>"      "<="                    "[INFO]"
+                              ">>>"     "<=<"                   "[WARN]"
+                              "{{"      "==>"                   "[ERROR]"
+                              "}}"      "=="                    "[FATAL]"
+                              "{|"      "==="                   "[TODO]"
+                              "|}"      "!="                    "[FIXME]"
+                              "{{--"    "!=="                   "[NOTE]"
+                              "{{!--"   "=/="                   "[HACK]"
+                              "--}}"    "=!="                   "[MARK]"
+                              "[|"      "|="                    "[EROR]"
+                              "|]"      "<=>"                   "[WARNING]"
+                              "!!"      "<==>"                  "todo))"
+                              "||"      "<=="                   "fixme))"
+                              "??"      "==>"                   "Cl"
+                              "???"     "=>"                    "al"
+                              "&&"      "<=|"                   "cl"
+                              "&&&"     "|=>"                   "el"
+                              "//"      "=<="                   "il"
+                              "///"     "=>="                   "tl"
+                              "/*"      "======="               "ul"
+                              "/**"     ">=<"                   "xl"
+                              "*/"      ":="                    "ff"
+                              "++"      "=:"                    "tt"
+                              "+++"     ":=:"                   "all"
+                              ";;"      "=:="                   "ell"
+                              ";;;"     "\\ \\' \\."            "ill"
+                              ".."      "--"                    "ull"
+                              "..."     "---"                   "ll"
+                              ".?"      "<!--"))
+
+    (global-ligature-mode t))
+
 #+end_src
 * ユーティリティー
 ** [[https://github.com/Wilfred/helpful][Helpful]] より見やすい*help*バッファー
@@ -504,6 +420,22 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
            ([remap describe-command] . helpful-command)
            ([remap Info-goto-emacs-command-node] . helpful-function)
            ("C-c C-d" . helpful-at-point)))
+#+end_src
+** which-key キーバインドの候補表示
+#+begin_src emacs-lisp :tangle yes
+  (use-package which-key
+    :ensure t
+
+    :config
+    (which-key-mode))
+#+end_src
+** [[http://github.com/szermatt/visual-replace][visual-replace]] 置換インターフェイス
+#+begin_src emacs-lisp :tangle yes
+  (use-package visual-replace
+    :ensure t
+
+    :config
+    (visual-replace-global-mode 1))
 #+end_src
 ** 括弧
 *** 対応する括弧を自動挿入
@@ -539,6 +471,13 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (setopt eldoc-box-clear-with-C-g t)
     ;; lsp-proxyを使っている分にはこの設定不要かもしれない
     (add-hook 'eldoc-box-buffer-setup-hook #'eldoc-box-prettify-ts-errors 0 t))
+#+end_src
+** [[https://github.com/Fanael/rainbow-delimiters][rainbow-delimiters]] 対応する括弧ごとに色をつける
+#+begin_src emacs-lisp :tangle yes
+  (use-package rainbow-delimiters
+    :ensure t
+
+    :hook (prog-mode . rainbow-delimiters-mode))
 #+end_src
 ** [[https://github.com/abo-abo/avy][avy]] 劇的にカーソル移動を早くする
 [[https://emacs-jp.github.io/tips/avy-can-do-anything][Avyならなんでもできる]]
@@ -607,6 +546,13 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :hook ((jtsx-tsx-mode jtsx-jsx-mode astro-ts-mode) . emmet-mode)
     :config
     (add-to-list 'emmet-jsx-major-modes 'jtsx-tsx-mode))
+#+end_src
+** macrostep use-packageなどのマクロを展開してデバッグする
+#+begin_src emacs-lisp :tangle yes
+  (use-package macrostep
+    :ensure t
+
+    :commands (macrostep-expand macrostep-mode))
 #+end_src
 * 補完インターフェイス minadさんシリーズ
 ** [[https://github.com/oantolin/orderless][orderless]] 順不同のテキストマッチングスタイル
@@ -1000,6 +946,12 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :ensure t
     :bind ((("C-c k" . tagedit-kill))))
 #+end_src
+** treesit シンタックスハイライト
+#+begin_src emacs-lisp :tangle yes
+  (use-package treesit
+    :custom
+    (treesit-font-lock-level 4))
+#+end_src
 * LSP
 ** 標準LSPクライアント [[https://github.com/joaotavora/eglot][eglot]]
 #+begin_src emacs-lisp :tangle no
@@ -1220,21 +1172,41 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
     )
 #+end_src
-* メジャーモード
-** [[https://github.com/llemaitre19/jtsx][jtsx-mode]] jsx tsxに対応したモード
+* 言語
+** [[https://github.com/Malabarba/aggressive-indent-mode][aggressive-indent]] Emacs Lisp
+#+begin_src emacs-lisp :tangle yes
+  (use-package aggressive-indent
+    :ensure t
+
+    :hook ((emacs-lisp-mode . aggressive-indent-mode))
+
+    :config
+    (add-to-list 'aggressive-indent-excluded-modes 'lisp-interaction-mode))
+#+end_src
+** JavaSctipt
+#+begin_src emacs-lisp :tangle yes
+  (use-package js-ts-mode
+    :custom
+    (js-indent-level 2)
+
+    :mode ("\\.js\\'" "\\.cjs\\'" "\\.mjs\\'"))
+#+end_src
+** TypeScript
+#+begin_src emacs-lisp :tangle yes
+  (use-package typescript-ts-mode
+    :mode ("\\.ts\\'" "\\.mts\\'" "\\.cts\\'"))
+#+end_src
+** [[https://github.com/llemaitre19/jtsx][jtsx]] JSX / TSX
 #+begin_src emacs-lisp :tangle yes
   (use-package jtsx
     :ensure t
-    :mode (("\\.jsx?\\'" . jtsx-jsx-mode)
-           ("\\.tsx\\'" . jtsx-tsx-mode)
-           ("\\.ts\\'" . jtsx-typescript-mode))
-    :commands jtsx-install-treesit-language
-    :hook ((jtsx-jsx-mode . hs-minor-mode)
-           (jtsx-tsx-mode . hs-minor-mode)
-           (jtsx-typescript-mode . hs-minor-mode))
+
+    :mode (("\\.jsx\\'" . jtsx-jsx-mode)
+           ("\\.tsx\\'" . jtsx-tsx-mode))
+
     :custom
     (js-indent-level 2)
-    (typescript-ts-mode-indent-offset 2)
+
     :config
     (defun jtsx-bind-keys-to-mode-map (mode-map)
       "Bind keys to MODE-MAP."
@@ -1265,23 +1237,84 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (add-hook 'jtsx-jsx-mode-hook 'jtsx-bind-keys-to-jtsx-jsx-mode-map)
     (add-hook 'jtsx-tsx-mode-hook 'jtsx-bind-keys-to-jtsx-tsx-mode-map))
 #+end_src
-** [[https://github.com/Sorixelle/astro-ts-mode][astro-ts-mode]]
+** [[https://github.com/Sorixelle/astro-ts-mode][astro-ts-mode]] Astro
 #+begin_src emacs-lisp :tangle yes
-  (leaf astro-ts-mode
+  (use-package astro-ts-mode
     :ensure t
+
     :mode "\\.astro\\'")
 #+end_src
-** mermaid-mode
+
+astroのgrammarがなければインストール。本当はnixで入れたいけどやり方がよく分からん。
 #+begin_src emacs-lisp :tangle yes
-  (leaf mermaid-mode
-    :doc "Major mode for working with mermaid graphs"
-    :url "https://github.com/abrochard/mermaid-mode"
-    :ensure t)
+  (unless (treesit-language-available-p 'astro nil)
+    (let ((treesit-language-source-alist  '((astro "https://github.com/virchau13/tree-sitter-astro"))))
+      (treesit-install-language-grammar 'astro)))
 #+end_src
-** terraform-mode [[https://github.com/hcl-emacs/terraform-mode][terraform-mode]]
+** HTML
 #+begin_src emacs-lisp :tangle yes
-  (leaf terraform-mode
-    :ensure t)
+  (use-package html-ts-mode
+    :mode ("\\.html\\'"))
+#+end_src
+** CSS
+#+begin_src emacs-lisp :tangle yes
+  ;; 編集機能としてはscssもcss-ts-modeで十分なのだが、
+  ;; apheleiaでPrettierをかける時にcssパーサーを使用することになり
+  ;; scssだとフォーマットできないため、別名のモードを作って
+  ;; フォーマットオプションを分岐させる。
+  (define-derived-mode scss-ts-mode css-ts-mode "SCSS")
+
+  (use-package css-mode
+    :mode (("\\.css\\'" . css-ts-mode)
+           ("\\.scss\\'" . scss-ts-mode))
+
+    :custom
+    (css-indent-offset 2))
+#+end_src
+** [[https://github.com/nix-community/nix-ts-mode][nix-ts-mode]] nix-ts-mode
+#+begin_src emacs-lisp :tangle yes
+  (use-package nix-ts-mode
+    :ensure t
+
+    :mode "\\.nix\\'")
+#+end_src
+** [[https://github.com/hcl-emacs/terraform-mode][terraform-mode]] Terraform
+#+begin_src emacs-lisp :tangle yes
+  (use-package terraform-mode
+    :ensure t
+
+    :config
+    (add-hook 'terraform-mode-hook #'outline-minor-mode))
+#+end_src
+** JSON
+#+begin_src emacs-lisp :tangle yes
+  (use-package json-ts-mode
+    :mode ("\\.jsonc?\\'"))
+#+end_src
+** Python
+python.el内でadd-to-listされているので設定いらなさそう。未検証。
+#+begin_src emacs-lisp :tangle no
+  (use-package python
+    :mode ("\\.py[iw]?\\'" . python-ts-mode)
+    :interpreter "python[0-9.]*")
+#+end_src
+** YAML
+yaml-ts-mode.el内でadd-to-listされているので設定いらなさそう。未検証。
+#+begin_src emacs-lisp :tangle no
+  (use-package yaml-ts-mode
+    :mode ("\\.ya?ml\\'"))
+#+end_src
+** TOML
+toml-ts-mode.elでadd-to-listされているので設定いらなさそう。未検証。
+#+begin_src emacs-lisp :tangle no
+  (use-package toml-ts-mode
+    :mode ("\\.toml\\'"))
+#+end_src
+** Dockerfile
+dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう。未検証。
+#+begin_src emacs-lisp :tangle no
+  (use-package dockerfile-ts-mode
+    :mode ("\\(?:Dockerfile\\(?:\\..*\\)?\\|\\.[Dd]ockerfile\\)\\'"))
 #+end_src
 * org-mode
 #+begin_src emacs-lisp :tangle yes
@@ -1374,15 +1407,6 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :config
     (setopt org-src-window-setup 'current-window)
     (setopt org-src-tab-acts-natively nil))
-#+end_src
-*** ob-mermaid
-#+begin_src emacs-lisp :tangle yes
-  (leaf ob-mermaid
-    :doc "Org-babel support for mermaid evaluation"
-    :url "https://github.com/arnm/ob-mermaid"
-    :ensure t)
-  (org-babel-do-load-languages 'org-babel-load-languages '((mermaid . t)))
-  (add-to-list 'org-src-lang-modes '("mermaid" . mermaid))
 #+end_src
 *** ob-typescript
 #+begin_src emacs-lisp :tangle yes

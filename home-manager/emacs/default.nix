@@ -11,6 +11,11 @@ let
       epkgs:
       epkgs
       // {
+        astro-ts-mode = epkgs.melpaBuild {
+          pname = "astro-ts-mode";
+          version = "0.0.1";
+          src = sources.emacs-astro-ts-mode.src;
+        };
         org-modern-indent = epkgs.melpaBuild {
           pname = "org-modern-indent";
           version = "0.0.1";
@@ -84,6 +89,7 @@ in
     pkgs.vale-ls # markdown
     pkgs.taplo # toml
     pkgs.terraform-ls
+    pkgs.pyright # python
 
     #formatter & linter
     pkgs.nodePackages.prettier
