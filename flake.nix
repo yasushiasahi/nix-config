@@ -17,6 +17,11 @@
 
     mac-app-util.url = "github:hraban/mac-app-util";
 
+    mcp-servers-nix = {
+      url = "github:natsukium/mcp-servers-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -33,6 +38,7 @@
       mac-app-util,
       emacs-overlay,
       org-babel,
+      mcp-servers-nix,
       self,
       ...
     }:
@@ -58,7 +64,12 @@
       };
 
       homeConfigurations.home = import ./home-manager {
-        inherit pkgs home-manager mac-app-util;
+        inherit
+          pkgs
+          home-manager
+          mac-app-util
+          mcp-servers-nix
+          ;
       };
 
       templates = {

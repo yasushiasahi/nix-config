@@ -140,6 +140,26 @@
         "type": "github"
       }
     },
+    "mcp-servers-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1770965836,
+        "narHash": "sha256-sKoLgsgc0RjfDnzeLb5vjDmN3V78NbmT+j0oeUf/xKQ=",
+        "owner": "natsukium",
+        "repo": "mcp-servers-nix",
+        "rev": "e9b928b9bb785880c23d1d8db24394d9c36a7d3a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "natsukium",
+        "repo": "mcp-servers-nix",
+        "type": "github"
+      }
+    },
     "nix-darwin": {
       "inputs": {
         "nixpkgs": [
@@ -292,6 +312,7 @@
         "emacs-overlay": "emacs-overlay",
         "home-manager": "home-manager",
         "mac-app-util": "mac-app-util",
+        "mcp-servers-nix": "mcp-servers-nix",
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs_5",
         "org-babel": "org-babel"

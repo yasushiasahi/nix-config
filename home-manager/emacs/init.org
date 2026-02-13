@@ -3,10 +3,10 @@
 #+EMAIL: asahi1600@gmail.com
 #+STARTUP: content
 
-* 雑多なグローバル設定
+* 最初に行うべき
 ** package.ei 標準パッケージマネージャー
 外部パッケージのソースはすべてnixで入れているのでミニマムでやる気ない設定。
-[[https://qiita.com/nobuyuki86/items/e392b642189d755dd113#packageel][このような]]凝った設定もあるみたい。「built-inパッケージも更新対象にする」が気になる。
+[[https://qiita.com/nobuyuki86/items/e392b642189d755dd113#packageel][このような]]凝った設定もある。「built-inパッケージも更新対象にする」が気になる。
 #+begin_src emacs-lisp :tangle yes
   (require 'package)
   (package-initialize)
@@ -22,7 +22,7 @@
     :ensure t
 
     :custom
-    ;; デフォルは-i。シェルをインタラクティブに起動すると時間かかるので引数なしにする。
+    ;; デフォルは"-i"。シェルをインタラクティブに起動すると時間かかるので引数なしにする。
     ;; https://github.com/purcell/exec-path-from-shell?tab=readme-ov-file#making-exec-path-from-shell-faster
     (exec-path-from-shell-arguments nil)
     ;; どの環境変数を取り込むか
@@ -31,40 +31,59 @@
     :config
     (exec-path-from-shell-initialize))
 #+end_src
-** 起動時に名言を表示する（ [[https://github.com/tkf/emacs-request][request]] HTTPクライアント）
+
+
+* Emacs組み込み機能の設定、有効化
+** customize set variable結果の置き場所指定
+tangleした後のinit.elなら書き込んでくれても良いが。nix/store/ファイルに書き込むことはおそらくできない。
 #+begin_src emacs-lisp :tangle yes
-  (use-package request :ensure t)
+(setopt custom-file (locate-user-emacs-file "custom.el"))
+#+end_src
+** バックアップファイル（自動生成ファイル）
+- 自動保存リストファイル
+  - 自動保存ファイル(auto-save-file)のリスト？
+  - 8年Emacsを使ってきて見ようと思ったことがないので不要
+#+begin_src emacs-lisp :tangle yes
+  ;; 編集中のファイルを定期的に保存してバックアップとして残す（自動保存ファイル）。-> ~/.config/emacs/buckup/
+  (setopt auto-save-file-name-transforms `((".*" ,(locate-user-emacs-file "backup/") t)))
 
-  (defun display-startup-echo-area-message ()
-    "スタートアップメッセージとして名言を表示する"
-    (request "https://meigen.doodlenote.net/api/json.php"
-      :parser 'json-read
-      :success (cl-function
-                (lambda (&key data &allow-other-keys)
-                  (let* ((item (aref data 0))
-                         (meigen (alist-get 'meigen item))
-                         (auther (alist-get 'auther item)))
-                    (message "%s\nby %s" meigen auther))))))
+  ;; ファイルオープン時(編集前)のファイルをバックアップとして残す。-> ~/.config/emacs/buckup/
+  (setopt backup-directory-alist `((".*" . ,(locate-user-emacs-file "backup"))))
 
-  ;; 表示を高速化しようと頑張った残骸
-  ;; (setq my/startup-msg nil)
-  ;;
-  ;; (request "https://meigen.doodlenote.net/api/json.php"
-  ;;   :parser 'json-read
-  ;;   :success (cl-function
-  ;;             (lambda (&key data &allow-other-keys)
-  ;;               (let* ((item (aref data 0))
-  ;;                      (meigen (alist-get 'meigen item))
-  ;;                      (auther (alist-get 'auther item)))
-  ;;                 (setq my/startup-msg (format "%s\nby %s" meigen auther))))))
-  ;;
-  ;; (defun display-startup-echo-area-message ()
-  ;;   "スタートアップメッセージとして名言を表示する"
-  ;;   (let ((count 0))
-  ;;     (while (and (not my/startup-msg) (< count 6))
-  ;;       (sleep-for 0.25)
-  ;;       (setq count (1+ count)))
-  ;;     (message my/startup-msg)))
+  ;; 自動保存リストファイルは作成しない
+  (setopt auto-save-list-file-prefix nil)
+
+  ;; 予めバックアップファイルを納めるディレクトリを作っておく
+  (make-directory (locate-user-emacs-file "backup") t)
+#+end_src
+** ロックファイル
+- ロックファイル
+  - 共同編集中のファイルの更新競合を防ぐのが重な目的
+  - Emacsでファイルを共同編集することはないので不要
+#+begin_src emacs-lisp :tangle yes
+  ;; ロックファイルは作成しない
+  (setopt create-lockfiles nil)
+#+end_src
+** ビルトインの設定
+#+begin_src emacs-lisp :tangle yes
+  ;; タブの幅。各言語のモードのタブはばは別でそのモードの設定でそれぞれ設定しないといけない。
+  (setopt tab-width 2)
+
+  ;; yesと打たずにyだけで答える
+  (defalias 'yes-or-no-p 'y-or-n-p)
+
+  ;; 警告音（ピープ音）をならさい
+  (setopt ring-bell-function 'ignore)
+
+  ;; read-onlyなテキストをkilしようとしても警告を表示しない
+  (setopt kill-read-only-ok t)
+
+  ;; 行頭でC-k(kill-line)したときにその行自体を消す
+  (setopt kill-whole-line nil)
+
+  ;; タブ文字を使用しない
+  ;; ちなみに、untabifyでバッファ無いの全てのタブをスペースに置き換えられる。tabifyはその逆。
+  (setq-default indent-tabs-mode nil)
 #+end_src
 ** キーバインド
 | C-h | バックスペース           |
@@ -124,163 +143,100 @@
 
   (define-key global-map (kbd "C-g") #'my/keyboard-quit-dwim)
 #+end_src
-** delsel 選択状態で入力した時に選択箇所を削除する
+** スタートアップメッセージ（ [[https://github.com/tkf/emacs-request][request]] HTTPクライアント）
+#+begin_src emacs-lisp :tangle yes
+  (use-package request :ensure t)
+
+  (defun display-startup-echo-area-message ()
+    "スタートアップメッセージとして名言を表示する"
+    (request "https://meigen.doodlenote.net/api/json.php"
+      :parser 'json-read
+      :success (cl-function
+                (lambda (&key data &allow-other-keys)
+                  (let* ((item (aref data 0))
+                         (meigen (alist-get 'meigen item))
+                         (auther (alist-get 'auther item)))
+                    (message "%s\nby %s" meigen auther))))))
+#+end_src
+#+begin_src emacs-lisp :tangle no
+  ;; 表示を高速化しようと頑張った残骸
+  ;; (setq my/startup-msg nil)
+  ;;
+  ;; (request "https://meigen.doodlenote.net/api/json.php"
+  ;;   :parser 'json-read
+  ;;   :success (cl-function
+  ;;             (lambda (&key data &allow-other-keys)
+  ;;               (let* ((item (aref data 0))
+  ;;                      (meigen (alist-get 'meigen item))
+  ;;                      (auther (alist-get 'auther item)))
+  ;;                 (setq my/startup-msg (format "%s\nby %s" meigen auther))))))
+  ;;
+  ;; (defun display-startup-echo-area-message ()
+  ;;   "スタートアップメッセージとして名言を表示する"
+  ;;   (let ((count 0))
+  ;;     (while (and (not my/startup-msg) (< count 6))
+  ;;       (sleep-for 0.25)
+  ;;       (setq count (1+ count)))
+  ;;     (message my/startup-msg)))
+#+end_src
+** recentf - 開いたファイルの履歴を保存
+#+begin_src emacs-lisp :tangle yes
+  (use-package recentf
+    :hook ((emacs-startup . recentf-mode))
+
+    :config
+    ;; 履歴の最大数
+    (setopt recentf-max-saved-items 1024)
+
+    ;; 履歴に含めたくないファイル
+    (add-to-list 'recentf-exclude "~/.config/")
+    (add-to-list 'recentf-exclude "/nix/store/")
+    (add-to-list 'recentf-exclude "/node_modules/"))
+#+end_src
+** delsel - 選択状態で入力した時に選択箇所を削除する
 #+begin_src emacs-lisp :tangle yes
   (use-package delsel
     :config
     (delete-selection-mode))
 #+end_src
-** [[https://codeberg.org/ideasman42/emacs-undo-fu][undo-fu]] Undo/Redoの改善
-何やら[[https://qiita.com/nobuyuki86/items/e392b642189d755dd113#undo-%E3%82%A2%E3%83%B3%E3%83%89%E3%82%A5%E9%96%A2%E9%80%A3][Emacs組み込みのUndoが改善されたらしい]]ので一旦向こうか
-#+begin_src emacs-lisp :tangle no
-  (use-package undo-fu
-    :ensure t
-
-    :custom
-    ;; Emacsのデフォルトのクリップボード履歴の容量が小さすぎるらしく、大きくしている。
-    ;; https://codeberg.org/ideasman42/emacs-undo-fu#undo-limits
-    (undo-limit . 67108864)
-    (undo-strong-limit . 100663296)
-    (undo-outer-limit . 1006632960)
-
-    :config
-    (global-set-key (kbd "C-/")   'undo-fu-only-undo)
-    (global-set-key (kbd "C-?") 'undo-fu-only-redo))
-#+end_src
-** [[https://github.com/casouri/vundo][vando]] キルリングのツリー操作
+** autorevert - emacs外で表示中のfileが更新された時にbufferを再描画する
 #+begin_src emacs-lisp :tangle yes
-  (use-package vundo
-    :ensure t
-
-    :custom
-    ;; ツリーの見た目が少しだけ可愛くなる
-    (vundo-glyph-alist vundo-unicode-symbols)
-
-    :bind ("C-M-/" . vundo))
-#+end_src
-** ビルトインの設定
-#+begin_src emacs-lisp :tangle yes
-  (leaf cus-start
+  (use-package autorevert
     :config
-    ;;; buffer.c
-    ;; タブの幅。各言語のモードのタブはばは別でそのモードの設定でそれぞれ設定しないといけない。
-    (setopt tab-width 2)
-    ;; yesと打たずにyだけで答える
-    (defalias 'yes-or-no-p 'y-or-n-p)
-
-    ;;; minibuf.c
-    ;; [vertico]ミニバッファ内で新たにミニバッファを開けるようにする
-    (setq enable-recursive-minibuffers t)
-    ;; [vertico]正直よくわからない。後日検証。readmeのおすすめ設定に載っているのでとりあえず書いておく。
-    (setq minibuffer-prompt-properties '(read-only t cursor-intangible t face minibuffer-prompt))
-    ;; [vertico]ignore-caseにバッファをミニバッファ補完
-    (setq read-buffer-completion-ignore-case t)
-    ;; [vertico]ignore-caseにコマンドをミニバッファ補完
-    (setq completion-ignore-case t)
-
-    ;;; terminal.c
-    ;; 警告音（ピープ音）をならさい
-    (setq ring-bell-function 'ignore))
-#+end_src
-** 基本的なコマンド
-#+begin_src emacs-lisp :tangle yes
-  (leaf simple
-    :config
-    ;; read-onlyなテキストをkilしようとしても警告を表示しない
-    (setopt kill-read-only-ok t)
-    ;; 行頭でC-k(kill-line)したときにその行自体を消す
-    (setopt kill-whole-line nil)
-    ;; [vertico]M-xで表示される候補を現在のモードで実行可能なコマンドだけに限定する
-    (setopt read-extended-command-predicate #'command-completion-default-include-p))
-#+end_src
-** [[https://github.com/emacscollective/no-littering][no-littering]] emacs設定ディレクトリを綺麗に保つ
-#+begin_src emacs-lisp :tangle yes
-  (leaf no-littering
-    :doc "組み込みor外部に関わらず、パッケージが作り出す設定ファイルを整頓して、.config/emacs配下を綺麗に保つ"
-    :url "https://github.com/emacscollective/no-littering"
-    :ensure t
-    :defvar (no-littering-var-directory no-littering-etc-directory)
-    :config
-    ;; Lock files
-    (let ((dir (no-littering-expand-var-file-name "lock-files/")))
-      (make-directory dir t)
-      (setq lock-file-name-transforms `((".*" ,dir t))))
-
-    ;; Saved customizations
-    (setq custom-file (no-littering-expand-var-file-name "custom.el"))
-
-    (leaf recentf
-      :doc "開いたファイルの履歴を保存しておく機能"
-      :tag "builtin"
-      :custom ((recentf-max-saved-items . 100))
-      :hook ((emacs-startup-hook . recentf-mode))
-      :defvar (recentf-exclude)
-      :defun (recentf-expand-file-name)
-      :config
-      ;; no-littering配下ファイルは除外
-      ;; https://github.com/emacscollective/no-littering?tab=readme-ov-file#recent-files
-      (add-to-list 'recentf-exclude
-                   (recentf-expand-file-name no-littering-var-directory))
-      (add-to-list 'recentf-exclude
-                   (recentf-expand-file-name no-littering-etc-directory))
-      )
-
-    (leaf files
-      :doc "file input and output commands for Emacs"
-      :custom ((version-control . t)
-               (delete-old-versions . t))
-      :config
-      ;; Auto-save, backup and undo-tree files
-      (no-littering-theme-backups))
-    )
-#+end_src
-** emacs外で表示中のfileが更新された時にbufferを再描画する
-#+begin_src emacs-lisp :tangle yes
-  (leaf autorevert
-    :config
-    (global-auto-revert-mode 1)
     ;; https://github.com/stevemolitor/claude-code.el?tab=readme-ov-file#tips-and-tricks
-    (setopt auto-revert-use-notify nil))
+    (setopt auto-revert-use-notify nil)
 
+    (global-auto-revert-mode 1))
 #+end_src
-** タブ文字を使用しない
-ちなみに、untabifyでバッファ無いの全てのタブをスペースに置き換えられる。tabifyはその逆。
-#+begin_src emacs-lisp :tangle yes
-  (setq-default indent-tabs-mode nil)
-#+end_src
-** 一時的なフォントサイズの変更方法
+** face-remap - 一時的なフォントサイズを変更
 普段は限界までフォントサイズを小さくしているが、画面共有などで他人にEmacsを見てもらう時に便利。
 以前までは、C-<wheel-up>, C-<wheel-down>で変更していたけど、これだとバッファローカルになる。
 グローバルに変更するにはvim-jpで見かけた以下をやる。
 mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイズ変更できる。
 #+begin_src emacs-lisp :tangle yes
-  (leaf face-remap
-    :doc "Functions for managing `face-remapping-alist'"
-    :tag "builtin"
-    :added "2024-07-01"
-    :custom ((text-scale-mode-step . 2))
+  (use-package face-remap
     :bind (("C-x M-=" . global-text-scale-adjust)
            ("C-x M-0" . global-text-scale-adjust)
            ("C-x M-+" . global-text-scale-adjust)
-           ("C-x M--" . global-text-scale-adjust)))
-#+end_src
-** describe-*した時*HELP*バッファのウィンドウにフォーカスする。
-こうしておくとqですぐに閉じられる。
-この設定をまではわざわざ*HELP*のウィンドウまで移動しないと閉じられなくて、気軽にdescribe-*できなかった。
-#+begin_src emacs-lisp :tangle yes
-  (leaf help
-    :doc "help commands for Emacs"
-    :tag "builtin" "internal" "help"
-    :require t
+           ("C-x M--" . global-text-scale-adjust))
+
     :config
-    (setopt help-window-select t))
+    (setopt text-scale-mode-step 2))
 #+end_src
-** プロジェクト管理
-*** =.dir-locals-2.el= があるディレクトリをプロジェクトのルートとする。gitのrootよりも優先される。
+** project - プロジェクト管理
 #+begin_src emacs-lisp :tangle yes
-  (leaf project
+  (use-package project
     :config
-    (setopt project-vc-extra-root-markers '(".dir-locals-2.el" ".dir-locals.el")))
+    ;; 指定したファイルがあるディレクトリをプロジェクトのルートとして扱う
+    (setopt project-vc-extra-root-markers '(".dir-locals-2.el" ".dir-locals.el" ".envrc")))
+#+end_src
+
+* 他から依存されるパッケージ
+** [[https://www.gnu.org/software/emacs/manual/html_mono/transient.html][transient]] - 説明むずい。キーリピート的な？
+magitの内部的に使われているということはビルトインなの？よく分かってない。
+#+begin_src emacs-lisp :tangle yes
+  (use-package transient
+    :ensure t)
 #+end_src
 * 見た目
 ** [[https://github.com/bbatsov/solarized-emacs][solarized-theme]] 定番のカラーテーマ
@@ -409,7 +365,36 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 
 #+end_src
 * ユーティリティー
-** [[https://github.com/Wilfred/helpful][Helpful]] より見やすい*help*バッファー
+** [[https://codeberg.org/ideasman42/emacs-undo-fu][undo-fu]] Undo/Redoの改善
+何やら[[https://qiita.com/nobuyuki86/items/e392b642189d755dd113#undo-%E3%82%A2%E3%83%B3%E3%83%89%E3%82%A5%E9%96%A2%E9%80%A3][Emacs組み込みのUndoが改善されたらしい]]ので一旦向こうか
+#+begin_src emacs-lisp :tangle no
+  (use-package undo-fu
+    :ensure t
+
+    :custom
+    ;; Emacsのデフォルトのクリップボード履歴の容量が小さすぎるらしく、大きくしている。
+    ;; https://codeberg.org/ideasman42/emacs-undo-fu#undo-limits
+    (undo-limit . 67108864)
+    (undo-strong-limit . 100663296)
+    (undo-outer-limit . 1006632960)
+
+    :config
+    (global-set-key (kbd "C-/")   'undo-fu-only-undo)
+    (global-set-key (kbd "C-?") 'undo-fu-only-redo))
+#+end_src
+** [[https://github.com/casouri/vundo][vando]] キルリングのツリー操作
+#+begin_src emacs-lisp :tangle yes
+  (use-package vundo
+    :ensure t
+
+    :custom
+    ;; ツリーの見た目が少しだけ可愛くなる
+    (vundo-glyph-alist vundo-unicode-symbols)
+
+    :bind ("C-M-/" . vundo))
+#+end_src
+** [[https://github.com/Wilfred/helpful][Helpful]] より見やすい*help*
+バッファー
 #+begin_src emacs-lisp :tangle yes
   (leaf helpful
     :doc "A better *help* buffer"
@@ -420,6 +405,48 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
            ([remap describe-command] . helpful-command)
            ([remap Info-goto-emacs-command-node] . helpful-function)
            ("C-c C-d" . helpful-at-point)))
+#+end_src
+*** describe-*した時*HELP*バッファのウィンドウにフォーカスする。
+こうしておくとqですぐに閉じられる。
+この設定をまではわざわざ*HELP*のウィンドウまで移動しないと閉じられなくて、気軽にdescribe-*できなかった。
+#+begin_src emacs-lisp :tangle yes
+  (leaf help
+    :doc "help commands for Emacs"
+    :tag "builtin" "internal" "help"
+    :require t
+    :config
+    (setopt help-window-select t))
+#+end_src
+** ウィンドウ操作を直感的に
+#+begin_src emacs-lisp :tangle yes
+  (transient-define-prefix my/window-operation ()
+    "Window Operation"
+    :transient-suffix     'transient--do-stay
+    :transient-non-suffix 'transient--do-exit
+    [:class transient-columns
+            ["Move"
+             ("p" "↑" windmove-up)
+             ("n" "↓" windmove-down)
+             ("b" "←" windmove-left)
+             ("f" "→" windmove-right)]
+            ["Ajust"
+             ("<up>" "↑" shrink-window)
+             ("<down>" "↓" enlarge-window)
+             ("<left>" "←" shrink-window-horizontally)
+             ("<right>" "→" enlarge-window-horizontally)]
+            ["Split"
+             ("\\" "vertical" split-window-right)
+             ("-" "horizontal" split-window-below)
+             ("s" "swap" window-swap-states)
+             ("e" "balance" balance-windows)]
+            ["Ohter"
+             ("0" "delete" delete-window)
+             ("1" "only" delete-other-windows)
+             ("t" "maxmaiz" toggle-frame-maximized)]])
+
+  (put 'my/window-operation 'interactive-only nil)
+
+  (define-key global-map (kbd "C-t") #'my/window-operation)
 #+end_src
 ** which-key キーバインドの候補表示
 #+begin_src emacs-lisp :tangle yes
@@ -472,14 +499,14 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     ;; lsp-proxyを使っている分にはこの設定不要かもしれない
     (add-hook 'eldoc-box-buffer-setup-hook #'eldoc-box-prettify-ts-errors 0 t))
 #+end_src
-** [[https://github.com/Fanael/rainbow-delimiters][rainbow-delimiters]] 対応する括弧ごとに色をつける
+** [[https://github.com/Fanael/rainbow-delimiters][rainbow-delimiters]] - 対応する括弧ごとに色をつける
 #+begin_src emacs-lisp :tangle yes
   (use-package rainbow-delimiters
     :ensure t
 
     :hook (prog-mode . rainbow-delimiters-mode))
 #+end_src
-** [[https://github.com/abo-abo/avy][avy]] 劇的にカーソル移動を早くする
+** [[https://github.com/abo-abo/avy][avy]] - 劇的にカーソル移動を早くする
 [[https://emacs-jp.github.io/tips/avy-can-do-anything][Avyならなんでもできる]]
 #+begin_src emacs-lisp :tangle yes
   (leaf avy
@@ -488,15 +515,18 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :config
     (setopt avy-background t))
 #+end_src
-** Caseをいい感じに操作する [[https://github.com/akicho8/string-inflection][string-inflection]]
+** [[https://github.com/akicho8/string-inflection][string-inflection]] - Caseをいい感じに操作する
 #+begin_src emacs-lisp :tangle yes
-  (leaf string-inflection
+  (use-package string-inflection
     :ensure t
-    :bind (("M-i" . my/transient-string-inflection))
+    :after transient
+
+    :bind ("M-i" . my/string-inflection-operation)
+
     :config
-    (transient-define-prefix my/transient-string-inflection ()
+    (transient-define-prefix my/string-inflection-operation ()
       "Window Operation"
-      :transient-suffix     'transient--do-exit
+      :transient-suffix 'transient--do-exit
       [:class transient-columns
               ["Single word"
                ("u" "EMACS" upcase-word)
@@ -635,6 +665,23 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
           (if (= vertico--index index)
               (concat cat " " cand)
             (concat blank " " cand))))))
+
+  (leaf cus-start
+    :config
+      ;;; minibuf.c
+    ;; [vertico]ミニバッファ内で新たにミニバッファを開けるようにする
+    (setq enable-recursive-minibuffers t)
+    ;; [vertico]正直よくわからない。後日検証。readmeのおすすめ設定に載っているのでとりあえず書いておく。
+    (setq minibuffer-prompt-properties '(read-only t cursor-intangible t face minibuffer-prompt))
+    ;; [vertico]ignore-caseにバッファをミニバッファ補完
+    (setq read-buffer-completion-ignore-case t)
+    ;; [vertico]ignore-caseにコマンドをミニバッファ補完
+    (setq completion-ignore-case t))
+
+  (leaf simple
+    :config
+    ;; [vertico]M-xで表示される候補を現在のモードで実行可能なコマンドだけに限定する
+    (setopt read-extended-command-predicate #'command-completion-default-include-p))
 #+end_src
 
 =vertico-multiform= 補完候補の表示方法をインタラクティブに変更できる

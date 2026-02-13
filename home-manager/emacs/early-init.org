@@ -48,16 +48,14 @@ macの場合グレーのタイトルバーが透過されてthemaの背景と同
 *** フレームのサイズ
 macbook air 13inchでええ感じな数字であって、特段意味のある設定ではない。
 #+begin_src emacs-lisp :tangle yes
-  (add-to-list 'default-frame-alist '(width . (text-pixels . 960))) ;横幅
-  (add-to-list 'default-frame-alist '(height . (text-pixels . 960))) ;縦幅
+  ;; (add-to-list 'default-frame-alist '(width . (text-pixels . 960))) ;横幅
+  ;; (add-to-list 'default-frame-alist '(height . (text-pixels . 960))) ;縦幅
 #+end_src
 *** フォント
 ~"{フォント名}-{フォントサイズ}"~の形式でフォントを指定する
 [[https://apribase.net/2024/07/06/emacs-default-frame-alist/][起動シーケンスを考慮して Emacs のフォント設定関数を正しく使い分ける]]を参考にしている
 #+begin_src emacs-lisp :tangle yes
   (add-to-list 'default-frame-alist '(font . "Maple Mono NF CN-13"))
-  ;; (add-to-list 'default-frame-alist '(font . "Helvetica-13"))
-  ;; (add-to-list 'default-frame-alist '(font . "HackGen-13"))
 #+end_src
 ** GUIの無効化
 early-init.elでやるべき事の代表格②

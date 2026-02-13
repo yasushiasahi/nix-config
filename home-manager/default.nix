@@ -2,6 +2,7 @@
   pkgs,
   home-manager,
   mac-app-util,
+  mcp-servers-nix,
 }:
 let
   mkAlias = sets: {
@@ -54,8 +55,6 @@ let
       # python tool
       pkgs.python315
       pkgs.uv
-
-      pkgs.claude-code
     ];
 
     # XDG_*の環境変数を設定する
@@ -107,7 +106,7 @@ home-manager.lib.homeManagerConfiguration {
     ./zoxide
     ./aws
     ./starship
-
+    ./claude-code
   ];
 
   # Optionally use extraSpecialArgs
@@ -116,5 +115,6 @@ home-manager.lib.homeManagerConfiguration {
     inherit mkAlias;
     inherit mkAbbr;
     inherit sources;
+    inherit mcp-servers-nix;
   };
 }
