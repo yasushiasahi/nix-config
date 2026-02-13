@@ -19,6 +19,7 @@ in
         # claude code config files
         "settings.local.json"
         "CLAUDE.local.md"
+        ".serena/"
       ];
       settings = {
         user = {
