@@ -3,6 +3,13 @@
   home-manager,
   mac-app-util,
   mcp-servers-nix,
+  agent-skills,
+  anthropic-skills,
+  cloudflare-skills,
+  hashicorp-agent-skills,
+  deno-skills,
+  aws-agent-skills,
+  microsoft-skills,
 }:
 let
   mkAlias = sets: {
@@ -86,6 +93,7 @@ home-manager.lib.homeManagerConfiguration {
   # the path to your home.nix.
   modules = [
     mac-app-util.homeManagerModules.default
+    agent-skills.homeManagerModules.default
     miscModule
     optionModule
     ./emacs
@@ -107,6 +115,7 @@ home-manager.lib.homeManagerConfiguration {
     ./aws
     ./starship
     ./claude-code
+    ./agent-skills
   ];
 
   # Optionally use extraSpecialArgs
@@ -116,5 +125,12 @@ home-manager.lib.homeManagerConfiguration {
     inherit mkAbbr;
     inherit sources;
     inherit mcp-servers-nix;
+    inherit agent-skills;
+    inherit anthropic-skills;
+    inherit cloudflare-skills;
+    inherit hashicorp-agent-skills;
+    inherit deno-skills;
+    inherit aws-agent-skills;
+    inherit microsoft-skills;
   };
 }

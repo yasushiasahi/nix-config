@@ -28,6 +28,36 @@
     };
 
     org-babel.url = "github:emacs-twist/org-babel";
+
+    agent-skills = {
+      url = "github:Kyure-A/agent-skills-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+    anthropic-skills = {
+      url = "github:anthropics/skills";
+      flake = false;
+    };
+    cloudflare-skills = {
+      url = "github:cloudflare/skills";
+      flake = false;
+    };
+    hashicorp-agent-skills = {
+      url = "github:hashicorp/agent-skills";
+      flake = false;
+    };
+    deno-skills = {
+      url = "github:denoland/skills";
+      flake = false;
+    };
+    aws-agent-skills = {
+      url = "github:itsmostafa/aws-agent-skills";
+      flake = false;
+    };
+    microsoft-skills = {
+      url = "github:microsoft/skills";
+      flake = false;
+    };
   };
 
   outputs =
@@ -39,6 +69,13 @@
       emacs-overlay,
       org-babel,
       mcp-servers-nix,
+      agent-skills,
+      anthropic-skills,
+      cloudflare-skills,
+      hashicorp-agent-skills,
+      deno-skills,
+      aws-agent-skills,
+      microsoft-skills,
       self,
       ...
     }:
@@ -69,6 +106,13 @@
           home-manager
           mac-app-util
           mcp-servers-nix
+          agent-skills
+          anthropic-skills
+          cloudflare-skills
+          hashicorp-agent-skills
+          deno-skills
+          aws-agent-skills
+          microsoft-skills
           ;
       };
 

@@ -39,6 +39,7 @@
       "arc"
       "brave-browser"
       "google-chrome"
+      "spotify"
       # ターミナル
       "alacritty"
       "ghostty"
