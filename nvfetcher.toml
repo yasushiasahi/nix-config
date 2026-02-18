@@ -14,10 +14,17 @@ fetch.github = "cxa/lsp-biome"
 src.git = "https://github.com/dangduc/fzf-native"
 src.branch = "main"
 fetch.github = "dangduc/fzf-native"
+
 [emacs-astro-ts-mode]
 src.git = "https://git.isincredibly.gay/srxl/astro-ts-mode.git"
 src.branch = "master"
 fetch.git = "https://git.isincredibly.gay/srxl/astro-ts-mode.git"
+
+[emacs-lsp-proxy]
+src.git = "https://github.com/jadestrong/lsp-proxy"
+src.branch = "main"
+fetch.github = "jadestrong/lsp-proxy"
+cargo_lock = ["Cargo.lock"]
 
 # fish
 

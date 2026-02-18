@@ -61,6 +61,32 @@
         },
         "version": "9b3d523e3df2a9f686e1b15396987a0310b62a15"
     },
+    "emacs-lsp-proxy": {
+        "cargoLock": {
+            "Cargo.lock": [
+                "sha256-Q82KmTJDBOeN9uYVlvtCIPsXcM+vX0_HheKwgH+Gqk0=/Cargo.lock",
+                {}
+            ]
+        },
+        "date": "2026-02-13",
+        "extract": null,
+        "name": "emacs-lsp-proxy",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "jadestrong",
+            "repo": "lsp-proxy",
+            "rev": "08a6f7c01135db8a09f6a75cf8ffecb7d8010ba5",
+            "sha256": "sha256-Q82KmTJDBOeN9uYVlvtCIPsXcM+vX0/HheKwgH+Gqk0=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "08a6f7c01135db8a09f6a75cf8ffecb7d8010ba5"
+    },
     "emacs-org-modern-indent": {
         "cargoLock": null,
         "date": "2026-01-02",
@@ -210,7 +236,7 @@
     },
     "zsh-autocomplete": {
         "cargoLock": null,
-        "date": "2025-12-09",
+        "date": "2026-02-18",
         "extract": null,
         "name": "zsh-autocomplete",
         "passthru": null,
@@ -222,12 +248,12 @@
             "name": null,
             "owner": "marlonrichert",
             "repo": "zsh-autocomplete",
-            "rev": "bbba73ebdc7c01323e09d4d518e51e2d6847ccc2",
-            "sha256": "sha256-998rYEyYD67XleSDbqvnQptRrGuG2N2AgFvTpFWvoV8=",
+            "rev": "c10880ee7247e26bcfb6967da2de0eb0f101c0e5",
+            "sha256": "sha256-qxqCVYojIbQn33EXaNQ+S6TeA7IOJQV6cM6qCHOz3x4=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "bbba73ebdc7c01323e09d4d518e51e2d6847ccc2"
+        "version": "c10880ee7247e26bcfb6967da2de0eb0f101c0e5"
     },
     "zsh-enhancd": {
         "cargoLock": null,

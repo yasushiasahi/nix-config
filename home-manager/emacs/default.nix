@@ -5,6 +5,13 @@
   ...
 }:
 let
+  lsp-proxy-cli = pkgs.rustPlatform.buildRustPackage {
+    pname = "lsp-proxy";
+    version = "0.0.1";
+    src = sources.emacs-lsp-proxy.src;
+    cargoLock = sources.emacs-lsp-proxy.cargoLock."Cargo.lock";
+  };
+
   emacs-with-epkgs = pkgs.emacsWithPackagesFromUsePackage {
     config = ./init.org;
     override =
@@ -32,6 +39,18 @@ let
           version = "0.0.1";
           src = sources.emacs-fzf-native.src;
           files = ''(:defaults "bin")'';
+        };
+        lsp-proxy = epkgs.melpaBuild {
+          pname = "lsp-proxy";
+          version = "0.0.1";
+          src = sources.emacs-lsp-proxy.src;
+          packageRequires = [
+            epkgs.s
+            epkgs.f
+            epkgs.ht
+            epkgs.dash
+            epkgs.yasnippet
+          ];
         };
         # lsp-modeのplists解析を有効にする。そのままだと、hash-tableになる。
         # https://emacs-lsp.github.io/lsp-mode/page/performance/#use-plists-for-deserialization
@@ -68,6 +87,7 @@ in
 
   home.packages = [
     pkgs.emacs-lsp-booster
+    lsp-proxy-cli
 
     # gnuのlsを入れないと以下の警告が出る
     # ls does not support --dired; see ‘dired-use-ls-dired’ for more details.
@@ -80,6 +100,8 @@ in
     # lsp
     pkgs.typescript
     pkgs.typescript-language-server
+    pkgs.typescript-go
+    pkgs.vtsls
     pkgs.astro-language-server
     pkgs.yaml-language-server
     pkgs.tailwindcss-language-server
@@ -111,8 +133,7 @@ in
   xdg.configFile = {
     "emacs/init.el".text = tangle (builtins.readFile ./init.org);
     "emacs/early-init.el".text = tangle (builtins.readFile ./early-init.org);
-    "emacs/etc/transient/values.el".source = ./etc/transient/values.el;
-    "emacs/etc/languages.toml".source = ./etc/languages.toml;
+    "emacs/lsp-proxy/languages.toml".source = ./languages.toml;
   };
 
   # TODO emacs demon? client? service
