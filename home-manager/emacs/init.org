@@ -394,11 +394,10 @@ magitの内部的に使われているということはビルトインなの？
     :bind ("C-M-/" . vundo))
 #+end_src
 ** [[https://github.com/Wilfred/helpful][Helpful]] より見やすい*help*
-バッファー
 #+begin_src emacs-lisp :tangle yes
-  (leaf helpful
-    :doc "A better *help* buffer"
+  (use-package helpful
     :ensure t
+
     :bind (([remap describe-function] . helpful-callable)
            ([remap describe-variable] . helpful-variable)
            ([remap describe-key]      . helpful-key)
@@ -410,10 +409,7 @@ magitの内部的に使われているということはビルトインなの？
 こうしておくとqですぐに閉じられる。
 この設定をまではわざわざ*HELP*のウィンドウまで移動しないと閉じられなくて、気軽にdescribe-*できなかった。
 #+begin_src emacs-lisp :tangle yes
-  (leaf help
-    :doc "help commands for Emacs"
-    :tag "builtin" "internal" "help"
-    :require t
+  (use-package help
     :config
     (setopt help-window-select t))
 #+end_src
@@ -985,231 +981,6 @@ magitの内部的に使われているということはビルトインなの？
     :custom
     (treesit-font-lock-level 4))
 #+end_src
-* LSP
-** 標準LSPクライアント [[https://github.com/joaotavora/eglot][eglot]]
-#+begin_src emacs-lisp :tangle no
-  (leaf eglot
-    :hook (((nix-ts-mode-hook) . eglot-ensure))
-    :bind (:eglot-mode-map
-           ("C-c l r r" . my/eglot-rename)
-           ("C-c l a" . eglot-code-actions))
-    :config
-    (add-to-list 'eglot-server-programs '(nix-ts-mode . ("nil")))
-
-    (leaf eglot-booster
-      :ensure t
-      :config
-      (setopt eglot-booster-io-only t)
-      (eglot-booster-mode))
-
-    (leaf consult-eglot
-      :ensure t
-      :bind (:eglot-mode-map
-             ("M-g e" . consult-eglot-symbols)))
-
-    (leaf eglot-signature-eldoc-talkative
-      :ensure t
-      :require t
-      :config
-      (advice-add #'eglot-signature-eldoc-function
-                  :override #'eglot-signature-eldoc-talkative))
-
-    (defun my/eglot-rename ()
-      "eglot-renameの改良版"
-      (interactive)
-      (if-let* ((symbol (thing-at-point 'symbol t))
-                (newname (string-trim
-                          (read-from-minibuffer (format "Rename `%s' to: " symbol) symbol))))
-          (cond ((string-empty-p newname)
-                 (user-error "空の名前は受け付けません"))
-                ((string-search " " newname)
-                 (user-error "ホワイトスペースを含む変数名はダメでしょ"))
-                ((string= symbol newname)
-                 (user-error "元の名前と同じやん"))
-                (t
-                 (eglot-rename newname)))
-        (user-error "ポイントにシンボルがないです"))))
-#+end_src
-** Rust製 LSPクランアント [[https://github.com/jadestrong/lsp-proxy][lsp-proxy]]
-#+begin_src emacs-lisp :tangle yes
-  (use-package lsp-proxy
-    :ensure t
-
-    :hook ((tsx-ts-mode js-ts-mode typescript-ts-mode astro-ts-mode nix-ts-mode html-ts-mode css-ts-mode toml-ts-mode json-ts-mode terraform-mode) . lsp-proxy-mode))
-
-  ;; (leaf lsp-proxy
-  ;;   :ensure t
-  ;;   :require t
-  ;;   :bind (:lsp-proxy-mode-map
-  ;;          ("C-c l r r" . lsp-proxy-rename)
-  ;;          ("C-c l a" . lsp-proxy-execute-code-action)
-  ;;          ("C-c d" . my/lsp-proxy-help-tap))
-  ;;   :hook (((jtsx-tsx-mode-hook jtsx-jsx-mode-hook jtsx-typescript-mode-hook astro-ts-mode-hook) . lsp-proxy-mode))
-  ;;   :config
-  ;;   (setopt lsp-proxy-user-languages-config (no-littering-expand-etc-file-name "languages.toml"))
-  ;;   (setopt lsp-proxy-diagnostics-provider :flymake)
-  ;;   (setopt lsp-proxy-log-file-directory (no-littering-expand-var-file-name "lsp-proxy-logs/"))
-  ;;   (setopt lsp-proxy-log-max 0) ; 100000
-  ;;   (setopt lsp-proxy-log-buffer-max nil)
-  ;;   (setopt lsp-proxy-log-level 0) ; 3
-
-
-  ;;   (defconst my/lsp-proxy-help-tap--buffer "*my-lsp-proxy-help*")
-  ;;   (defvar my/lsp-proxy-help-tap--last-point nil)
-
-  ;;   (defun my/lsp-proxy-help-tap--delete-frame ()
-  ;;     "表示中のposframeを削除する"
-  ;;     (posframe-delete my/lsp-proxy-help-tap--buffer)
-  ;;     (advice-remove 'my/keyboard-quit-dwim #'my/lsp-proxy-help-tap--delete-frame))
-
-  ;;   (defun my/lsp-proxy-help-tap--hidehandler (_info)
-  ;;     "カーソルを移動したらframeを消す"
-  ;;     (let ((should-close (not (equal my/lsp-proxy-help-tap--last-point
-  ;;                                     (point)))))
-  ;;       (when should-close
-  ;;         (my/lsp-proxy-help-tap--delete-frame))
-  ;;       should-close))
-
-  ;;   (defun my/lsp-proxy-help-tap ()
-  ;;     "lspのtextDocument/hover情報をposframeに表示する"
-  ;;     (interactive)
-  ;;     (if-let* ((help-text (lsp-proxy--request 'textDocument/hover
-  ;;                                              (lsp-proxy--request-or-notify-params
-  ;;                                               (eglot--TextDocumentPositionParams))))
-  ;;               (formated-help-text (eglot--format-markup help-text)))
-  ;;         (progn
-  ;;           (posframe-show my/lsp-proxy-help-tap--buffer
-  ;;                          :string formated-help-text
-  ;;                          :position (point)
-  ;;                          :max-width 80
-  ;;                          :max-height 160
-  ;;                          :border-width 4
-  ;;                          :background-color "#001e27"
-  ;;                          :hidehandler #'my/lsp-proxy-help-tap--hidehandler)
-
-  ;;           (setq my/lsp-proxy-help-tap--last-point (point))
-  ;;           (advice-add 'my/keyboard-quit-dwim
-  ;;                       :before
-  ;;                       #'my/lsp-proxy-help-tap--delete-frame)))))
-#+end_src
-** 結局はこれ [[https://github.com/casouri/eldoc-box][lsp-mode]]
-#+begin_src emacs-lisp :tangle no
-  (leaf cape
-    :ensure t)
-
-  (leaf lsp-mode
-    :ensure t
-    :hook (((typescript-ts-mode-hook tsx-ts-mode-hook astro-ts-mode-hook nix-ts-mode-hook html-ts-mode-hook css-ts-mode-hook toml-ts-mode-hook json-ts-mode-hook terraform-mode-hook) . lsp-deferred)
-           (lsp-mode-hook . lsp-enable-which-key-integration)
-           (lsp-completion-mode-hook . my/lsp-mode-setup-completion))
-    :init
-    (defun my/lsp-mode-setup-completion ()
-      (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-            '(hotfuzz)))
-
-    :config
-    ;; 使わない機能をオフにする
-    (setopt lsp-headerline-breadcrumb-enable nil)
-    (setopt lsp-modeline-diagnostics-enable nil)
-    (setopt lsp-modeline-workspace-status-enable nil)
-    (setopt lsp-modeline-code-actions-enable nil)
-    (setopt lsp-semantic-tokens-enable nil)
-    (setopt lsp-enable-folding nil)
-    (setopt lsp-progress-via-spinner nil) ; モードラインにスピナーを表示する
-    (setopt lsp-enable-dap-auto-configure nil) ; dap-modeを自動で設定する
-    (setopt lsp-enable-indentation nil)
-    (setopt lsp-enable-on-type-formatting nil) ; キーワード（`}'など）を入力時に自動フォーマットする
-    (setopt lsp-enable-text-document-color nil) ; カラーコードに色をつける
-    (setopt lsp-progress-function 'ignore)      ; modelineにプログレスを表示する
-
-    ;; フォーマットはaphalia&linterで賄うからイラン
-    (setopt lsp-trim-trailing-whitespace nil)   ; 行末のホワイトスペース削除
-    (setopt lsp-insert-final-newline nil)       ; ファイル末尾に一つだけ改行
-    (setopt lsp-trim-final-newlines nil)        ; ファイル末尾に一つだけ改行
-
-    ;; 勝手にlsp serverからの変更提案を反映しない
-    (setopt lsp-before-save-edits nil)
-    (setopt lsp-apply-edits-after-file-operations nil)
-
-    ;; ファイルを監視しない
-    (setopt lsp-enable-file-watchers nil)
-
-
-    (setopt lsp-completion-provider :none)
-    ;; (setopt lsp-diagnostics-provider :flymake)
-
-    (setopt lsp-auto-execute-action nil)  ; 可能なアクションが１つの場合、確認無しに実行する
-    (setopt lsp-eldoc-render-all t)       ; サーバーから返ってきたドキュメントを全て表示する
-
-    ;; typescript
-    (setopt lsp-typescript-format-enable nil)
-    (setopt lsp-typescript-references-code-lens-enabled t)
-    (setopt lsp-typescript-implementations-code-lens-enabled t)
-    (setopt lsp-javascript-format-enable nil)
-    (setopt lsp-javascript-display-return-type-hints t)
-    (setopt lsp-javascript-display-parameter-type-hints t)
-    (setopt lsp-javascript-display-parameter-name-hints-when-argument-matches-name t)
-    (setopt lsp-javascript-display-property-declaration-type-hints t)
-    (setopt lsp-javascript-display-variable-type-hints t)
-
-    ;; eslint
-    (setopt lsp-eslint-server-command '("vscode-eslint-language-server" "--stdio"))
-
-    (setopt lsp-html-format-enable nil)
-    (setopt lsp-yaml-format-enable nil)
-
-    (add-to-list 'lsp-language-id-configuration '(scss-ts-mode . "scss"))
-
-    (leaf lsp-tailwindcss
-      :ensure t
-      :init
-      (setq lsp-tailwindcss-add-on-mode t)
-      :config
-      (setq lsp-tailwindcss-major-modes '(tsx-ts-mode astro-ts-mode))
-      ;; (setopt lsp-tailwindcss-skip-config-check t)
-      (setopt lsp-tailwindcss-server-path (string-trim (shell-command-to-string "which tailwindcss-language-server"))))
-
-    (use-package lsp-biome
-      :ensure t
-      :preface
-      (defun my/lsp-biome-active-hook ()
-        (setq-local apheleia-formatter '(biome)))
-
-      :config
-      (add-hook 'lsp-biome-active-hook #'my/lsp-biome-active-hook))
-
-    (defun lsp-booster--advice-json-parse (old-fn &rest args)
-      "Try to parse bytecode instead of json."
-      (or
-       (when (equal (following-char) ?#)
-         (let ((bytecode (read (current-buffer))))
-           (when (byte-code-function-p bytecode)
-             (funcall bytecode))))
-       (apply old-fn args)))
-    (advice-add (if (progn (require 'json)
-                           (fboundp 'json-parse-buffer))
-                    'json-parse-buffer
-                  'json-read)
-                :around
-                #'lsp-booster--advice-json-parse)
-
-    (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
-      "Prepend emacs-lsp-booster command to lsp CMD."
-      (let ((orig-result (funcall old-fn cmd test?)))
-        (if (and (not test?)                             ;; for check lsp-server-present?
-                 (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
-                 lsp-use-plists
-                 (not (functionp 'json-rpc-connection))  ;; native json-rpc
-                 (executable-find "emacs-lsp-booster"))
-            (progn
-              (when-let ((command-from-exec-path (executable-find (car orig-result))))  ;; resolve command from exec-path (in case not found in $PATH)
-                (setcar orig-result command-from-exec-path))
-              (message "Using emacs-lsp-booster for %s!" orig-result)
-              (cons "emacs-lsp-booster" orig-result))
-          orig-result)))
-    (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
-    )
-#+end_src
 * 言語
 ** [[https://github.com/Malabarba/aggressive-indent-mode][aggressive-indent]] Emacs Lisp
 #+begin_src emacs-lisp :tangle yes
@@ -1331,7 +1102,7 @@ astroのgrammarがなければインストール。本当はnixで入れたい�
 #+end_src
 ** Python
 python.el内でadd-to-listされているので設定いらなさそう。未検証。
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle n
   (use-package python
     :mode ("\\.py[iw]?\\'" . python-ts-mode)
     :interpreter "python[0-9.]*")
@@ -1350,9 +1121,155 @@ toml-ts-mode.elでadd-to-listされているので設定いらなさそう。未
 #+end_src
 ** Dockerfile
 dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう。未検証。
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle yes
   (use-package dockerfile-ts-mode
     :mode ("\\(?:Dockerfile\\(?:\\..*\\)?\\|\\.[Dd]ockerfile\\)\\'"))
+#+end_src
+* LSP
+** Rust製 LSPクランアント [[https://github.com/jadestrong/lsp-proxy][lsp-proxy]]
+#+begin_src emacs-lisp :tangle yes
+  (use-package lsp-proxy
+    :ensure t
+
+    :hook ((tsx-ts-mode
+            js-ts-mode
+            typescript-ts-mode
+            astro-ts-mode
+            nix-ts-mode
+            html-ts-mode
+            css-ts-mode
+            toml-ts-mode
+            json-ts-mode
+            terraform-mode)
+           . lsp-proxy-mode)
+
+    :bind (:map lsp-proxy-mode-map
+                ("M-." . lsp-proxy-find-definition)
+                ("M-," . xref-go-back)
+                ("C-c C-d" . lsp-proxy-describe-thing-at-point)
+                ("C-c C-r" . lsp-proxy-find-references)
+                ("C-c l i" . lsp-proxy-find-implementations)
+                ("C-c l r" . lsp-proxy-rename)
+                ("C-c l c" . lsp-proxy-execute-command)
+                ("C-c l s" . lsp-proxy-signature-activate)))
+#+end_src
+** 結局はこれ [[https://github.com/casouri/eldoc-box][lsp-mode]]
+#+begin_src emacs-lisp :tangle no
+  (leaf cape
+    :ensure t)
+
+  (leaf lsp-mode
+    :ensure t
+    :hook (((typescript-ts-mode-hook tsx-ts-mode-hook astro-ts-mode-hook nix-ts-mode-hook html-ts-mode-hook css-ts-mode-hook toml-ts-mode-hook json-ts-mode-hook terraform-mode-hook) . lsp-deferred)
+           (lsp-mode-hook . lsp-enable-which-key-integration)
+           (lsp-completion-mode-hook . my/lsp-mode-setup-completion))
+    :init
+    (defun my/lsp-mode-setup-completion ()
+      (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+            '(hotfuzz)))
+
+    :config
+    ;; 使わない機能をオフにする
+    (setopt lsp-headerline-breadcrumb-enable nil)
+    (setopt lsp-modeline-diagnostics-enable nil)
+    (setopt lsp-modeline-workspace-status-enable nil)
+    (setopt lsp-modeline-code-actions-enable nil)
+    (setopt lsp-semantic-tokens-enable nil)
+    (setopt lsp-enable-folding nil)
+    (setopt lsp-progress-via-spinner nil) ; モードラインにスピナーを表示する
+    (setopt lsp-enable-dap-auto-configure nil) ; dap-modeを自動で設定する
+    (setopt lsp-enable-indentation nil)
+    (setopt lsp-enable-on-type-formatting nil) ; キーワード（`}'など）を入力時に自動フォーマットする
+    (setopt lsp-enable-text-document-color nil) ; カラーコードに色をつける
+    (setopt lsp-progress-function 'ignore)      ; modelineにプログレスを表示する
+
+    ;; フォーマットはaphalia&linterで賄うからイラン
+    (setopt lsp-trim-trailing-whitespace nil)   ; 行末のホワイトスペース削除
+    (setopt lsp-insert-final-newline nil)       ; ファイル末尾に一つだけ改行
+    (setopt lsp-trim-final-newlines nil)        ; ファイル末尾に一つだけ改行
+
+    ;; 勝手にlsp serverからの変更提案を反映しない
+    (setopt lsp-before-save-edits nil)
+    (setopt lsp-apply-edits-after-file-operations nil)
+
+    ;; ファイルを監視しない
+    (setopt lsp-enable-file-watchers nil)
+
+
+    (setopt lsp-completion-provider :none)
+    ;; (setopt lsp-diagnostics-provider :flymake)
+
+    (setopt lsp-auto-execute-action nil)  ; 可能なアクションが１つの場合、確認無しに実行する
+    (setopt lsp-eldoc-render-all t)       ; サーバーから返ってきたドキュメントを全て表示する
+
+    ;; typescript
+    (setopt lsp-typescript-format-enable nil)
+    (setopt lsp-typescript-references-code-lens-enabled t)
+    (setopt lsp-typescript-implementations-code-lens-enabled t)
+    (setopt lsp-javascript-format-enable nil)
+    (setopt lsp-javascript-display-return-type-hints t)
+    (setopt lsp-javascript-display-parameter-type-hints t)
+    (setopt lsp-javascript-display-parameter-name-hints-when-argument-matches-name t)
+    (setopt lsp-javascript-display-property-declaration-type-hints t)
+    (setopt lsp-javascript-display-variable-type-hints t)
+
+    ;; eslint
+    (setopt lsp-eslint-server-command '("vscode-eslint-language-server" "--stdio"))
+
+    (setopt lsp-html-format-enable nil)
+    (setopt lsp-yaml-format-enable nil)
+
+    (add-to-list 'lsp-language-id-configuration '(scss-ts-mode . "scss"))
+
+    (leaf lsp-tailwindcss
+      :ensure t
+      :init
+      (setq lsp-tailwindcss-add-on-mode t)
+      :config
+      (setq lsp-tailwindcss-major-modes '(tsx-ts-mode astro-ts-mode))
+      ;; (setopt lsp-tailwindcss-skip-config-check t)
+      (setopt lsp-tailwindcss-server-path (string-trim (shell-command-to-string "which tailwindcss-language-server"))))
+
+    (use-package lsp-biome
+      :ensure t
+      :preface
+      (defun my/lsp-biome-active-hook ()
+        (setq-local apheleia-formatter '(biome)))
+
+      :config
+      (add-hook 'lsp-biome-active-hook #'my/lsp-biome-active-hook))
+
+    (defun lsp-booster--advice-json-parse (old-fn &rest args)
+      "Try to parse bytecode instead of json."
+      (or
+       (when (equal (following-char) ?#)
+         (let ((bytecode (read (current-buffer))))
+           (when (byte-code-function-p bytecode)
+             (funcall bytecode))))
+       (apply old-fn args)))
+    (advice-add (if (progn (require 'json)
+                           (fboundp 'json-parse-buffer))
+                    'json-parse-buffer
+                  'json-read)
+                :around
+                #'lsp-booster--advice-json-parse)
+
+    (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
+      "Prepend emacs-lsp-booster command to lsp CMD."
+      (let ((orig-result (funcall old-fn cmd test?)))
+        (if (and (not test?)                             ;; for check lsp-server-present?
+                 (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
+                 lsp-use-plists
+                 (not (functionp 'json-rpc-connection))  ;; native json-rpc
+                 (executable-find "emacs-lsp-booster"))
+            (progn
+              (when-let ((command-from-exec-path (executable-find (car orig-result))))  ;; resolve command from exec-path (in case not found in $PATH)
+                (setcar orig-result command-from-exec-path))
+              (message "Using emacs-lsp-booster for %s!" orig-result)
+              (cons "emacs-lsp-booster" orig-result))
+          orig-result)))
+    (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
+    )
 #+end_src
 * 言語ユーティリティー
 ** [[https://github.com/radian-software/apheleia][apheleia]] いろんな言語のフォーマッター

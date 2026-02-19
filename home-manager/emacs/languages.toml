@@ -2,6 +2,7 @@
 command = "biome"
 args = ["lsp-proxy"]
 
+
 [language-server.tsgo-ls]
 command = "tsgo"
 args = ["--lsp", "--stdio"]
@@ -9,6 +10,11 @@ args = ["--lsp", "--stdio"]
 
 [language-server.nil]
 command = "nil"
+
+
+[language-server.terraform-ls]
+command = "terraform-ls"
+args = ["serve"]
 
 
 [language-server.astro-ls]
@@ -206,3 +212,9 @@ language-servers = [
 name = "nix"
 file-types = ["nix"]
 language-servers = ["nil"]
+
+
+[[language]]
+name = "terraform"
+file-types = ["tf"]
+language-servers = ["terraform-ls"]
