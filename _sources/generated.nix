@@ -124,15 +124,15 @@
   };
   fish-fzf = {
     pname = "fish-fzf";
-    version = "8920367cf85eee5218cc25a11e209d46e2591e7a";
+    version = "7e94169da1ef1b8b4f371a2a302c614069c6fd3c";
     src = fetchFromGitHub {
       owner = "PatrickF1";
       repo = "fzf.fish";
-      rev = "8920367cf85eee5218cc25a11e209d46e2591e7a";
+      rev = "7e94169da1ef1b8b4f371a2a302c614069c6fd3c";
       fetchSubmodules = false;
-      sha256 = "sha256-T8KYLA/r/gOKvAivKRoeqIwE2pINlxFQtZJHpOy9GMM=";
+      sha256 = "sha256-KO2EM2ZneF8QCcL2gJ4ZJBY4q2xmGD7eu3TMWBImjjo=";
     };
-    date = "2024-04-06";
+    date = "2026-03-08";
   };
   fish-ghq = {
     pname = "fish-ghq";
@@ -148,15 +148,15 @@
   };
   zsh-autocomplete = {
     pname = "zsh-autocomplete";
-    version = "c10880ee7247e26bcfb6967da2de0eb0f101c0e5";
+    version = "a3e4b595e799a21eb61b3cd0809fa143c104e336";
     src = fetchFromGitHub {
       owner = "marlonrichert";
       repo = "zsh-autocomplete";
-      rev = "c10880ee7247e26bcfb6967da2de0eb0f101c0e5";
+      rev = "a3e4b595e799a21eb61b3cd0809fa143c104e336";
       fetchSubmodules = false;
-      sha256 = "sha256-qxqCVYojIbQn33EXaNQ+S6TeA7IOJQV6cM6qCHOz3x4=";
+      sha256 = "sha256-Xsfb/kpehDz1Ol/qjb5ScvGRNLuGtojpw6EZtPTGggY=";
     };
-    date = "2026-02-18";
+    date = "2026-02-24";
   };
   zsh-enhancd = {
     pname = "zsh-enhancd";

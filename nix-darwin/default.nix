@@ -39,14 +39,13 @@
       "arc"
       "brave-browser"
       "google-chrome"
-      "spotify"
       # ターミナル
       "alacritty"
       "ghostty"
       # エディタ
       "visual-studio-code"
       "coteditor"
-      # ターミナル
+      # 開発ツール
       "postman"
     ];
     masApps = {
@@ -143,9 +142,9 @@
       # デスクトップクリックでデスクトップ表示
       EnableStandardClickToShowDesktop = false;
       # アプリを画面端にドラッグすると左右半分にスナップする
-      # EnableTilingByEdgeDrag = false;
+      EnableTilingByEdgeDrag = true;
       # アプリを画面上橋にドラッグするとフススクリーンにする
-      EnableTopTilingByEdgeDrag = false;
+      EnableTopTilingByEdgeDrag = true;
     };
   };
 

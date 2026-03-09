@@ -62,6 +62,9 @@ let
       # python tool
       pkgs.python315
       pkgs.uv
+
+      # gcp
+      pkgs.google-cloud-sdk
     ];
 
     # XDG_*の環境変数を設定する

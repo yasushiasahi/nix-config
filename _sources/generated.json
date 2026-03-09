@@ -194,7 +194,7 @@
     },
     "fish-fzf": {
         "cargoLock": null,
-        "date": "2024-04-06",
+        "date": "2026-03-08",
         "extract": null,
         "name": "fish-fzf",
         "passthru": null,
@@ -206,12 +206,12 @@
             "name": null,
             "owner": "PatrickF1",
             "repo": "fzf.fish",
-            "rev": "8920367cf85eee5218cc25a11e209d46e2591e7a",
-            "sha256": "sha256-T8KYLA/r/gOKvAivKRoeqIwE2pINlxFQtZJHpOy9GMM=",
+            "rev": "7e94169da1ef1b8b4f371a2a302c614069c6fd3c",
+            "sha256": "sha256-KO2EM2ZneF8QCcL2gJ4ZJBY4q2xmGD7eu3TMWBImjjo=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "8920367cf85eee5218cc25a11e209d46e2591e7a"
+        "version": "7e94169da1ef1b8b4f371a2a302c614069c6fd3c"
     },
     "fish-ghq": {
         "cargoLock": null,
@@ -236,7 +236,7 @@
     },
     "zsh-autocomplete": {
         "cargoLock": null,
-        "date": "2026-02-18",
+        "date": "2026-02-24",
         "extract": null,
         "name": "zsh-autocomplete",
         "passthru": null,
@@ -248,12 +248,12 @@
             "name": null,
             "owner": "marlonrichert",
             "repo": "zsh-autocomplete",
-            "rev": "c10880ee7247e26bcfb6967da2de0eb0f101c0e5",
-            "sha256": "sha256-qxqCVYojIbQn33EXaNQ+S6TeA7IOJQV6cM6qCHOz3x4=",
+            "rev": "a3e4b595e799a21eb61b3cd0809fa143c104e336",
+            "sha256": "sha256-Xsfb/kpehDz1Ol/qjb5ScvGRNLuGtojpw6EZtPTGggY=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "c10880ee7247e26bcfb6967da2de0eb0f101c0e5"
+        "version": "a3e4b595e799a21eb61b3cd0809fa143c104e336"
     },
     "zsh-enhancd": {
         "cargoLock": null,
