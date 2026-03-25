@@ -58,6 +58,7 @@ let
           _: p: {
             buildPhase = ''
               export LSP_USE_PLISTS=true
+              export TYPE_SCRIPT_LIB=${pkgs.typescript}/lib/node_modules/typescript/lib/
             ''
             + p.buildPhase;
           }
@@ -128,8 +129,7 @@ in
   home.sessionVariables = {
     LANG = "en_US.UTF-8";
     LSP_USE_PLISTS = "true";
-    TYPESCRIPT_HOGE = "unko";
-    TYPESCRIPT_LIB = "${pkgs.typescript}/lib/";
+    TYPE_SCRIPT_LIB = "${pkgs.typescript}/lib/node_modules/typescript/lib/";
   };
 
   xdg.configFile = {

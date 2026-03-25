@@ -22,11 +22,12 @@
     :ensure t
 
     :custom
+    (exec-path-from-shell-shell-name "/run/current-system/sw/bin/fish")
     ;; デフォルは"-i"。シェルをインタラクティブに起動すると時間かかるので引数なしにする。
     ;; https://github.com/purcell/exec-path-from-shell?tab=readme-ov-file#making-exec-path-from-shell-faster
     (exec-path-from-shell-arguments nil)
     ;; どの環境変数を取り込むか
-    (exec-path-from-shell-variables '("PATH" "LSP_USE_PLISTS"))
+    (exec-path-from-shell-variables '("PATH" "TYPE_SCRIPT_LIB"))
 
     :config
     (exec-path-from-shell-initialize))
