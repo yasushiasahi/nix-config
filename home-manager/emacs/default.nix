@@ -128,6 +128,8 @@ in
   home.sessionVariables = {
     LANG = "en_US.UTF-8";
     LSP_USE_PLISTS = "true";
+    TYPESCRIPT_HOGE = "unko";
+    TYPESCRIPT_LIB = "${pkgs.typescript}/lib/";
   };
 
   xdg.configFile = {
