@@ -1,4 +1,4 @@
-{ mkAbbr, ... }:
+{ mkAbbr, pkgs, ... }:
 let
   abbr = mkAbbr {
     dgie = "echo '.dir-locals-2.el\\n.envrc\\nshell.nix' >> .git/info/exclude";
@@ -8,6 +8,13 @@ in
   programs = {
     direnv = {
       enable = true;
+      # Go 1.26でMakefileの-linkmode=externalとCGO_ENABLED=0が衝突するため、
+      # buildPhaseをオーバーライドして回避する
+      package = pkgs.direnv.overrideAttrs (old: {
+        buildPhase = ''
+          go build -ldflags '-X main.bashPath=${pkgs.bash}/bin/bash' -o direnv
+        '';
+      });
       nix-direnv.enable = true;
       silent = true;
       enableZshIntegration = true;

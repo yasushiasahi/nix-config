@@ -30,21 +30,21 @@ file-types = ["astro"]
 roots = ["package.json"]
 language-servers = [
   "astro-ls",
-  { name = "tailwindcss-ls" },
-  { name = "eslint", support-workspace = true, config-files = [
-    ".eslintrc.js",
-    ".eslintrc.cjs",
-    ".eslintrc.yaml",
-    ".eslintrc.yml",
-    ".eslintrc",
-    ".eslintrc.json",
-    "eslint.config.js",
-    "eslint.config.mjs",
-    "eslint.config.cjs",
-    "eslint.config.ts",
-    "eslint.config.mts",
-    "eslint.config.cts",
-  ] },
+  # { name = "tailwindcss-ls" },
+  # { name = "eslint", support-workspace = true, config-files = [
+  #   ".eslintrc.js",
+  #   ".eslintrc.cjs",
+  #   ".eslintrc.yaml",
+  #   ".eslintrc.yml",
+  #   ".eslintrc",
+  #   ".eslintrc.json",
+  #   "eslint.config.js",
+  #   "eslint.config.mjs",
+  #   "eslint.config.cjs",
+  #   "eslint.config.ts",
+  #   "eslint.config.mts",
+  #   "eslint.config.cts",
+  # ] },
 ]
 
 

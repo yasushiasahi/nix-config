@@ -393,7 +393,7 @@ magitの内部的に使われているということはビルトインなの？
 
     :bind ("C-M-/" . vundo))
 #+end_src
-** [[https://github.com/Wilfred/helpful][Helpful]] より見やすい*help*
+** [[https://github.com/Wilfred/helpful][Helpful]] より見や すい*help*
 #+begin_src emacs-lisp :tangle yes
   (use-package helpful
     :ensure t
@@ -469,18 +469,10 @@ magitの内部的に使われているということはビルトインなの？
 #+end_src
 *** 括弧を賢く扱う [[https://github.com/AmaiKinono/puni][puni]]
 #+begin_src emacs-lisp :tangle yes
-  (leaf puni
+  (use-package puni
     :ensure t
-    :require t
-    :bind (:puni-mode-map
-           ("C-)" . puni-slurp-forward)
-           ("C-}" . puni-barf-forward)
-           ("M-(" . puni-wrap-round)
-           ("M-s" . puni-splice)
-           ("M-r" . puni-raise)
-           ("M-U" . puni-splice-killing-backward)
-           ("M-z" . puni-squeeze))
-    :config
+
+    :init
     (puni-global-mode))
 #+end_src
 ** eldoc

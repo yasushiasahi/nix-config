@@ -46,21 +46,21 @@
   };
   emacs-lsp-proxy = {
     pname = "emacs-lsp-proxy";
-    version = "08a6f7c01135db8a09f6a75cf8ffecb7d8010ba5";
+    version = "85706b52ec7599ea282b7a0b821c145a9e2cbec7";
     src = fetchFromGitHub {
       owner = "jadestrong";
       repo = "lsp-proxy";
-      rev = "08a6f7c01135db8a09f6a75cf8ffecb7d8010ba5";
+      rev = "85706b52ec7599ea282b7a0b821c145a9e2cbec7";
       fetchSubmodules = false;
-      sha256 = "sha256-Q82KmTJDBOeN9uYVlvtCIPsXcM+vX0/HheKwgH+Gqk0=";
+      sha256 = "sha256-AntAhcrpSlO6qHuNnpTRRaD/w32i6IZEJXFM2glfnB4=";
     };
     cargoLock."Cargo.lock" = {
-      lockFile = ./. + "/sha256-Q82KmTJDBOeN9uYVlvtCIPsXcM+vX0_HheKwgH+Gqk0=/Cargo.lock";
+      lockFile = ./. + "/sha256-AntAhcrpSlO6qHuNnpTRRaD_w32i6IZEJXFM2glfnB4=/Cargo.lock";
       outputHashes = {
         
       };
     };
-    date = "2026-02-13";
+    date = "2026-03-15";
   };
   emacs-org-modern-indent = {
     pname = "emacs-org-modern-indent";
@@ -124,15 +124,15 @@
   };
   fish-fzf = {
     pname = "fish-fzf";
-    version = "7e94169da1ef1b8b4f371a2a302c614069c6fd3c";
+    version = "0069dbbe06cc05482bfb13063b4b4eac26318992";
     src = fetchFromGitHub {
       owner = "PatrickF1";
       repo = "fzf.fish";
-      rev = "7e94169da1ef1b8b4f371a2a302c614069c6fd3c";
+      rev = "0069dbbe06cc05482bfb13063b4b4eac26318992";
       fetchSubmodules = false;
-      sha256 = "sha256-KO2EM2ZneF8QCcL2gJ4ZJBY4q2xmGD7eu3TMWBImjjo=";
+      sha256 = "sha256-H7HgYT+okuVXo2SinrSs+hxAKCn4Q4su7oMbebKd/7s=";
     };
-    date = "2026-03-08";
+    date = "2026-03-10";
   };
   fish-ghq = {
     pname = "fish-ghq";
@@ -145,41 +145,5 @@
       sha256 = "sha256-6b1zmjtemNLNPx4qsXtm27AbtjwIZWkzJAo21/aVZzM=";
     };
     date = "2021-07-16";
-  };
-  zsh-autocomplete = {
-    pname = "zsh-autocomplete";
-    version = "a3e4b595e799a21eb61b3cd0809fa143c104e336";
-    src = fetchFromGitHub {
-      owner = "marlonrichert";
-      repo = "zsh-autocomplete";
-      rev = "a3e4b595e799a21eb61b3cd0809fa143c104e336";
-      fetchSubmodules = false;
-      sha256 = "sha256-Xsfb/kpehDz1Ol/qjb5ScvGRNLuGtojpw6EZtPTGggY=";
-    };
-    date = "2026-02-24";
-  };
-  zsh-enhancd = {
-    pname = "zsh-enhancd";
-    version = "5afb4eb6ba36c15821de6e39c0a7bb9d6b0ba415";
-    src = fetchFromGitHub {
-      owner = "babarot";
-      repo = "enhancd";
-      rev = "5afb4eb6ba36c15821de6e39c0a7bb9d6b0ba415";
-      fetchSubmodules = false;
-      sha256 = "sha256-pKQbwiqE0KdmRDbHQcW18WfxyJSsKfymWt/TboY2iic=";
-    };
-    date = "2025-01-24";
-  };
-  zsh-npm-scripts-autocomplete = {
-    pname = "zsh-npm-scripts-autocomplete";
-    version = "5d145e13150acf5dbb01dac6e57e57c357a47a4b";
-    src = fetchFromGitHub {
-      owner = "grigorii-zander";
-      repo = "zsh-npm-scripts-autocomplete";
-      rev = "5d145e13150acf5dbb01dac6e57e57c357a47a4b";
-      fetchSubmodules = false;
-      sha256 = "sha256-Y34VXOU7b5z+R2SssCmbooVwrlmSxUxkObTV0YtsS50=";
-    };
-    date = "2023-10-19";
   };
 }

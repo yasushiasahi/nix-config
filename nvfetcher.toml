@@ -61,18 +61,17 @@ fetch.github = "jorgebucaran/autopair.fish"
 
 # zsh
 
-[zsh-autocomplete]
-src.git = "https://github.com/marlonrichert/zsh-autocomplete"
-src.branch = "main"
-fetch.github = "marlonrichert/zsh-autocomplete"
+# [zsh-autocomplete]
+# src.git = "https://github.com/marlonrichert/zsh-autocomplete"
+# src.branch = "main"
+# fetch.github = "marlonrichert/zsh-autocomplete"
 
-[zsh-npm-scripts-autocomplete]
-src.git = "https://github.com/grigorii-zander/zsh-npm-scripts-autocomplete"
-src.branch = "main"
-fetch.github = "grigorii-zander/zsh-npm-scripts-autocomplete"
+# [zsh-npm-scripts-autocomplete]
+# src.git = "https://github.com/grigorii-zander/zsh-npm-scripts-autocomplete"
+# src.branch = "main"
+# fetch.github = "grigorii-zander/zsh-npm-scripts-autocomplete"
 
-[zsh-enhancd]
-src.git = "https://github.com/babarot/enhancd"
-src.branch = "main"
-fetch.github = "babarot/enhancd"
-
+# [zsh-enhancd]
+# src.git = "https://github.com/babarot/enhancd"
+# src.branch = "main"
+# fetch.github = "babarot/enhancd"
