@@ -1124,6 +1124,10 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
   (use-package lsp-proxy
     :ensure t
 
+    :custom
+    (lsp-proxy-log-buffer-max nil)
+    (lsp-proxy-diagnostics-provider :flymake)
+
     :hook ((tsx-ts-mode
             js-ts-mode
             typescript-ts-mode
@@ -1132,8 +1136,7 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
             html-ts-mode
             css-ts-mode
             toml-ts-mode
-            json-ts-mode
-            terraform-mode)
+            json-ts-mode)
            . lsp-proxy-mode)
 
     :bind (:map lsp-proxy-mode-map
@@ -1147,13 +1150,13 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
                 ("C-c l s" . lsp-proxy-signature-activate)))
 #+end_src
 ** 結局はこれ [[https://github.com/casouri/eldoc-box][lsp-mode]]
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle yes
   (leaf cape
     :ensure t)
 
   (leaf lsp-mode
     :ensure t
-    :hook (((typescript-ts-mode-hook tsx-ts-mode-hook astro-ts-mode-hook nix-ts-mode-hook html-ts-mode-hook css-ts-mode-hook toml-ts-mode-hook json-ts-mode-hook terraform-mode-hook) . lsp-deferred)
+    :hook (((terraform-mode-hook) . lsp-deferred)
            (lsp-mode-hook . lsp-enable-which-key-integration)
            (lsp-completion-mode-hook . my/lsp-mode-setup-completion))
     :init
@@ -1196,41 +1199,41 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
     (setopt lsp-eldoc-render-all t)       ; サーバーから返ってきたドキュメントを全て表示する
 
     ;; typescript
-    (setopt lsp-typescript-format-enable nil)
-    (setopt lsp-typescript-references-code-lens-enabled t)
-    (setopt lsp-typescript-implementations-code-lens-enabled t)
-    (setopt lsp-javascript-format-enable nil)
-    (setopt lsp-javascript-display-return-type-hints t)
-    (setopt lsp-javascript-display-parameter-type-hints t)
-    (setopt lsp-javascript-display-parameter-name-hints-when-argument-matches-name t)
-    (setopt lsp-javascript-display-property-declaration-type-hints t)
-    (setopt lsp-javascript-display-variable-type-hints t)
+    ;; (setopt lsp-typescript-format-enable nil)
+    ;; (setopt lsp-typescript-references-code-lens-enabled t)
+    ;; (setopt lsp-typescript-implementations-code-lens-enabled t)
+    ;; (setopt lsp-javascript-format-enable nil)
+    ;; (setopt lsp-javascript-display-return-type-hints t)
+    ;; (setopt lsp-javascript-display-parameter-type-hints t)
+    ;; (setopt lsp-javascript-display-parameter-name-hints-when-argument-matches-name t)
+    ;; (setopt lsp-javascript-display-property-declaration-type-hints t)
+    ;; (setopt lsp-javascript-display-variable-type-hints t)
 
-    ;; eslint
-    (setopt lsp-eslint-server-command '("vscode-eslint-language-server" "--stdio"))
+    ;; ;; eslint
+    ;; (setopt lsp-eslint-server-command '("vscode-eslint-language-server" "--stdio"))
 
-    (setopt lsp-html-format-enable nil)
-    (setopt lsp-yaml-format-enable nil)
+    ;; (setopt lsp-html-format-enable nil)
+    ;; (setopt lsp-yaml-format-enable nil)
 
-    (add-to-list 'lsp-language-id-configuration '(scss-ts-mode . "scss"))
+    ;; (add-to-list 'lsp-language-id-configuration '(scss-ts-mode . "scss"))
 
-    (leaf lsp-tailwindcss
-      :ensure t
-      :init
-      (setq lsp-tailwindcss-add-on-mode t)
-      :config
-      (setq lsp-tailwindcss-major-modes '(tsx-ts-mode astro-ts-mode))
-      ;; (setopt lsp-tailwindcss-skip-config-check t)
-      (setopt lsp-tailwindcss-server-path (string-trim (shell-command-to-string "which tailwindcss-language-server"))))
+    ;; (leaf lsp-tailwindcss
+    ;;   :ensure t
+    ;;   :init
+    ;;   (setq lsp-tailwindcss-add-on-mode t)
+    ;;   :config
+    ;;   (setq lsp-tailwindcss-major-modes '(tsx-ts-mode astro-ts-mode))
+    ;;   ;; (setopt lsp-tailwindcss-skip-config-check t)
+    ;;   (setopt lsp-tailwindcss-server-path (string-trim (shell-command-to-string "which tailwindcss-language-server"))))
 
-    (use-package lsp-biome
-      :ensure t
-      :preface
-      (defun my/lsp-biome-active-hook ()
-        (setq-local apheleia-formatter '(biome)))
+    ;; (use-package lsp-biome
+    ;;   :ensure t
+    ;;   :preface
+    ;;   (defun my/lsp-biome-active-hook ()
+    ;;     (setq-local apheleia-formatter '(biome)))
 
-      :config
-      (add-hook 'lsp-biome-active-hook #'my/lsp-biome-active-hook))
+    ;;   :config
+    ;;   (add-hook 'lsp-biome-active-hook #'my/lsp-biome-active-hook))
 
     (defun lsp-booster--advice-json-parse (old-fn &rest args)
       "Try to parse bytecode instead of json."

@@ -20,7 +20,7 @@ args = ["serve"]
 [language-server.astro-ls]
 command = "astro-ls"
 args = ["--stdio"]
-config = { typescript = { tsdk = "./node_modules/typescript/lib/" } }
+config = { typescript = { tsdk = "/nix/store/snhhwv8zjbyv024iiasccjamn9rn6v67-typescript-5.9.3/lib/node_modules/typescript/lib/" } }
 
 [[language]]
 name = "astro"
@@ -182,6 +182,7 @@ language-servers = ["nil"]
 
 
 [[language]]
-name = "terraform"
-file-types = ["tf"]
+name = "hcl"
+language-id = "terraform"
+file-types = ["hcl", "tf", "nomad"]
 language-servers = ["terraform-ls"]

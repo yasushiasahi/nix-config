@@ -119,6 +119,7 @@ home-manager.lib.homeManagerConfiguration {
     ./starship
     ./claude-code
     ./agent-skills
+    # ./television
   ];
 
   # Optionally use extraSpecialArgs

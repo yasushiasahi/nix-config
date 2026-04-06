@@ -10,6 +10,8 @@ let
     version = "0.0.1";
     src = sources.emacs-lsp-proxy.src;
     cargoLock = sources.emacs-lsp-proxy.cargoLock."Cargo.lock";
+    RUSTFLAGS = "-C target-cpu=native";
+    buildType = "release";
   };
 
   emacs-with-epkgs = pkgs.emacsWithPackagesFromUsePackage {
