@@ -117,7 +117,6 @@ in
     pkgs.pyright # python
 
     #formatter & linter
-    pkgs.nodePackages.prettier
     pkgs.nixfmt
     pkgs.eslint
     pkgs.biome

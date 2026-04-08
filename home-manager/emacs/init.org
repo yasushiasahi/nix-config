@@ -1136,6 +1136,7 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
             html-ts-mode
             css-ts-mode
             toml-ts-mode
+            yaml-ts-mode
             json-ts-mode)
            . lsp-proxy-mode)
 
