@@ -106,6 +106,7 @@ in
     pkgs.typescript-go
     pkgs.vtsls
     pkgs.astro-language-server
+    # pkgs.rust-analyzer
     pkgs.yaml-language-server
     pkgs.tailwindcss-language-server
     pkgs.dockerfile-language-server
@@ -120,6 +121,7 @@ in
     pkgs.nixfmt
     pkgs.eslint
     pkgs.biome
+    # pkgs.clippy
 
     # shell-script-mode
     pkgs.shellcheck

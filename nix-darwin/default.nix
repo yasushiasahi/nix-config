@@ -41,12 +41,12 @@
       "google-chrome"
       # ターミナル
       "alacritty"
-      "ghostty"
       # エディタ
       "visual-studio-code"
       "coteditor"
       # 開発ツール
       "postman"
+      # "claude-code"
     ];
     masApps = {
       LINE = 539883307;

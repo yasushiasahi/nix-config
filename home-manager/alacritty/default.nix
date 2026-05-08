@@ -99,6 +99,11 @@ in
           mods = "Command";
           action = "ToggleFullscreen";
         }
+        {
+          key = "Return";
+          mods = "Shift";
+          chars = "\u001B\r";
+        }
       ];
 
       selection = {

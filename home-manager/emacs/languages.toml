@@ -176,6 +176,13 @@ language-servers = [
 
 
 [[language]]
+name = "rust"
+file-types = ["rs"]
+roots = ["Cargo.toml", "Cargo.lock"]
+language-servers = [{ name = "rust-analyzer" }]
+
+
+[[language]]
 name = "nix"
 file-types = ["nix"]
 language-servers = ["nil"]

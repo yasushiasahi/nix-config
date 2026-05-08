@@ -56,6 +56,9 @@ let
       # node tools
       pkgs.nodejs_24
 
+      # rust
+      pkgs.rustup
+
       # nix tool
       pkgs.nvfetcher
 
@@ -106,7 +109,7 @@ home-manager.lib.homeManagerConfiguration {
     ./git
     ./nix
     ./alacritty
-    ./ghostty
+    # ./ghostty
     ./tmux
     ./direnv
     ./eza
