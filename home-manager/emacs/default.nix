@@ -112,6 +112,7 @@ in
     pkgs.dockerfile-language-server
     pkgs.vscode-langservers-extracted # html css json
     pkgs.nil # nix
+    pkgs.nixd # nix
     pkgs.vale-ls # markdown
     pkgs.taplo # toml
     pkgs.terraform-ls

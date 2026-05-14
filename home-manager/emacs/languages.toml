@@ -1,51 +1,13 @@
-[language-server.biome]
-command = "biome"
-args = ["lsp-proxy"]
-
-
+# ============================================================
+# TypeSctipt / JavaSctipt
+# ============================================================
 [language-server.tsgo-ls]
 command = "tsgo"
 args = ["--lsp", "--stdio"]
 
-
-[language-server.nil]
-command = "nil"
-
-
-[language-server.terraform-ls]
-command = "terraform-ls"
-args = ["serve"]
-
-
-[language-server.astro-ls]
-command = "astro-ls"
-args = ["--stdio"]
-config = { typescript = { tsdk = "/nix/store/snhhwv8zjbyv024iiasccjamn9rn6v67-typescript-5.9.3/lib/node_modules/typescript/lib/" } }
-
-[[language]]
-name = "astro"
-language-id = "astro"
-file-types = ["astro"]
-roots = ["package.json"]
-language-servers = [
-  "astro-ls",
-  { name = "tailwindcss-ls" },
-  { name = "eslint", support-workspace = true, config-files = [
-    ".eslintrc.js",
-    ".eslintrc.cjs",
-    ".eslintrc.yaml",
-    ".eslintrc.yml",
-    ".eslintrc",
-    ".eslintrc.json",
-    "eslint.config.js",
-    "eslint.config.mjs",
-    "eslint.config.cjs",
-    "eslint.config.ts",
-    "eslint.config.mts",
-    "eslint.config.cts",
-  ] },
-]
-
+[language-server.biome]
+command = "biome"
+args = ["lsp-proxy"]
 
 [[language]]
 name = "javascript"
@@ -175,6 +137,42 @@ language-servers = [
 ]
 
 
+# ============================================================
+# Astro
+# ============================================================
+[language-server.astro-ls]
+command = "astro-ls"
+args = ["--stdio"]
+config = { typescript = { tsdk = "/nix/store/snhhwv8zjbyv024iiasccjamn9rn6v67-typescript-5.9.3/lib/node_modules/typescript/lib/" } }
+
+[[language]]
+name = "astro"
+language-id = "astro"
+file-types = ["astro"]
+roots = ["package.json"]
+language-servers = [
+  "astro-ls",
+  # { name = "tailwindcss-ls" },
+  # { name = "eslint", support-workspace = true, config-files = [
+  #   ".eslintrc.js",
+  #   ".eslintrc.cjs",
+  #   ".eslintrc.yaml",
+  #   ".eslintrc.yml",
+  #   ".eslintrc",
+  #   ".eslintrc.json",
+  #   "eslint.config.js",
+  #   "eslint.config.mjs",
+  #   "eslint.config.cjs",
+  #   "eslint.config.ts",
+  #   "eslint.config.mts",
+  #   "eslint.config.cts",
+  # ] },
+]
+
+
+# ============================================================
+# Rust
+# ============================================================
 [[language]]
 name = "rust"
 file-types = ["rs"]
@@ -182,14 +180,45 @@ roots = ["Cargo.toml", "Cargo.lock"]
 language-servers = [{ name = "rust-analyzer" }]
 
 
-[[language]]
-name = "nix"
-file-types = ["nix"]
-language-servers = ["nil"]
-
+# ============================================================
+# Terraform
+# ============================================================
+[language-server.terraform-ls]
+command = "terraform-ls"
+args = ["serve"]
 
 [[language]]
 name = "hcl"
 language-id = "terraform"
 file-types = ["hcl", "tf", "nomad"]
-language-servers = ["terraform-ls"]
+roots = ["*.tf", "*.tfvars"]
+language-servers = [
+  { name = "terraform-ls", except-features = [
+    "format",
+    "diagnostics",
+    "pull-diagnostics",
+  ] },
+]
+
+
+# ============================================================
+# Nix
+# ============================================================
+[language-server.nil]
+command = "nil"
+config = { formatting = { command = ["nixfmt"] } }
+
+[language-server.nixd]
+command = "nixd"
+
+[language-server.nixd.config]
+nixpkgs = { expr = "import (builtins.getFlake \"/Users/asahi/ghq/github.com/yasushiasahiaa/nix-config\").inputs.nixpkgs { }   " }
+
+[language-server.nixd.config.options]
+home-manager = { expr = "(builtins.getFlake \"/Users/asahi/ghq/github.com/yasushiasahiaa/nix-config\").homeConfigurations.home.options" }
+nix-darwin = { expr = "(builtins.getFlake \"/Users/asahi/ghq/github.com/yasushiasahiaa/nix-config\")..darwinConfigurations.darwin.options" }
+
+[[language]]
+name = "nix"
+file-types = ["nix"]
+language-servers = ["nixd"]

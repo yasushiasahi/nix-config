@@ -18,19 +18,18 @@
       sparseCheckout = [ ];
       sha256 = "sha256-DAHuFZX8sQVbTKU6ZnQkHEnFqcdicH9a4thpwxmdDR8=";
     };
-    date = "2025-03-09";
   };
   emacs-fzf-native = {
     pname = "emacs-fzf-native";
-    version = "b159c581699e0661da015a845760578598880307";
+    version = "ff865ce209cd15e2b5110d78269c78f2c31929d1";
     src = fetchFromGitHub {
       owner = "dangduc";
       repo = "fzf-native";
-      rev = "b159c581699e0661da015a845760578598880307";
+      rev = "ff865ce209cd15e2b5110d78269c78f2c31929d1";
       fetchSubmodules = false;
-      sha256 = "sha256-ykLRASDpOJMIQvD5+xGyvsRmhtuRBuctUQcjOhRKypg=";
+      sha256 = "sha256-WkNPZW/vQbc8TfsDoTzB8EcprRqUmu8KqvyJUENi4Gw=";
     };
-    date = "2024-12-24";
+    date = "2026-05-08";
   };
   emacs-lsp-biome = {
     pname = "emacs-lsp-biome";

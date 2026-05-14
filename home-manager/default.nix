@@ -58,6 +58,7 @@ let
 
       # rust
       pkgs.rustup
+      pkgs.cargo-lambda
 
       # nix tool
       pkgs.nvfetcher

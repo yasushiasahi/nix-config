@@ -16,9 +16,12 @@ src.branch = "main"
 fetch.github = "dangduc/fzf-native"
 
 [emacs-astro-ts-mode]
-src.git = "https://git.isincredibly.gay/srxl/astro-ts-mode.git"
+# src.git = "https://git.isincredibly.gay/srxl/astro-ts-mode.git"
 src.branch = "master"
 fetch.git = "https://git.isincredibly.gay/srxl/astro-ts-mode.git"
+# 以下のコミットから起動時に"Debugger entered--Lisp error: (void-function treesit-ready-p)"と出て、起動できなくなった。
+# https://git.isincredibly.gay/srxl/astro-ts-mode/commit/3ece1b9f617baeab6b9b2f997cb3b10863466d59
+src.manual = "886d692378d0da2071e710c1e6db02e5b2e0dd30"
 
 [emacs-lsp-proxy]
 src.git = "https://github.com/jadestrong/lsp-proxy"

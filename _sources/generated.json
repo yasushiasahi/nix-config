@@ -1,7 +1,7 @@
 {
     "emacs-astro-ts-mode": {
         "cargoLock": null,
-        "date": "2025-03-09",
+        "date": null,
         "extract": null,
         "name": "emacs-astro-ts-mode",
         "passthru": null,
@@ -21,7 +21,7 @@
     },
     "emacs-fzf-native": {
         "cargoLock": null,
-        "date": "2024-12-24",
+        "date": "2026-05-08",
         "extract": null,
         "name": "emacs-fzf-native",
         "passthru": null,
@@ -33,12 +33,12 @@
             "name": null,
             "owner": "dangduc",
             "repo": "fzf-native",
-            "rev": "b159c581699e0661da015a845760578598880307",
-            "sha256": "sha256-ykLRASDpOJMIQvD5+xGyvsRmhtuRBuctUQcjOhRKypg=",
+            "rev": "ff865ce209cd15e2b5110d78269c78f2c31929d1",
+            "sha256": "sha256-WkNPZW/vQbc8TfsDoTzB8EcprRqUmu8KqvyJUENi4Gw=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "b159c581699e0661da015a845760578598880307"
+        "version": "ff865ce209cd15e2b5110d78269c78f2c31929d1"
     },
     "emacs-lsp-biome": {
         "cargoLock": null,
