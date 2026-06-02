@@ -19,18 +19,6 @@
       sha256 = "sha256-DAHuFZX8sQVbTKU6ZnQkHEnFqcdicH9a4thpwxmdDR8=";
     };
   };
-  emacs-fzf-native = {
-    pname = "emacs-fzf-native";
-    version = "ff865ce209cd15e2b5110d78269c78f2c31929d1";
-    src = fetchFromGitHub {
-      owner = "dangduc";
-      repo = "fzf-native";
-      rev = "ff865ce209cd15e2b5110d78269c78f2c31929d1";
-      fetchSubmodules = false;
-      sha256 = "sha256-WkNPZW/vQbc8TfsDoTzB8EcprRqUmu8KqvyJUENi4Gw=";
-    };
-    date = "2026-05-08";
-  };
   emacs-lsp-biome = {
     pname = "emacs-lsp-biome";
     version = "9b3d523e3df2a9f686e1b15396987a0310b62a15";
@@ -72,77 +60,5 @@
       sha256 = "sha256-+q7KmbU8A+uR61BSa528vYbdFSj2WGsFWYW/5q7J9Kw=";
     };
     date = "2026-01-02";
-  };
-  fish-autopair = {
-    pname = "fish-autopair";
-    version = "4d1752ff5b39819ab58d7337c69220342e9de0e2";
-    src = fetchFromGitHub {
-      owner = "jorgebucaran";
-      repo = "autopair.fish";
-      rev = "4d1752ff5b39819ab58d7337c69220342e9de0e2";
-      fetchSubmodules = false;
-      sha256 = "sha256-qt3t1iKRRNuiLWiVoiAYOu+9E7jsyECyIqZJ/oRIT1A=";
-    };
-    date = "2022-07-04";
-  };
-  fish-bd = {
-    pname = "fish-bd";
-    version = "ab686e028bfe95fa561a4f4e57840e36902d4d7d";
-    src = fetchFromGitHub {
-      owner = "0rax";
-      repo = "fish-bd";
-      rev = "ab686e028bfe95fa561a4f4e57840e36902d4d7d";
-      fetchSubmodules = false;
-      sha256 = "sha256-GeWjoakXa0t2TsMC/wpLEmsSVGhHFhBVK3v9eyQdzv0=";
-    };
-    date = "2022-03-04";
-  };
-  fish-done = {
-    pname = "fish-done";
-    version = "998ad4f5fc9cee36c09840a7e635b56428e554f9";
-    src = fetchFromGitHub {
-      owner = "franciscolourenco";
-      repo = "done";
-      rev = "998ad4f5fc9cee36c09840a7e635b56428e554f9";
-      fetchSubmodules = false;
-      sha256 = "sha256-GZ1ZpcaEfbcex6XvxOFJDJqoD9C5out0W4bkkn768r0=";
-    };
-    date = "2025-12-15";
-  };
-  fish-enhancd = {
-    pname = "fish-enhancd";
-    version = "5afb4eb6ba36c15821de6e39c0a7bb9d6b0ba415";
-    src = fetchFromGitHub {
-      owner = "babarot";
-      repo = "enhancd";
-      rev = "5afb4eb6ba36c15821de6e39c0a7bb9d6b0ba415";
-      fetchSubmodules = false;
-      sha256 = "sha256-pKQbwiqE0KdmRDbHQcW18WfxyJSsKfymWt/TboY2iic=";
-    };
-    date = "2025-01-24";
-  };
-  fish-fzf = {
-    pname = "fish-fzf";
-    version = "0069dbbe06cc05482bfb13063b4b4eac26318992";
-    src = fetchFromGitHub {
-      owner = "PatrickF1";
-      repo = "fzf.fish";
-      rev = "0069dbbe06cc05482bfb13063b4b4eac26318992";
-      fetchSubmodules = false;
-      sha256 = "sha256-H7HgYT+okuVXo2SinrSs+hxAKCn4Q4su7oMbebKd/7s=";
-    };
-    date = "2026-03-10";
-  };
-  fish-ghq = {
-    pname = "fish-ghq";
-    version = "cafaaabe63c124bf0714f89ec715cfe9ece87fa2";
-    src = fetchFromGitHub {
-      owner = "decors";
-      repo = "fish-ghq";
-      rev = "cafaaabe63c124bf0714f89ec715cfe9ece87fa2";
-      fetchSubmodules = false;
-      sha256 = "sha256-6b1zmjtemNLNPx4qsXtm27AbtjwIZWkzJAo21/aVZzM=";
-    };
-    date = "2021-07-16";
   };
 }

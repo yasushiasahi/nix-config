@@ -7,8 +7,9 @@
     ];
   };
 
-  # fishにnix関連のpathを通す
+  # fishとzshにnix関連のpathを通す
   programs.fish.enable = true;
+  programs.zsh.enable = true;
 
   fonts.packages = [
     # 日本語対応プログラミングフォント
@@ -58,7 +59,27 @@
   };
 
   nix = {
-    optimise.automatic = true;
+    optimise = {
+      automatic = true;
+      interval = [
+        {
+          Hour = 3;
+          Minute = 0;
+        }
+      ];
+    };
+
+    gc = {
+      automatic = true;
+      interval = [
+        {
+          Hour = 3;
+          Minute = 30;
+        }
+      ];
+      options = "--delete-older-than 7d";
+    };
+
     settings = {
       # これを設定しないとflakeが使えない
       experimental-features = "nix-command flakes";

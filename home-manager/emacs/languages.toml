@@ -141,8 +141,10 @@ language-servers = [
 # Astro
 # ============================================================
 [language-server.astro-ls]
-command = "astro-ls"
-args = ["--stdio"]
+command = "npx"
+args = ["@astrojs/language-server", "--stdio"]
+# command = "astro-ls"
+# args = ["--stdio"]
 config = { typescript = { tsdk = "/nix/store/snhhwv8zjbyv024iiasccjamn9rn6v67-typescript-5.9.3/lib/node_modules/typescript/lib/" } }
 
 [[language]]
@@ -152,21 +154,25 @@ file-types = ["astro"]
 roots = ["package.json"]
 language-servers = [
   "astro-ls",
-  # { name = "tailwindcss-ls" },
-  # { name = "eslint", support-workspace = true, config-files = [
-  #   ".eslintrc.js",
-  #   ".eslintrc.cjs",
-  #   ".eslintrc.yaml",
-  #   ".eslintrc.yml",
-  #   ".eslintrc",
-  #   ".eslintrc.json",
-  #   "eslint.config.js",
-  #   "eslint.config.mjs",
-  #   "eslint.config.cjs",
-  #   "eslint.config.ts",
-  #   "eslint.config.mts",
-  #   "eslint.config.cts",
-  # ] },
+  { name = "tailwindcss-ls" },
+  { name = "eslint", support-workspace = true, config-files = [
+    ".eslintrc.js",
+    ".eslintrc.cjs",
+    ".eslintrc.yaml",
+    ".eslintrc.yml",
+    ".eslintrc",
+    ".eslintrc.json",
+    "eslint.config.js",
+    "eslint.config.mjs",
+    "eslint.config.cjs",
+    "eslint.config.ts",
+    "eslint.config.mts",
+    "eslint.config.cts",
+  ] },
+  { name = "biome", config-files = [
+    "biome.json",
+    "biome.jsonc",
+  ] },
 ]
 
 

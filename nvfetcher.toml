@@ -10,11 +10,6 @@ src.git = "https://github.com/cxa/lsp-biome"
 src.branch = "main"
 fetch.github = "cxa/lsp-biome"
 
-[emacs-fzf-native]
-src.git = "https://github.com/dangduc/fzf-native"
-src.branch = "main"
-fetch.github = "dangduc/fzf-native"
-
 [emacs-astro-ts-mode]
 # src.git = "https://git.isincredibly.gay/srxl/astro-ts-mode.git"
 src.branch = "master"
@@ -28,53 +23,3 @@ src.git = "https://github.com/jadestrong/lsp-proxy"
 src.branch = "main"
 fetch.github = "jadestrong/lsp-proxy"
 cargo_lock = ["Cargo.lock"]
-
-# fish
-
-[fish-bd]
-src.git = "https://github.com/0rax/fish-bd"
-src.branch = "master"
-fetch.github = "0rax/fish-bd"
-
-[fish-ghq]
-src.git = "https://github.com/decors/fish-ghq"
-src.branch = "master"
-fetch.github = "decors/fish-ghq"
-
-[fish-fzf]
-src.git = "https://github.com/PatrickF1/fzf.fish"
-src.branch = "main"
-fetch.github = "PatrickF1/fzf.fish"
-
-[fish-enhancd]
-src.git = "https://github.com/babarot/enhancd"
-src.branch = "main"
-fetch.github = "babarot/enhancd"
-
-[fish-done]
-src.git = "https://github.com/franciscolourenco/done"
-src.branch = "master"
-fetch.github = "franciscolourenco/done"
-
-[fish-autopair]
-src.git = "https://github.com/jorgebucaran/autopair.fish"
-src.branch = "main"
-fetch.github = "jorgebucaran/autopair.fish"
-
-
-# zsh
-
-# [zsh-autocomplete]
-# src.git = "https://github.com/marlonrichert/zsh-autocomplete"
-# src.branch = "main"
-# fetch.github = "marlonrichert/zsh-autocomplete"
-
-# [zsh-npm-scripts-autocomplete]
-# src.git = "https://github.com/grigorii-zander/zsh-npm-scripts-autocomplete"
-# src.branch = "main"
-# fetch.github = "grigorii-zander/zsh-npm-scripts-autocomplete"
-
-# [zsh-enhancd]
-# src.git = "https://github.com/babarot/enhancd"
-# src.branch = "main"
-# fetch.github = "babarot/enhancd"

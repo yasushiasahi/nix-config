@@ -2,6 +2,7 @@
   pkgs,
   mkAlias,
   sources,
+  lib,
   ...
 }:
 let
@@ -30,18 +31,6 @@ let
           version = "0.0.1";
           src = sources.emacs-org-modern-indent.src;
         };
-        lsp-biome = epkgs.melpaBuild {
-          pname = "lsp-biome";
-          version = "0.0.1";
-          src = sources.emacs-lsp-biome.src;
-          packageRequires = [ epkgs.lsp-mode ];
-        };
-        fzf-native = epkgs.melpaBuild {
-          pname = "fzf-native";
-          version = "0.0.1";
-          src = sources.emacs-fzf-native.src;
-          files = ''(:defaults "bin")'';
-        };
         lsp-proxy = epkgs.melpaBuild {
           pname = "lsp-proxy";
           version = "0.0.1";
@@ -56,18 +45,19 @@ let
         };
         # lsp-modeのplists解析を有効にする。そのままだと、hash-tableになる。
         # https://emacs-lsp.github.io/lsp-mode/page/performance/#use-plists-for-deserialization
-        lsp-mode = epkgs.lsp-mode.overrideAttrs (
-          _: p: {
-            buildPhase = ''
-              export LSP_USE_PLISTS=true
-              export TYPE_SCRIPT_LIB=${pkgs.typescript}/lib/node_modules/typescript/lib/
-            ''
-            + p.buildPhase;
-          }
-        );
+        # lsp-mode = epkgs.lsp-mode.overrideAttrs (
+        #   _: p: {
+        #     buildPhase = ''
+        #       export LSP_USE_PLISTS=true
+        #       export TYPE_SCRIPT_LIB=${pkgs.typescript}/lib/node_modules/typescript/lib/
+        #     ''
+        #     + p.buildPhase;
+        #   }
+        # );
       };
     extraEmacsPackages = epkgs: [
       epkgs.treesit-grammars.with-all-grammars
+      pkgs.tree-sitter-grammars.tree-sitter-astro
       # TODO astroのgrammarsも入れたいけど、grammarsのbuild方法がわからない。
     ];
   };
@@ -105,7 +95,7 @@ in
     pkgs.typescript-language-server
     pkgs.typescript-go
     pkgs.vtsls
-    pkgs.astro-language-server
+
     # pkgs.rust-analyzer
     pkgs.yaml-language-server
     pkgs.tailwindcss-language-server
@@ -134,6 +124,8 @@ in
     LANG = "en_US.UTF-8";
     LSP_USE_PLISTS = "true";
     TYPE_SCRIPT_LIB = "${pkgs.typescript}/lib/node_modules/typescript/lib/";
+    EDITOR = lib.mkForce "emacs -nw";
+    VISUAL = lib.mkForce "emacs -nw";
   };
 
   xdg.configFile = {

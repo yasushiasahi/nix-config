@@ -99,10 +99,12 @@ in
           mods = "Command";
           action = "ToggleFullscreen";
         }
+        # Claude CodeでShift+Enterで改行できるようにする
+        # https://blog.bobuhiro11.net/en/2026/02-27-shift-enter.html
         {
           key = "Return";
           mods = "Shift";
-          chars = "\u001B\r";
+          chars = "\u001b[13;2u";
         }
       ];
 

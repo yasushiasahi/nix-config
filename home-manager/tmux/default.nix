@@ -17,21 +17,16 @@ let
     set-option -g status-justify centre
   '';
 
-  # ghqから選択してtmuxのsessionを作る
-  extraConfigSeshFromGhq = ''
-    bind-key "P" run-shell "sesh connect \"$(ghq root)/$(ghq list | fzf-tmux -p 60%,60% --border-label ' select project ' --prompt='Create new session from > ' --preview='eza --icons always --color always --git-ignore --tree --level=2 $(ghq root)/{1}')\"";
-  '';
-
   # フルカラーサポート
   # https://apribase.net/2025/05/28/term-terminfo/
   extraConfigTerminalFeatures = ''
     set -as terminal-features ",alacritty:RGB,xterm-ghostty:RGB,foot:RGB,wezterm:RGB"
   '';
 
-  # tmux-which-key
-  # nix storeに入れてしまうとなぜか動かないので、一時凌ぎ。
-  extraConfigTmuxWhichKey = ''
-    run-shell $XDG_DATA_HOME/tmux/plugins/tmux-which-key/plugin.sh.tmux
+  # Claude CodeでShift+Enterで改行できるようにする
+  # https://blog.bobuhiro11.net/en/2026/02-27-shift-enter.html
+  extraConfigClaudeCode = ''
+    bind-key -n S-Enter send-keys -l "[13;2u"
   '';
 
 in
@@ -50,18 +45,10 @@ in
 
     plugins = [
       pkgs.tmuxPlugins.pain-control
-      pkgs.tmuxPlugins.tmux-fzf
-      # pkgs.tmuxPlugins.extrakto # wl-clipboard dependency fails on macOS
       {
         plugin = pkgs.tmuxPlugins.tmux-colors-solarized;
         extraConfig = ''
           set -g @colors-solarized 'dark'
-        '';
-      }
-      {
-        plugin = pkgs.tmuxPlugins.prefix-highlight;
-        extraConfig = ''
-          set -g status-right '#{prefix_highlight} | %a %Y-%m-%d %H:%M'
         '';
       }
     ];
@@ -69,9 +56,8 @@ in
       extraConfigDefaultShell
       + extraConfigReroadConfig
       + extraConfigStatusLine
-      + extraConfigSeshFromGhq
       + extraConfigTerminalFeatures
-      + extraConfigTmuxWhichKey;
+      + extraConfigClaudeCode;
   };
 
   # セッションをいい感じに扱える

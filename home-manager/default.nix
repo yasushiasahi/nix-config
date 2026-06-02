@@ -2,14 +2,6 @@
   pkgs,
   home-manager,
   mac-app-util,
-  mcp-servers-nix,
-  agent-skills,
-  anthropic-skills,
-  cloudflare-skills,
-  hashicorp-agent-skills,
-  deno-skills,
-  aws-agent-skills,
-  microsoft-skills,
 }:
 let
   mkAlias = sets: {
@@ -57,8 +49,8 @@ let
       pkgs.nodejs_24
 
       # rust
-      pkgs.rustup
-      pkgs.cargo-lambda
+      # pkgs.rustup
+      # pkgs.cargo-lambda
 
       # nix tool
       pkgs.nvfetcher
@@ -69,6 +61,10 @@ let
 
       # gcp
       pkgs.google-cloud-sdk
+
+      pkgs.devenv
+
+      pkgs.cspell
     ];
 
     # XDG_*の環境変数を設定する
@@ -100,17 +96,14 @@ home-manager.lib.homeManagerConfiguration {
   # the path to your home.nix.
   modules = [
     mac-app-util.homeManagerModules.default
-    agent-skills.homeManagerModules.default
     miscModule
     optionModule
     ./emacs
-    # ./zsh
     ./bash
     ./fish
     ./git
     ./nix
     ./alacritty
-    # ./ghostty
     ./tmux
     ./direnv
     ./eza
@@ -122,8 +115,7 @@ home-manager.lib.homeManagerConfiguration {
     ./aws
     ./starship
     ./claude-code
-    ./agent-skills
-    # ./television
+    ./television
   ];
 
   # Optionally use extraSpecialArgs
@@ -132,13 +124,5 @@ home-manager.lib.homeManagerConfiguration {
     inherit mkAlias;
     inherit mkAbbr;
     inherit sources;
-    inherit mcp-servers-nix;
-    inherit agent-skills;
-    inherit anthropic-skills;
-    inherit cloudflare-skills;
-    inherit hashicorp-agent-skills;
-    inherit deno-skills;
-    inherit aws-agent-skills;
-    inherit microsoft-skills;
   };
 }

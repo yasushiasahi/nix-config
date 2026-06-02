@@ -20,6 +20,14 @@ in
         "settings.local.json"
         "CLAUDE.local.md"
         ".serena/"
+        # devenv
+        ".devenv"
+        "devenv.yaml"
+        "devenv.nix"
+        "devenv.lock"
+        ".devenv.flake.nix"
+        # emacs
+        ".dir-locals-2.el"
       ];
       settings = {
         user = {
