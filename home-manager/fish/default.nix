@@ -18,6 +18,9 @@
     };
   };
 
+  # trace: warning: programs.man.generateCaches has no effect when programs.man.package is null を抑制するため
+  programs.man.generateCaches = false;
+
   xdg.configFile = {
     # completions
     "fish/completions/" = {

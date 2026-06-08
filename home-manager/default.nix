@@ -69,7 +69,6 @@ let
 
     # XDG_*の環境変数を設定する
     xdg.enable = true;
-
   };
 
   optionModule =

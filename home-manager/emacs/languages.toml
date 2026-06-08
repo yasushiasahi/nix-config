@@ -222,7 +222,7 @@ nixpkgs = { expr = "import (builtins.getFlake \"/Users/asahi/ghq/github.com/yasu
 
 [language-server.nixd.config.options]
 home-manager = { expr = "(builtins.getFlake \"/Users/asahi/ghq/github.com/yasushiasahiaa/nix-config\").homeConfigurations.home.options" }
-nix-darwin = { expr = "(builtins.getFlake \"/Users/asahi/ghq/github.com/yasushiasahiaa/nix-config\")..darwinConfigurations.darwin.options" }
+nix-darwin = { expr = "(builtins.getFlake \"/Users/asahi/ghq/github.com/yasushiasahiaa/nix-config\").darwinConfigurations.darwin.options" }
 
 [[language]]
 name = "nix"

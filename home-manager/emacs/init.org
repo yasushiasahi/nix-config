@@ -1293,6 +1293,9 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
                                                           "--plugin=prettier-plugin-astro" "--parser=astro")))
     (add-to-list 'apheleia-mode-alist '(astro-ts-mode . prettier-astro))
 
+    ;; Rust
+    (add-to-list 'apheleia-formatters '(rustfmt . ("rustfmt" "--edition=2024" "--quiet" "--emit=stdout")))
+
     ;; Sass
     (add-to-list 'apheleia-mode-alist '(scss-ts-mode . prettier-scss))
 
@@ -1322,7 +1325,6 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
 
     (apheleia-global-mode +1))
 #+end_src
-
 
 #+begin_src emacs-lisp :tangle yes
   (require 'json)

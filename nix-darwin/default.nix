@@ -26,6 +26,7 @@
       autoUpdate = true;
       upgrade = true;
       cleanup = "uninstall";
+      extraFlags = [ "--force-cleanup" ];
     };
     brews = [
       # プロジェクトで一時的に必要
@@ -83,6 +84,7 @@
     settings = {
       # これを設定しないとflakeが使えない
       experimental-features = "nix-command flakes";
+      trusted-users = [ "asahi" ];
       max-jobs = 8;
     };
   };
