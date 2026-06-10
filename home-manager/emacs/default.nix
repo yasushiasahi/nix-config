@@ -79,7 +79,6 @@ in
   // shellAlias;
 
   home.packages = [
-    pkgs.emacs-lsp-booster
     lsp-proxy-cli
 
     # gnuのlsを入れないと以下の警告が出る
@@ -94,14 +93,11 @@ in
     pkgs.typescript
     pkgs.typescript-language-server
     pkgs.typescript-go
-    pkgs.vtsls
-
-    # pkgs.rust-analyzer
+    pkgs.astro-language-server
     pkgs.yaml-language-server
     pkgs.tailwindcss-language-server
     pkgs.dockerfile-language-server
     pkgs.vscode-langservers-extracted # html css json
-    pkgs.nil # nix
     pkgs.nixd # nix
     pkgs.vale-ls # markdown
     pkgs.taplo # toml
@@ -112,7 +108,6 @@ in
     pkgs.nixfmt
     pkgs.eslint
     pkgs.biome
-    # pkgs.clippy
 
     # shell-script-mode
     pkgs.shellcheck
