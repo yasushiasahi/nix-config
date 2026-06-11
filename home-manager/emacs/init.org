@@ -1,3 +1,4 @@
+
 #+TITLE: My Configuration for GNU Emacs
 #+AUTHOR: Yasushi Asahi
 #+EMAIL: asahi1600@gmail.com
@@ -1488,6 +1489,18 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
   (add-to-list 'org-src-lang-modes '("markdown" . markdown))
   (add-to-list 'org-src-lang-modes '("html" . html-ts))
   (add-to-list 'org-src-lang-modes '("astro" . astro-ts))
+#+end_src
+* 自作関数
+** Chromeをリロードする
+#+begin_src emacs-lisp :tangle yes
+  (leaf *Chromeをリロードする
+    :bind ("s-r" . my/reload-chrome)
+
+    :config
+    (defun my/reload-chrome ()
+      "Chromeをリロードする"
+      (interactive)
+      (shell-command "osascript -e 'tell application \"Google Chrome\" to reload active tab of front window'")))
 #+end_src
 * ユースケース
 ** 特定のバッファーのポイントを記録してどこからでもその位置にジャンプする
