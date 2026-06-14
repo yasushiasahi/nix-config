@@ -1493,14 +1493,13 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
 * 自作関数
 ** Chromeをリロードする
 #+begin_src emacs-lisp :tangle yes
-  (leaf *Chromeをリロードする
-    :bind ("s-r" . my/reload-chrome)
+  (defun my/reload-chrome ()
+    "Chromeをリロードする"
+    (interactive)
+    (shell-command "osascript -e 'tell application \"Google Chrome\" to reload active tab of front window'"))
 
-    :config
-    (defun my/reload-chrome ()
-      "Chromeをリロードする"
-      (interactive)
-      (shell-command "osascript -e 'tell application \"Google Chrome\" to reload active tab of front window'")))
+  (global-set-key (kbd "s-r") 'my/reload-chrome)
+
 #+end_src
 * ユースケース
 ** 特定のバッファーのポイントを記録してどこからでもその位置にジャンプする
