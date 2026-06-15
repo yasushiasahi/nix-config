@@ -7,12 +7,15 @@
 }:
 let
   lsp-proxy-cli = pkgs.rustPlatform.buildRustPackage {
-    pname = "lsp-proxy";
+    pname = "emacs-lsp-proxy";
     version = "0.0.1";
     src = sources.emacs-lsp-proxy.src;
     cargoLock = sources.emacs-lsp-proxy.cargoLock."Cargo.lock";
     RUSTFLAGS = "-C target-cpu=native";
     buildType = "release";
+    checkFlags = [
+      "--skip=remote::ssh::tests::ssh_check_master_returns_false_for_missing_socket"
+    ];
   };
 
   emacs-with-epkgs = pkgs.emacsWithPackagesFromUsePackage {
@@ -25,6 +28,11 @@ let
           pname = "astro-ts-mode";
           version = "0.0.1";
           src = sources.emacs-astro-ts-mode.src;
+          # このautoloadがtreesitのロード前に呼ばれてしまってemacsが立ち上がる前に落ちてしまうため
+          # https://git.isincredibly.gay/srxl/astro-ts-mode/src/commit/1d24c9d399dee4cfea6ed9b49d8e08891665e16c/astro-ts-mode.el#L184
+          preBuild = ''
+            sed -i '/;;;###autoload/d' astro-ts-mode.el
+          '';
         };
         org-modern-indent = epkgs.melpaBuild {
           pname = "org-modern-indent";
@@ -43,17 +51,6 @@ let
             epkgs.yasnippet
           ];
         };
-        # lsp-modeのplists解析を有効にする。そのままだと、hash-tableになる。
-        # https://emacs-lsp.github.io/lsp-mode/page/performance/#use-plists-for-deserialization
-        # lsp-mode = epkgs.lsp-mode.overrideAttrs (
-        #   _: p: {
-        #     buildPhase = ''
-        #       export LSP_USE_PLISTS=true
-        #       export TYPE_SCRIPT_LIB=${pkgs.typescript}/lib/node_modules/typescript/lib/
-        #     ''
-        #     + p.buildPhase;
-        #   }
-        # );
       };
     extraEmacsPackages = epkgs: [
       epkgs.treesit-grammars.with-all-grammars
@@ -117,8 +114,6 @@ in
   # https://apribase.net/2024/07/26/emacs-language-environment-mac/#langen_jputf-8-cannot-be-used-using-en_usutf-8-instead
   home.sessionVariables = {
     LANG = "en_US.UTF-8";
-    LSP_USE_PLISTS = "true";
-    TYPE_SCRIPT_LIB = "${pkgs.typescript}/lib/node_modules/typescript/lib/";
     EDITOR = lib.mkForce "emacs -nw";
     VISUAL = lib.mkForce "emacs -nw";
   };

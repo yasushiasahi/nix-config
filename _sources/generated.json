@@ -1,7 +1,7 @@
 {
     "emacs-astro-ts-mode": {
         "cargoLock": null,
-        "date": null,
+        "date": "2026-04-17",
         "extract": null,
         "name": "emacs-astro-ts-mode",
         "passthru": null,
@@ -11,43 +11,22 @@
             "fetchSubmodules": false,
             "leaveDotGit": false,
             "name": null,
-            "rev": "886d692378d0da2071e710c1e6db02e5b2e0dd30",
-            "sha256": "sha256-DAHuFZX8sQVbTKU6ZnQkHEnFqcdicH9a4thpwxmdDR8=",
+            "rev": "1d24c9d399dee4cfea6ed9b49d8e08891665e16c",
+            "sha256": "sha256-HN04hS5rS6wJ6XhN9sgVKtELFnw/teumIQM1cPD0pbI=",
             "sparseCheckout": [],
             "type": "git",
             "url": "https://git.isincredibly.gay/srxl/astro-ts-mode.git"
         },
-        "version": "886d692378d0da2071e710c1e6db02e5b2e0dd30"
-    },
-    "emacs-lsp-biome": {
-        "cargoLock": null,
-        "date": "2025-11-19",
-        "extract": null,
-        "name": "emacs-lsp-biome",
-        "passthru": null,
-        "pinned": false,
-        "src": {
-            "deepClone": false,
-            "fetchSubmodules": false,
-            "leaveDotGit": false,
-            "name": null,
-            "owner": "cxa",
-            "repo": "lsp-biome",
-            "rev": "9b3d523e3df2a9f686e1b15396987a0310b62a15",
-            "sha256": "sha256-SSqbr0HDosdWbaMduoTK10jrsR+ZzWgkaLj9tWkScGQ=",
-            "sparseCheckout": [],
-            "type": "github"
-        },
-        "version": "9b3d523e3df2a9f686e1b15396987a0310b62a15"
+        "version": "1d24c9d399dee4cfea6ed9b49d8e08891665e16c"
     },
     "emacs-lsp-proxy": {
         "cargoLock": {
             "Cargo.lock": [
-                "sha256-AntAhcrpSlO6qHuNnpTRRaD_w32i6IZEJXFM2glfnB4=/Cargo.lock",
+                "sha256-jG9m5i7Yc+V46uR5PWKmPvIj8EwKDWBrSyPmmTR0wtc=/Cargo.lock",
                 {}
             ]
         },
-        "date": "2026-03-15",
+        "date": "2026-06-14",
         "extract": null,
         "name": "emacs-lsp-proxy",
         "passthru": null,
@@ -59,12 +38,12 @@
             "name": null,
             "owner": "jadestrong",
             "repo": "lsp-proxy",
-            "rev": "85706b52ec7599ea282b7a0b821c145a9e2cbec7",
-            "sha256": "sha256-AntAhcrpSlO6qHuNnpTRRaD/w32i6IZEJXFM2glfnB4=",
+            "rev": "6e823791c9866064d309f5e624660bcfe4126f53",
+            "sha256": "sha256-jG9m5i7Yc+V46uR5PWKmPvIj8EwKDWBrSyPmmTR0wtc=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "85706b52ec7599ea282b7a0b821c145a9e2cbec7"
+        "version": "6e823791c9866064d309f5e624660bcfe4126f53"
     },
     "emacs-org-modern-indent": {
         "cargoLock": null,

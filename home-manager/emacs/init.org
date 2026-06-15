@@ -1,5 +1,4 @@
-
-#+TITLE: My Configuration for GNU Emacs
+#+title: My Configuration for GNU Emacs
 #+AUTHOR: Yasushi Asahi
 #+EMAIL: asahi1600@gmail.com
 #+STARTUP: content

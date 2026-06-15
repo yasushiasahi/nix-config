@@ -1,3 +1,8 @@
+;; -*- lexical-binding: t; generate-autoload-cookie: nil; -*-
+;; -*- lexical-binding: t; generate-autoload-cookie: nil; -*-
+
+(;; -*- lexical-binding: t; generate-autoload-cookie: nil; -*-
+)
 # emacs package
 
 [emacs-org-modern-indent]

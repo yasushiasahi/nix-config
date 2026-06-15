@@ -8,46 +8,35 @@
 {
   emacs-astro-ts-mode = {
     pname = "emacs-astro-ts-mode";
-    version = "886d692378d0da2071e710c1e6db02e5b2e0dd30";
+    version = "1d24c9d399dee4cfea6ed9b49d8e08891665e16c";
     src = fetchgit {
       url = "https://git.isincredibly.gay/srxl/astro-ts-mode.git";
-      rev = "886d692378d0da2071e710c1e6db02e5b2e0dd30";
+      rev = "1d24c9d399dee4cfea6ed9b49d8e08891665e16c";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
       sparseCheckout = [ ];
-      sha256 = "sha256-DAHuFZX8sQVbTKU6ZnQkHEnFqcdicH9a4thpwxmdDR8=";
+      sha256 = "sha256-HN04hS5rS6wJ6XhN9sgVKtELFnw/teumIQM1cPD0pbI=";
     };
-  };
-  emacs-lsp-biome = {
-    pname = "emacs-lsp-biome";
-    version = "9b3d523e3df2a9f686e1b15396987a0310b62a15";
-    src = fetchFromGitHub {
-      owner = "cxa";
-      repo = "lsp-biome";
-      rev = "9b3d523e3df2a9f686e1b15396987a0310b62a15";
-      fetchSubmodules = false;
-      sha256 = "sha256-SSqbr0HDosdWbaMduoTK10jrsR+ZzWgkaLj9tWkScGQ=";
-    };
-    date = "2025-11-19";
+    date = "2026-04-17";
   };
   emacs-lsp-proxy = {
     pname = "emacs-lsp-proxy";
-    version = "85706b52ec7599ea282b7a0b821c145a9e2cbec7";
+    version = "6e823791c9866064d309f5e624660bcfe4126f53";
     src = fetchFromGitHub {
       owner = "jadestrong";
       repo = "lsp-proxy";
-      rev = "85706b52ec7599ea282b7a0b821c145a9e2cbec7";
+      rev = "6e823791c9866064d309f5e624660bcfe4126f53";
       fetchSubmodules = false;
-      sha256 = "sha256-AntAhcrpSlO6qHuNnpTRRaD/w32i6IZEJXFM2glfnB4=";
+      sha256 = "sha256-jG9m5i7Yc+V46uR5PWKmPvIj8EwKDWBrSyPmmTR0wtc=";
     };
     cargoLock."Cargo.lock" = {
-      lockFile = ./. + "/sha256-AntAhcrpSlO6qHuNnpTRRaD_w32i6IZEJXFM2glfnB4=/Cargo.lock";
+      lockFile = ./. + "/sha256-jG9m5i7Yc+V46uR5PWKmPvIj8EwKDWBrSyPmmTR0wtc=/Cargo.lock";
       outputHashes = {
         
       };
     };
-    date = "2026-03-15";
+    date = "2026-06-14";
   };
   emacs-org-modern-indent = {
     pname = "emacs-org-modern-indent";
