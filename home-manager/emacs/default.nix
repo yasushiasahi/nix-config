@@ -51,6 +51,14 @@ let
             epkgs.yasnippet
           ];
         };
+        ghostel = epkgs.melpaBuild {
+          pname = "ghostel";
+          version = "0.0.1";
+          src = sources.emacs-ghostel.src;
+          files = ''
+            (:defaults "etc")
+          '';
+        };
       };
     extraEmacsPackages = epkgs: [
       epkgs.treesit-grammars.with-all-grammars

@@ -20,23 +20,35 @@
     };
     date = "2026-04-17";
   };
+  emacs-ghostel = {
+    pname = "emacs-ghostel";
+    version = "743651d4728737cb864635a9de45395a0ee9d9fd";
+    src = fetchFromGitHub {
+      owner = "dakra";
+      repo = "ghostel";
+      rev = "743651d4728737cb864635a9de45395a0ee9d9fd";
+      fetchSubmodules = false;
+      sha256 = "sha256-leLC2Cgdi74wmBCF+/i4ZAkCwdw4ACMIhCFKYm0+7Nw=";
+    };
+    date = "2026-06-14";
+  };
   emacs-lsp-proxy = {
     pname = "emacs-lsp-proxy";
-    version = "6e823791c9866064d309f5e624660bcfe4126f53";
+    version = "1419fcd38e500447d8b43b91cb42e217ad3dd241";
     src = fetchFromGitHub {
       owner = "jadestrong";
       repo = "lsp-proxy";
-      rev = "6e823791c9866064d309f5e624660bcfe4126f53";
+      rev = "1419fcd38e500447d8b43b91cb42e217ad3dd241";
       fetchSubmodules = false;
-      sha256 = "sha256-jG9m5i7Yc+V46uR5PWKmPvIj8EwKDWBrSyPmmTR0wtc=";
+      sha256 = "sha256-uWVU5fyBznrnchvkR7Zxydm368S32aMtMeCywxTzeoE=";
     };
     cargoLock."Cargo.lock" = {
-      lockFile = ./. + "/sha256-jG9m5i7Yc+V46uR5PWKmPvIj8EwKDWBrSyPmmTR0wtc=/Cargo.lock";
+      lockFile = ./. + "/sha256-uWVU5fyBznrnchvkR7Zxydm368S32aMtMeCywxTzeoE=/Cargo.lock";
       outputHashes = {
         
       };
     };
-    date = "2026-06-14";
+    date = "2026-06-15";
   };
   emacs-org-modern-indent = {
     pname = "emacs-org-modern-indent";

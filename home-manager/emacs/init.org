@@ -1489,6 +1489,15 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
   (add-to-list 'org-src-lang-modes '("html" . html-ts))
   (add-to-list 'org-src-lang-modes '("astro" . astro-ts))
 #+end_src
+* ターミナル
+** [[https://github.com/dakra/ghostel][ghostel]] Ghostty in Emacs
+#+begin_src emacs-lisp :tangle yes
+  (use-package ghostel
+    :ensure t
+
+    :custom ((ghostel-module-directory  "~/.config/emacs/ghostel/")
+             (ghostel-shell  "fish")))
+#+end_src
 * 自作関数
 ** Chromeをリロードする
 #+begin_src emacs-lisp :tangle yes

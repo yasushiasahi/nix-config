@@ -19,14 +19,35 @@
         },
         "version": "1d24c9d399dee4cfea6ed9b49d8e08891665e16c"
     },
+    "emacs-ghostel": {
+        "cargoLock": null,
+        "date": "2026-06-14",
+        "extract": null,
+        "name": "emacs-ghostel",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "dakra",
+            "repo": "ghostel",
+            "rev": "743651d4728737cb864635a9de45395a0ee9d9fd",
+            "sha256": "sha256-leLC2Cgdi74wmBCF+/i4ZAkCwdw4ACMIhCFKYm0+7Nw=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "743651d4728737cb864635a9de45395a0ee9d9fd"
+    },
     "emacs-lsp-proxy": {
         "cargoLock": {
             "Cargo.lock": [
-                "sha256-jG9m5i7Yc+V46uR5PWKmPvIj8EwKDWBrSyPmmTR0wtc=/Cargo.lock",
+                "sha256-uWVU5fyBznrnchvkR7Zxydm368S32aMtMeCywxTzeoE=/Cargo.lock",
                 {}
             ]
         },
-        "date": "2026-06-14",
+        "date": "2026-06-15",
         "extract": null,
         "name": "emacs-lsp-proxy",
         "passthru": null,
@@ -38,12 +59,12 @@
             "name": null,
             "owner": "jadestrong",
             "repo": "lsp-proxy",
-            "rev": "6e823791c9866064d309f5e624660bcfe4126f53",
-            "sha256": "sha256-jG9m5i7Yc+V46uR5PWKmPvIj8EwKDWBrSyPmmTR0wtc=",
+            "rev": "1419fcd38e500447d8b43b91cb42e217ad3dd241",
+            "sha256": "sha256-uWVU5fyBznrnchvkR7Zxydm368S32aMtMeCywxTzeoE=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "6e823791c9866064d309f5e624660bcfe4126f53"
+        "version": "1419fcd38e500447d8b43b91cb42e217ad3dd241"
     },
     "emacs-org-modern-indent": {
         "cargoLock": null,
