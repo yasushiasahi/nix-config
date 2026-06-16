@@ -5,7 +5,6 @@
     enable = true;
     aggressiveResize = true;
     baseIndex = 1;
-    clock24 = true;
     focusEvents = true;
     historyLimit = 10000;
     keyMode = "emacs";
@@ -13,12 +12,12 @@
     prefix = "C-t";
     plugins = [
       pkgs.tmuxPlugins.pain-control
-      {
-        plugin = pkgs.tmuxPlugins.tmux-colors-solarized;
-        extraConfig = ''
-          set -g @colors-solarized 'dark'
-        '';
-      }
+      # {
+      #   plugin = pkgs.tmuxPlugins.tmux-colors-solarized;
+      #   extraConfig = ''
+      #     set -g @colors-solarized 'dark'
+      #   '';
+      # }
     ];
     extraConfig = ''
       # tmux起動時にfishを使う。設定しないとデフォルトシェル(zsh)が使われてしまう。
@@ -36,12 +35,8 @@
       # https://apribase.net/2025/05/28/term-terminfo/
       # https://zenn.dev/a24k/articles/20221027-alacritty-tmux
       set -g default-terminal "screen-256color"
-      set -as terminal-features ",alacritty:RGB"
-      set -ag terminal-overrides ",alacritty:RGB"
-
-      # Claude CodeでShift+Enterで改行できるようにする。
-      # https://blog.bobuhiro11.net/en/2026/02-27-shift-enter.html
-      bind-key -n S-Enter send-keys -l "[13;2u"
+      set -as terminal-features ",alacritty:RGB,xterm-ghostty:RGB"
+      set -ag terminal-overrides ",alacritty:RGB,xterm-ghostty:RGB"
     '';
   };
 

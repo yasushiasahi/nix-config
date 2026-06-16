@@ -7,7 +7,7 @@
     generateCompletions = true;
     interactiveShellInit = ''
       # 起動時の挨拶文を非表示にする
-      set fish_greeting      
+      set fish_greeting
     '';
     shellAliases = {
       rm = "trash";

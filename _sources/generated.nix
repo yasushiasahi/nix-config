@@ -22,15 +22,23 @@
   };
   emacs-ghostel = {
     pname = "emacs-ghostel";
-    version = "743651d4728737cb864635a9de45395a0ee9d9fd";
+    version = "b197c1695b7cd887dd72b2aab8ff575be68cd5d3";
     src = fetchFromGitHub {
       owner = "dakra";
       repo = "ghostel";
-      rev = "743651d4728737cb864635a9de45395a0ee9d9fd";
+      rev = "b197c1695b7cd887dd72b2aab8ff575be68cd5d3";
       fetchSubmodules = false;
-      sha256 = "sha256-leLC2Cgdi74wmBCF+/i4ZAkCwdw4ACMIhCFKYm0+7Nw=";
+      sha256 = "sha256-GbbxnG5I/QPfoaK4g8S6tLVLeM1nTrl8x5vl8JBau4g=";
     };
-    date = "2026-06-14";
+    date = "2026-06-16";
+  };
+  emacs-ghostel-module = {
+    pname = "emacs-ghostel-module";
+    version = "v0.34.0";
+    src = fetchurl {
+      url = "https://github.com/dakra/ghostel/releases/latest/download/ghostel-module-aarch64-macos.dylib";
+      sha256 = "sha256-z7mTLgaf+c2hXWQrO8P1yUni6Yok6MRznXDwPS8j1qg=";
+    };
   };
   emacs-lsp-proxy = {
     pname = "emacs-lsp-proxy";
@@ -42,13 +50,15 @@
       fetchSubmodules = false;
       sha256 = "sha256-uWVU5fyBznrnchvkR7Zxydm368S32aMtMeCywxTzeoE=";
     };
-    cargoLock."Cargo.lock" = {
-      lockFile = ./. + "/sha256-uWVU5fyBznrnchvkR7Zxydm368S32aMtMeCywxTzeoE=/Cargo.lock";
-      outputHashes = {
-        
-      };
-    };
     date = "2026-06-15";
+  };
+  emacs-lsp-proxy-bin = {
+    pname = "emacs-lsp-proxy-bin";
+    version = "v0.8.1";
+    src = fetchTarball {
+      url = "https://github.com/jadestrong/lsp-proxy/releases/latest/download/lsp-proxy-macos-arm64.tar.gz";
+      sha256 = "sha256-Q6Mz2tXH/Jy7T7bADHDBLxNA+eK0zOE7yIPQ5pSxEFg=";
+    };
   };
   emacs-org-modern-indent = {
     pname = "emacs-org-modern-indent";

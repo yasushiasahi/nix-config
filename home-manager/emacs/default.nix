@@ -3,21 +3,10 @@
   mkAlias,
   sources,
   lib,
+  emacs-ghostel,
   ...
 }:
 let
-  lsp-proxy-cli = pkgs.rustPlatform.buildRustPackage {
-    pname = "emacs-lsp-proxy";
-    version = "0.0.1";
-    src = sources.emacs-lsp-proxy.src;
-    cargoLock = sources.emacs-lsp-proxy.cargoLock."Cargo.lock";
-    RUSTFLAGS = "-C target-cpu=native";
-    buildType = "release";
-    checkFlags = [
-      "--skip=remote::ssh::tests::ssh_check_master_returns_false_for_missing_socket"
-    ];
-  };
-
   emacs-with-epkgs = pkgs.emacsWithPackagesFromUsePackage {
     config = ./init.org;
     override =
@@ -26,7 +15,7 @@ let
       // {
         astro-ts-mode = epkgs.melpaBuild {
           pname = "astro-ts-mode";
-          version = "0.0.1";
+          version = "0.0.0-unstable-${sources.emacs-astro-ts-mode.date}";
           src = sources.emacs-astro-ts-mode.src;
           # このautoloadがtreesitのロード前に呼ばれてしまってemacsが立ち上がる前に落ちてしまうため
           # https://git.isincredibly.gay/srxl/astro-ts-mode/src/commit/1d24c9d399dee4cfea6ed9b49d8e08891665e16c/astro-ts-mode.el#L184
@@ -36,13 +25,14 @@ let
         };
         org-modern-indent = epkgs.melpaBuild {
           pname = "org-modern-indent";
-          version = "0.0.1";
+          version = "0.0.0-unstable-${sources.emacs-org-modern-indent.date}";
           src = sources.emacs-org-modern-indent.src;
         };
         lsp-proxy = epkgs.melpaBuild {
           pname = "lsp-proxy";
-          version = "0.0.1";
+          version = "0.0.0-unstable-${sources.emacs-lsp-proxy.date}";
           src = sources.emacs-lsp-proxy.src;
+          files = ''("*.el")'';
           packageRequires = [
             epkgs.s
             epkgs.f
@@ -51,12 +41,13 @@ let
             epkgs.yasnippet
           ];
         };
-        ghostel = epkgs.melpaBuild {
+        ghostel = pkgs.emacsPackages.melpaBuild {
           pname = "ghostel";
-          version = "0.0.1";
+          version = "0.0.0-unstable-${sources.emacs-ghostel.date}";
           src = sources.emacs-ghostel.src;
-          files = ''
-            (:defaults "etc")
+          files = ''(:defaults "etc" "ghostel-module.dylib")'';
+          preBuild = ''
+            install ${sources.emacs-ghostel-module.src} ghostel-module.dylib
           '';
         };
       };
@@ -84,7 +75,7 @@ in
   // shellAlias;
 
   home.packages = [
-    lsp-proxy-cli
+    # lsp-proxy-cli
 
     # gnuのlsを入れないと以下の警告が出る
     # ls does not support --dired; see ‘dired-use-ls-dired’ for more details.
@@ -130,6 +121,7 @@ in
     "emacs/init.el".text = tangle (builtins.readFile ./init.org);
     "emacs/early-init.el".text = tangle (builtins.readFile ./early-init.org);
     "emacs/lsp-proxy/languages.toml".source = ./languages.toml;
+    "emacs/lsp-proxy/emacs-lsp-proxy".source = "${sources.emacs-lsp-proxy-bin.src}/emacs-lsp-proxy";
   };
 
   # TODO emacs demon? client? service

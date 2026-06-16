@@ -21,7 +21,7 @@
     },
     "emacs-ghostel": {
         "cargoLock": null,
-        "date": "2026-06-14",
+        "date": "2026-06-16",
         "extract": null,
         "name": "emacs-ghostel",
         "passthru": null,
@@ -33,20 +33,30 @@
             "name": null,
             "owner": "dakra",
             "repo": "ghostel",
-            "rev": "743651d4728737cb864635a9de45395a0ee9d9fd",
-            "sha256": "sha256-leLC2Cgdi74wmBCF+/i4ZAkCwdw4ACMIhCFKYm0+7Nw=",
+            "rev": "b197c1695b7cd887dd72b2aab8ff575be68cd5d3",
+            "sha256": "sha256-GbbxnG5I/QPfoaK4g8S6tLVLeM1nTrl8x5vl8JBau4g=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "743651d4728737cb864635a9de45395a0ee9d9fd"
+        "version": "b197c1695b7cd887dd72b2aab8ff575be68cd5d3"
+    },
+    "emacs-ghostel-module": {
+        "cargoLock": null,
+        "date": null,
+        "extract": null,
+        "name": "emacs-ghostel-module",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "name": null,
+            "sha256": "sha256-z7mTLgaf+c2hXWQrO8P1yUni6Yok6MRznXDwPS8j1qg=",
+            "type": "url",
+            "url": "https://github.com/dakra/ghostel/releases/latest/download/ghostel-module-aarch64-macos.dylib"
+        },
+        "version": "v0.34.0"
     },
     "emacs-lsp-proxy": {
-        "cargoLock": {
-            "Cargo.lock": [
-                "sha256-uWVU5fyBznrnchvkR7Zxydm368S32aMtMeCywxTzeoE=/Cargo.lock",
-                {}
-            ]
-        },
+        "cargoLock": null,
         "date": "2026-06-15",
         "extract": null,
         "name": "emacs-lsp-proxy",
@@ -65,6 +75,20 @@
             "type": "github"
         },
         "version": "1419fcd38e500447d8b43b91cb42e217ad3dd241"
+    },
+    "emacs-lsp-proxy-bin": {
+        "cargoLock": null,
+        "date": null,
+        "extract": null,
+        "name": "emacs-lsp-proxy-bin",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "sha256": "sha256-Q6Mz2tXH/Jy7T7bADHDBLxNA+eK0zOE7yIPQ5pSxEFg=",
+            "type": "tarball",
+            "url": "https://github.com/jadestrong/lsp-proxy/releases/latest/download/lsp-proxy-macos-arm64.tar.gz"
+        },
+        "version": "v0.8.1"
     },
     "emacs-org-modern-indent": {
         "cargoLock": null,

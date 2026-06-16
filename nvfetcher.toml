@@ -11,12 +11,19 @@ src.branch = "master"
 fetch.git = "https://git.isincredibly.gay/srxl/astro-ts-mode.git"
 
 [emacs-lsp-proxy]
-src.git = "https://github.com/jadestrong/lsp-proxy"
+src.git = "https://github.com/jadestrong/lsp-proxy.git"
 src.branch = "main"
 fetch.github = "jadestrong/lsp-proxy"
-cargo_lock = ["Cargo.lock"]
+
+[emacs-lsp-proxy-bin]
+src.github = "jadestrong/lsp-proxy"
+fetch.tarball = "https://github.com/jadestrong/lsp-proxy/releases/latest/download/lsp-proxy-macos-arm64.tar.gz"
 
 [emacs-ghostel]
-src.git = "https://github.com/dakra/ghostel"
+src.git = "https://github.com/dakra/ghostel.git"
 src.branch = "main"
 fetch.github = "dakra/ghostel"
+
+[emacs-ghostel-module]
+src.github = "dakra/ghostel"
+fetch.url = "https://github.com/dakra/ghostel/releases/latest/download/ghostel-module-aarch64-macos.dylib"

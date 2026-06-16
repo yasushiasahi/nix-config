@@ -476,13 +476,13 @@ magitの内部的に使われているということはビルトインなの？
     :config
     (electric-pair-mode))
 #+end_src
-*** 括弧を賢く扱う [[https://github.com/AmaiKinono/puni][puni]]
+*** [[https://github.com/AmaiKinono/puni][puni]] 括弧を賢く扱う
 #+begin_src emacs-lisp :tangle yes
   (use-package puni
     :ensure t
+    :defer t
 
-    :init
-    (puni-global-mode))
+    :hook ((prog-mode eval-expression-minibuffer-setup) . puni-mode))
 #+end_src
 ** eldoc
 *** eldocの内容をchild frameに表示する [[https://github.com/casouri/eldoc-box][eldoc-box]]
@@ -1108,7 +1108,7 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
                 ("C-c C-e" . markdown-do)))
 #+end_src
 * LSP
-** Rust製 LSPクランアント [[https://github.com/jadestrong/lsp-proxy][lsp-proxy]]
+** [[https://github.com/jadestrong/lsp-proxy][lsp-proxy]] Rust製 LSPクランアント
 #+begin_src emacs-lisp :tangle yes
   (use-package lsp-proxy
     :ensure t
@@ -1392,19 +1392,7 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
       "保存前に行末のスペースを削除"
       (add-hook 'before-save-hook 'delete-trailing-whitespace nil 'make-it-local)))
 #+end_src
-** org-capture
-#+begin_src emacs-lisp :tangle no
-  (leaf org-capture
-    :doc "Fast note taking in Org"
-    :tag "builtin" "text" "calendar" "hypermedia" "outlines"
-    :url "https://orgmode.org"
-    :bind (("C-c c" . org-capture))
-    :config
-    (setopt org-capture-templates `(("n" "Memo" entry
-                                     (file+headline ,(expand-file-name "memo.org" org-directory) "Memos")
-                                     "* %?\nEntered on %U\n %i\n %a"))))
-#+end_src
-** 第二の脳 [[https://github.com/org-roam/org-roam][org-roam]]
+** [[https://github.com/org-roam/org-roam][org-roam]] 第二の脳
 - complation-at-pointでlinkを挿入できるらしいけどうまくいかない
 #+begin_src emacs-lisp :tangle yes
   (leaf org-roam
@@ -1420,7 +1408,7 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
 
     (org-roam-setup))
 #+end_src
-** かっこいい見た目にする [[https://github.com/minad/org-modern/tree/main][org-modern]]
+** [[https://github.com/minad/org-modern/tree/main][org-modern]] かっこいい見た目にする
 #+begin_src emacs-lisp :tangle yes
   (leaf org-modern
     :ensure t
@@ -1452,51 +1440,44 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
     (set-face-attribute 'org-block-end-line nil :overline nil :family "Iosevka")
     (set-face-attribute 'org-block nil :background "#001e27"))
 #+end_src
-** org-src
-#+begin_src emacs-lisp :tangle yes
-  (leaf org-src
-    :require t
-    :config
-    (setopt org-src-window-setup 'current-window)
-    (setopt org-src-tab-acts-natively nil))
-#+end_src
-*** ob-typescript
-#+begin_src emacs-lisp :tangle yes
-  (leaf ob-typescript
-    :doc "Org-babel functions for typescript evaluation"
-    :url "https://github.com/lurdan/ob-typescript"
-    :ensure t)
-  (org-babel-do-load-languages 'org-babel-load-languages '((typescript . t)))
-  (add-to-list 'org-src-lang-modes '("typescript" . jtsx-typescript))
-
-
-  (leaf ob-shell
-    :doc "Babel Functions for Shell Evaluation"
-    :tag "builtin" "reproducible research" "literate programming"
-    :url "https://orgmode.org"
-    :added "2025-05-29")
-
-  (org-babel-do-load-languages 'org-babel-load-languages '((shell . t)))
-  (add-to-list 'org-src-lang-modes '("shell" . bash-ts))
-
-  (org-babel-do-load-languages 'org-babel-load-languages '((css . t)))
-  (add-to-list 'org-src-lang-modes '("css" . css-ts))
-
-  (org-babel-do-load-languages 'org-babel-load-languages '((js . t)))
-  (add-to-list 'org-src-lang-modes '("js" . jtsx-jsx))
-
-  (add-to-list 'org-src-lang-modes '("markdown" . markdown))
-  (add-to-list 'org-src-lang-modes '("html" . html-ts))
-  (add-to-list 'org-src-lang-modes '("astro" . astro-ts))
-#+end_src
 * ターミナル
 ** [[https://github.com/dakra/ghostel][ghostel]] Ghostty in Emacs
 #+begin_src emacs-lisp :tangle yes
   (use-package ghostel
     :ensure t
+    :defer t
 
-    :custom ((ghostel-module-directory  "~/.config/emacs/ghostel/")
-             (ghostel-shell  "fish")))
+    :bind
+    ("s-M-G" . ghostel)
+
+    :custom
+    (ghostel-shell "/run/current-system/sw/bin/fish")
+    (ghostel-keymap-exceptions '("C-x" "C-u" "M-x" "C-c" "M-s" "C-t"))
+    (ghostel-buffer-name "*👻*")
+    (ghostel-buffer-name-function #'my/ghostel-buffer-name-by-directory)
+
+    :init
+    (defun my/ghostel-buffer-name-by-directory (_title)
+      "バッファ名を決める。オリジナルとほぼ同じ"
+      (format "*👻: %s*"
+              (abbreviate-file-name (directory-file-name default-directory)))))
+#+end_src
+** [[https://github.com/karthink/popper][popper]] バッファをポップアップ表示する
+#+begin_src emacs-lisp :tangle yes
+  (use-package popper
+    :ensure t
+
+    :bind
+    ("s-g" . popper-toggle)
+    ("s-M-g" . popper-cycle)
+
+    :custom
+    (popper-reference-buffers '("^\\*👻.*\\*$" ghostel-mode))
+    (popper-mode-line nil)
+
+    :init
+    (popper-mode +1)
+    (popper-echo-mode +1))
 #+end_src
 * 自作関数
 ** Chromeをリロードする
