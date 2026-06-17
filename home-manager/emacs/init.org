@@ -1448,7 +1448,7 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
     :defer t
 
     :bind
-    ("s-M-G" . ghostel)
+    ("C-c g" . ghostel)
 
     :custom
     (ghostel-shell "/run/current-system/sw/bin/fish")
