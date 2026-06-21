@@ -3,7 +3,6 @@
   mkAlias,
   sources,
   lib,
-  emacs-ghostel,
   ...
 }:
 let
@@ -88,22 +87,22 @@ in
     # lsp
     pkgs.typescript
     pkgs.typescript-language-server
-    pkgs.typescript-go
-    pkgs.astro-language-server
+    # pkgs.typescript-go
+    # pkgs.astro-language-server
     pkgs.yaml-language-server
     pkgs.tailwindcss-language-server
     pkgs.dockerfile-language-server
     pkgs.vscode-langservers-extracted # html css json
-    pkgs.nixd # nix
+    # pkgs.nixd # nix
     pkgs.vale-ls # markdown
     pkgs.taplo # toml
-    pkgs.terraform-ls
+    # pkgs.terraform-ls
     pkgs.pyright # python
 
     #formatter & linter
     pkgs.nixfmt
-    pkgs.eslint
-    pkgs.biome
+    # pkgs.eslint
+    # pkgs.biome
 
     # shell-script-mode
     pkgs.shellcheck
@@ -120,7 +119,8 @@ in
   xdg.configFile = {
     "emacs/init.el".text = tangle (builtins.readFile ./init.org);
     "emacs/early-init.el".text = tangle (builtins.readFile ./early-init.org);
-    "emacs/lsp-proxy/languages.toml".source = ./languages.toml;
+    # "emacs/lsp-proxy/languages.toml".source = ./languages.toml;
+    "emacs/lsp-proxy/languages.toml".source = import ./languages.nix { inherit pkgs lib; };
     "emacs/lsp-proxy/emacs-lsp-proxy".source = "${sources.emacs-lsp-proxy-bin.src}/emacs-lsp-proxy";
   };
 
