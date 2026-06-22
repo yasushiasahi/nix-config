@@ -61,8 +61,8 @@ in
       ];
     };
 
-    "terraform-ls" = {
-      command = "terraform-ls";
+    terraform-ls = {
+      command = lib.getExe pkgs.terraform-ls;
       args = [ "serve" ];
     };
 
@@ -77,44 +77,27 @@ in
         "--stdio"
       ];
     };
+
+    yaml-language-server = {
+      command = lib.getExe pkgs.yaml-language-server;
+      args = [ "--stdio" ];
+    };
+
+    docker-language-server = {
+      command = lib.getExe pkgs.docker-language-server;
+      args = [
+        "start"
+        "--stdio"
+      ];
+    };
+
+    docker-compose-langserver = {
+      command = lib.getExe' pkgs.docker-compose-language-service "docker-compose-langserver";
+      args = [ "--stdio" ];
+    };
   };
 
   language = [
-    {
-      name = "json";
-      file-types = [
-        "json"
-        "jsonc"
-        "arb"
-        "ipynb"
-        "geojson"
-        "gltf"
-        "webmanifest"
-        { glob = "flake.lock"; }
-        { glob = ".babelrc"; }
-        { glob = ".bowerrc"; }
-        { glob = ".jscrc"; }
-        "js.map"
-        "ts.map"
-        "css.map"
-        { glob = ".jslintrc"; }
-        "jsonl"
-        "jsonld"
-        { glob = ".vuerc"; }
-        { glob = "composer.lock"; }
-        { glob = ".watchmanconfig"; }
-        "avsc"
-        { glob = ".prettierrc"; }
-      ];
-      language-servers = [
-        {
-          name = "vscode-json-languageserver";
-          support-workspace = true;
-        }
-      ];
-
-    }
-
     {
       name = "javascript";
       language-id = "javascript";
@@ -238,6 +221,62 @@ in
             "format"
           ];
         }
+      ];
+    }
+
+    {
+      name = "json";
+      file-types = [
+        "json"
+        "jsonc"
+        "arb"
+        "ipynb"
+        "geojson"
+        "gltf"
+        "webmanifest"
+        { glob = "flake.lock"; }
+        { glob = ".babelrc"; }
+        { glob = ".bowerrc"; }
+        { glob = ".jscrc"; }
+        "js.map"
+        "ts.map"
+        "css.map"
+        { glob = ".jslintrc"; }
+        "jsonl"
+        "jsonld"
+        { glob = ".vuerc"; }
+        { glob = "composer.lock"; }
+        { glob = ".watchmanconfig"; }
+        "avsc"
+        { glob = ".prettierrc"; }
+      ];
+      language-servers = [
+        {
+          name = "vscode-json-languageserver";
+          support-workspace = true;
+        }
+      ];
+    }
+
+    {
+      name = "docker-compose";
+      language-id = "dockercompose";
+      roots = [
+        "docker-compose.yaml"
+        "docker-compose.yml"
+        "compose.yaml"
+        "compose.yml"
+      ];
+      language-servers = [
+        "docker-compose-langserver"
+        "yaml-language-server"
+        "docker-language-server"
+      ];
+      file-types = [
+        { glob = "docker-compose.yaml"; }
+        { glob = "docker-compose.yml"; }
+        { glob = "compose.yaml"; }
+        { glob = "compose.yml"; }
       ];
     }
   ];

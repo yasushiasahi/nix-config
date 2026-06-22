@@ -81,23 +81,14 @@ in
     # lsp
     pkgs.typescript
     pkgs.typescript-language-server
-    # pkgs.typescript-go
-    # pkgs.astro-language-server
-
-    pkgs.yaml-language-server
     pkgs.tailwindcss-language-server
-    pkgs.dockerfile-language-server
     pkgs.vscode-langservers-extracted # html css json
-    # pkgs.nixd # nix
     pkgs.vale-ls # markdown
     pkgs.taplo # toml
-    pkgs.terraform-ls
     pkgs.pyright # python
 
     #formatter & linter
     pkgs.nixfmt
-    # pkgs.eslint
-    # pkgs.biome
 
     # shell-script-mode
     pkgs.shellcheck
