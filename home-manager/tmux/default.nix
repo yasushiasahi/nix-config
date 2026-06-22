@@ -12,12 +12,12 @@
     prefix = "C-t";
     plugins = [
       pkgs.tmuxPlugins.pain-control
-      # {
-      #   plugin = pkgs.tmuxPlugins.tmux-colors-solarized;
-      #   extraConfig = ''
-      #     set -g @colors-solarized 'dark'
-      #   '';
-      # }
+      {
+        plugin = pkgs.tmuxPlugins.tmux-colors-solarized;
+        extraConfig = ''
+          set -g @colors-solarized 'dark'
+        '';
+      }
     ];
     extraConfig = ''
       # tmux起動時にfishを使う。設定しないとデフォルトシェル(zsh)が使われてしまう。

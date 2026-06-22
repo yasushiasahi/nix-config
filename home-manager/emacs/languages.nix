@@ -37,7 +37,7 @@ let
   };
 
 in
-(pkgs.formats.toml { }).generate "lsp-proxy.toml" {
+(pkgs.formats.toml { }).generate "languages.toml" {
   language-server = {
     "tsgo-ls" = {
       command = lib.getExe' pkgs.typescript-go "tsgo";
@@ -62,16 +62,58 @@ in
     };
 
     "terraform-ls" = {
-      command = lib.getExe pkgs.terraform-ls;
+      command = "terraform-ls";
       args = [ "serve" ];
     };
 
     "nixd" = {
       command = lib.getExe pkgs.nixd;
     };
+
+    "vscode-json-languageserver" = {
+      command = "npx";
+      args = [
+        "vscode-json-languageserver"
+        "--stdio"
+      ];
+    };
   };
 
   language = [
+    {
+      name = "json";
+      file-types = [
+        "json"
+        "jsonc"
+        "arb"
+        "ipynb"
+        "geojson"
+        "gltf"
+        "webmanifest"
+        { glob = "flake.lock"; }
+        { glob = ".babelrc"; }
+        { glob = ".bowerrc"; }
+        { glob = ".jscrc"; }
+        "js.map"
+        "ts.map"
+        "css.map"
+        { glob = ".jslintrc"; }
+        "jsonl"
+        "jsonld"
+        { glob = ".vuerc"; }
+        { glob = "composer.lock"; }
+        { glob = ".watchmanconfig"; }
+        "avsc"
+        { glob = ".prettierrc"; }
+      ];
+      language-servers = [
+        {
+          name = "vscode-json-languageserver";
+          support-workspace = true;
+        }
+      ];
+
+    }
 
     {
       name = "javascript";
@@ -181,8 +223,6 @@ in
           name = "terraform-ls";
           except-features = [
             "format"
-            "diagnostics"
-            "pull-diagnostics"
           ];
         }
       ];

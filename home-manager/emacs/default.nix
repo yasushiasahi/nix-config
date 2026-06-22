@@ -74,21 +74,16 @@ in
   // shellAlias;
 
   home.packages = [
-    # lsp-proxy-cli
-
     # gnuのlsを入れないと以下の警告が出る
     # ls does not support --dired; see ‘dired-use-ls-dired’ for more details.
     pkgs.coreutils
-
-    # org-web-toolsで使う。orgからmarkdownに変換する。
-    # TODO: もしかするとpakagesに同梱されてるかも。調べる。
-    pkgs.pandoc
 
     # lsp
     pkgs.typescript
     pkgs.typescript-language-server
     # pkgs.typescript-go
     # pkgs.astro-language-server
+
     pkgs.yaml-language-server
     pkgs.tailwindcss-language-server
     pkgs.dockerfile-language-server
@@ -96,7 +91,7 @@ in
     # pkgs.nixd # nix
     pkgs.vale-ls # markdown
     pkgs.taplo # toml
-    # pkgs.terraform-ls
+    pkgs.terraform-ls
     pkgs.pyright # python
 
     #formatter & linter
