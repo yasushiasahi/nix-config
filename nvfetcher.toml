@@ -14,10 +14,7 @@ fetch.git = "https://git.isincredibly.gay/srxl/astro-ts-mode.git"
 src.git = "https://github.com/jadestrong/lsp-proxy.git"
 src.branch = "main"
 fetch.github = "jadestrong/lsp-proxy"
-
-[emacs-lsp-proxy-bin]
-src.github = "jadestrong/lsp-proxy"
-fetch.tarball = "https://github.com/jadestrong/lsp-proxy/releases/latest/download/lsp-proxy-macos-arm64.tar.gz"
+cargo_lock = ["Cargo.lock"]
 
 [emacs-ghostel]
 src.git = "https://github.com/dakra/ghostel.git"

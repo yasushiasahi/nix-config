@@ -6,6 +6,18 @@
   ...
 }:
 let
+  emacs-lsp-proxy = pkgs.rustPlatform.buildRustPackage {
+    pname = "emacs-lsp-proxy";
+    version = "0.0.0-unstable-${sources.emacs-lsp-proxy.date}";
+    src = sources.emacs-lsp-proxy.src;
+    cargoLock = sources.emacs-lsp-proxy.cargoLock."Cargo.lock";
+    RUSTFLAGS = "-C target-cpu=native";
+    buildType = "release";
+    checkFlags = [
+      "--skip=remote::ssh::tests::ssh_check_master_returns_false_for_missing_socket"
+    ];
+  };
+
   emacs-with-epkgs = pkgs.emacsWithPackagesFromUsePackage {
     config = ./init.org;
     override =
@@ -53,7 +65,6 @@ let
     extraEmacsPackages = epkgs: [
       epkgs.treesit-grammars.with-all-grammars
       pkgs.tree-sitter-grammars.tree-sitter-astro
-      # TODO astroのgrammarsも入れたいけど、grammarsのbuild方法がわからない。
     ];
   };
 
@@ -74,6 +85,8 @@ in
   // shellAlias;
 
   home.packages = [
+    emacs-lsp-proxy
+
     # gnuのlsを入れないと以下の警告が出る
     # ls does not support --dired; see ‘dired-use-ls-dired’ for more details.
     pkgs.coreutils
@@ -105,9 +118,7 @@ in
   xdg.configFile = {
     "emacs/init.el".text = tangle (builtins.readFile ./init.org);
     "emacs/early-init.el".text = tangle (builtins.readFile ./early-init.org);
-    # "emacs/lsp-proxy/languages.toml".source = ./languages.toml;
     "emacs/lsp-proxy/languages.toml".source = import ./languages.nix { inherit pkgs lib; };
-    "emacs/lsp-proxy/emacs-lsp-proxy".source = "${sources.emacs-lsp-proxy-bin.src}/emacs-lsp-proxy";
   };
 
   # TODO emacs demon? client? service

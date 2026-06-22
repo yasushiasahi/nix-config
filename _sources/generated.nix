@@ -22,43 +22,41 @@
   };
   emacs-ghostel = {
     pname = "emacs-ghostel";
-    version = "b197c1695b7cd887dd72b2aab8ff575be68cd5d3";
+    version = "84b1016c88e48b73f8feb3af1ba8ee724fe4b426";
     src = fetchFromGitHub {
       owner = "dakra";
       repo = "ghostel";
-      rev = "b197c1695b7cd887dd72b2aab8ff575be68cd5d3";
+      rev = "84b1016c88e48b73f8feb3af1ba8ee724fe4b426";
       fetchSubmodules = false;
-      sha256 = "sha256-GbbxnG5I/QPfoaK4g8S6tLVLeM1nTrl8x5vl8JBau4g=";
+      sha256 = "sha256-BDKetLaHmFSc1ebMPG+dV2ijxBq3VJ+gVCsoftlUAo4=";
     };
-    date = "2026-06-16";
+    date = "2026-06-22";
   };
   emacs-ghostel-module = {
     pname = "emacs-ghostel-module";
-    version = "v0.34.0";
+    version = "v0.37.0";
     src = fetchurl {
       url = "https://github.com/dakra/ghostel/releases/latest/download/ghostel-module-aarch64-macos.dylib";
-      sha256 = "sha256-z7mTLgaf+c2hXWQrO8P1yUni6Yok6MRznXDwPS8j1qg=";
+      sha256 = "sha256-AJZZvgfcAcA3vDcCYQLEJCgMcHapY5O4oEHKa8HweBk=";
     };
   };
   emacs-lsp-proxy = {
     pname = "emacs-lsp-proxy";
-    version = "1419fcd38e500447d8b43b91cb42e217ad3dd241";
+    version = "bc536d920ab0cde0c3faf8f00d4c6c51655d1d9a";
     src = fetchFromGitHub {
       owner = "jadestrong";
       repo = "lsp-proxy";
-      rev = "1419fcd38e500447d8b43b91cb42e217ad3dd241";
+      rev = "bc536d920ab0cde0c3faf8f00d4c6c51655d1d9a";
       fetchSubmodules = false;
-      sha256 = "sha256-uWVU5fyBznrnchvkR7Zxydm368S32aMtMeCywxTzeoE=";
+      sha256 = "sha256-THqvoha/OCr3vI4neJCAGS674Mx7QJ6qfcv16F5EfJ0=";
     };
-    date = "2026-06-15";
-  };
-  emacs-lsp-proxy-bin = {
-    pname = "emacs-lsp-proxy-bin";
-    version = "v0.8.1";
-    src = fetchTarball {
-      url = "https://github.com/jadestrong/lsp-proxy/releases/latest/download/lsp-proxy-macos-arm64.tar.gz";
-      sha256 = "sha256-Q6Mz2tXH/Jy7T7bADHDBLxNA+eK0zOE7yIPQ5pSxEFg=";
+    cargoLock."Cargo.lock" = {
+      lockFile = ./. + "/sha256-THqvoha_OCr3vI4neJCAGS674Mx7QJ6qfcv16F5EfJ0=/Cargo.lock";
+      outputHashes = {
+
+      };
     };
+    date = "2026-06-18";
   };
   emacs-org-modern-indent = {
     pname = "emacs-org-modern-indent";
