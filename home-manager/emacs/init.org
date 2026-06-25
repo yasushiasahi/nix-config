@@ -1310,6 +1310,7 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
     (add-to-list 'apheleia-mode-alist '(json-ts-mode . biome-check))
     (add-to-list 'apheleia-mode-alist '(html-ts-mode . biome-check))
     (add-to-list 'apheleia-mode-alist '(css-ts-mode . biome-check))
+    ;; (add-to-list 'apheleia-mode-alist '(astro-ts-mode . biome-check))
 
     ;; package.jsonにpettierがあればpretterにする
     (defun my/set-prettier-formatter ()
@@ -1322,6 +1323,7 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
     (add-hook 'json-ts-mode-hook #'my/set-prettier-formatter)
     (add-hook 'html-ts-mode-hook #'my/set-prettier-formatter)
     (add-hook 'css-ts-mode-hook #'my/set-prettier-formatter)
+    ;; (add-hook 'astro-ts-mode-hook #'my/set-prettier-formatter)
 
     (apheleia-global-mode +1))
 #+end_src

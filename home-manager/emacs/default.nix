@@ -102,6 +102,7 @@ in
 
     #formatter & linter
     pkgs.nixfmt
+    pkgs.prettier
 
     # shell-script-mode
     pkgs.shellcheck
