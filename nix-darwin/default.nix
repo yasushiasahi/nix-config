@@ -46,9 +46,8 @@
       # エディタ
       "visual-studio-code"
       "coteditor"
-      # 開発ツール
-      "postman"
-      # "claude-code"
+      # 人工知能
+      "claude"
     ];
     masApps = {
       LINE = 539883307;

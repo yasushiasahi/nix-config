@@ -787,6 +787,7 @@ magitの内部的に使われているということはビルトインなの？
             ("C-x b" . consult-buffer)
             ("C-x M-p" . consult-project-buffer)
             ("C-x C-g" . my/consult-ghq-magit-status)
+            ("s-m" . my/consult-ghq-ghostel)
             ;; Other custom bindings
             ("M-y" . consult-yank-pop)
             ;; M-g bindings in `goto-map'
@@ -805,7 +806,9 @@ magitの内部的に使われているということはビルトインなの？
             ("M-s g r" . my-consult-ghq-ripgrep)
             ("M-s l" . my/consult-line)
             ("M-s L" . consult-line-multi))
+
     :hook (completion-list-mode-hook . consult-preview-at-point-mode)
+
     :config
     (setopt xref-show-xrefs-function #'consult-xref)
     (setopt xref-show-definitions-function #'consult-xref)
@@ -841,18 +844,27 @@ magitの内部的に使われているということはビルトインなの？
                        :state (consult--file-preview)
                        :prompt "ghq: "
                        :category 'file))
+
       (defun my-consult-ghq-fd ()
         "ghq管理のリポジトリ一覧から選び、プロジェクト内ファイル検索"
         (interactive)
         (consult-fd (my-consult-ghq--read)))
+
       (defun my-consult-ghq-ripgrep ()
         "ghq管理のリポジトリ一覧から選び、プロジェクト内でripgrep"
         (interactive)
         (consult-ripgrep (my-consult-ghq--read)))
+
       (defun my/consult-ghq-magit-status ()
         "ghq管理のリポジトリ一覧から選び、magit statusを開く"
         (interactive)
-        (magit-status (my-consult-ghq--read))))
+        (magit-status (my-consult-ghq--read)))
+
+      (defun my/consult-ghq-ghostel ()
+        "ghq管理のリポジトリ一覧から選び、ghostelを開く"
+        (interactive)
+        (let ((default-directory (my-consult-ghq--read)))
+          (ghostel))))
 
     (defun my-consult-switch-buffer-kill ()
       "Kill candidate buffer at point within the minibuffer completion."
