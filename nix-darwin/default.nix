@@ -55,6 +55,7 @@
       tailscale = 1475387142;
       yoink = 457622435;
       Xcode = 497799835;
+      times-up-visual-timer = 1550456653;
     };
   };
 
