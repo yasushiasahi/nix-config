@@ -8,55 +8,55 @@
 {
   emacs-astro-ts-mode = {
     pname = "emacs-astro-ts-mode";
-    version = "1d24c9d399dee4cfea6ed9b49d8e08891665e16c";
+    version = "b9ba8559effbd0677838d1fda6599dece51499b8";
     src = fetchgit {
       url = "https://git.isincredibly.gay/srxl/astro-ts-mode.git";
-      rev = "1d24c9d399dee4cfea6ed9b49d8e08891665e16c";
+      rev = "b9ba8559effbd0677838d1fda6599dece51499b8";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
       sparseCheckout = [ ];
-      sha256 = "sha256-HN04hS5rS6wJ6XhN9sgVKtELFnw/teumIQM1cPD0pbI=";
+      sha256 = "sha256-TTTfZN76x/wNuIXFttHwyDILHU9zjWaOKWIX2ODwtrI=";
     };
-    date = "2026-04-17";
+    date = "2026-07-07";
   };
   emacs-ghostel = {
     pname = "emacs-ghostel";
-    version = "78e9677cf599f8c073efccd8baae7dfe9bbb1948";
+    version = "2191afe3049fc785c6fd2b1ab6b826daf500ffbe";
     src = fetchFromGitHub {
       owner = "dakra";
       repo = "ghostel";
-      rev = "78e9677cf599f8c073efccd8baae7dfe9bbb1948";
+      rev = "2191afe3049fc785c6fd2b1ab6b826daf500ffbe";
       fetchSubmodules = false;
-      sha256 = "sha256-zm7mvHX4mpu1OThOwlTWQ9dU6ANkW6q7qLfA8VD3o1c=";
+      sha256 = "sha256-vRGZoQtjsL42ga07fOfEjccKRidAhqgwHBoKs++62Ls=";
     };
-    date = "2026-06-24";
+    date = "2026-07-13";
   };
   emacs-ghostel-module = {
     pname = "emacs-ghostel-module";
-    version = "v0.38.0";
+    version = "v0.44.0";
     src = fetchurl {
       url = "https://github.com/dakra/ghostel/releases/latest/download/ghostel-module-aarch64-macos.dylib";
-      sha256 = "sha256-f193xQ+VruO3aM+u9fxB4+iaRAWIO2lsUlStXMz3Gkc=";
+      sha256 = "sha256-MTBW4wjQuy4m3uZcdgQO7Xh73Za3Ei9lPxPQBa7Zj9Q=";
     };
   };
   emacs-lsp-proxy = {
     pname = "emacs-lsp-proxy";
-    version = "bc536d920ab0cde0c3faf8f00d4c6c51655d1d9a";
+    version = "45566dfe32ef31d71ac7d74fc18dd64a04cc82a5";
     src = fetchFromGitHub {
       owner = "jadestrong";
       repo = "lsp-proxy";
-      rev = "bc536d920ab0cde0c3faf8f00d4c6c51655d1d9a";
+      rev = "45566dfe32ef31d71ac7d74fc18dd64a04cc82a5";
       fetchSubmodules = false;
-      sha256 = "sha256-THqvoha/OCr3vI4neJCAGS674Mx7QJ6qfcv16F5EfJ0=";
+      sha256 = "sha256-VmMwX+gs3zLSFoPLJZuEXBypVEfZRXSajX2HJaTDh9U=";
     };
     cargoLock."Cargo.lock" = {
-      lockFile = ./. + "/sha256-THqvoha_OCr3vI4neJCAGS674Mx7QJ6qfcv16F5EfJ0=/Cargo.lock";
+      lockFile = ./. + "/sha256-VmMwX+gs3zLSFoPLJZuEXBypVEfZRXSajX2HJaTDh9U=/Cargo.lock";
       outputHashes = {
-
+        
       };
     };
-    date = "2026-06-18";
+    date = "2026-07-04";
   };
   emacs-org-modern-indent = {
     pname = "emacs-org-modern-indent";

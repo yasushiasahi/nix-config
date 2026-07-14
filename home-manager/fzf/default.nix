@@ -5,9 +5,9 @@
     enableZshIntegration = true;
     enableFishIntegration = true;
     defaultCommand = "fd --type f";
-    fileWidgetCommand = "fd --type f";
-    changeDirWidgetCommand = "fd --type d";
-    changeDirWidgetOptions = [
+    fileWidget.command = "fd --type f";
+    changeDirWidget.command = "fd --type d";
+    changeDirWidget.options = [
       "--preview 'eza --tree --sort=type --reverse --git-ignore  {} | head -200'"
     ];
     tmux.enableShellIntegration = true;

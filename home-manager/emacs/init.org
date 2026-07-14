@@ -575,13 +575,15 @@ magitの内部的に使われているということはビルトインなの？
     :ensure t
     :hook ((after-init-hook . global-flycheck-mode)))
 #+end_src
-** emmet-mode
+** [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]] 矩形編集
 #+begin_src emacs-lisp :tangle yes
-  (use-package emmet-mode
+  (use-package multiple-cursors
     :ensure t
-    :hook ((jtsx-tsx-mode jtsx-jsx-mode astro-ts-mode) . emmet-mode)
-    :config
-    (add-to-list 'emmet-jsx-major-modes 'jtsx-tsx-mode))
+
+    :bind (("C->" . mc/mark-next-like-this)
+           ("C-<" . mc/mark-previous-like-this)
+           ("C-c C-<" . mc/mark-all-like-this))
+    )
 #+end_src
 ** macrostep use-packageなどのマクロを展開してデバッグする
 #+begin_src emacs-lisp :tangle yes
@@ -951,6 +953,14 @@ magitの内部的に使われているということはビルトインなの？
   (use-package envrc
     :ensure t
     :hook (after-init . envrc-global-mode))
+#+end_src
+** emmet-mode
+#+begin_src emacs-lisp :tangle yes
+  (use-package emmet-mode
+    :ensure t
+    :hook ((jtsx-tsx-mode jtsx-jsx-mode astro-ts-mode) . emmet-mode)
+    :config
+    (add-to-list 'emmet-jsx-major-modes 'jtsx-tsx-mode))
 #+end_src
 ** treesit シンタックスハイライト
 #+begin_src emacs-lisp :tangle yes
@@ -1383,10 +1393,10 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
            (my/package-json-has-prettier-p package-json))))
 #+end_src
 * org-mode
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
   (leaf org
     :doc "Outline-based notes management and organizer"
-    :require t
+
     :bind (org-mode-map
            ;; superを小文字のsでバインドし直さないと呼び出せない。そういうもんだっけ？
            ("M-s-RET" . org-insert-todo-heading)

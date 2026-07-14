@@ -23,4 +23,5 @@ fetch.github = "dakra/ghostel"
 
 [emacs-ghostel-module]
 src.github = "dakra/ghostel"
+src.prerelase = true
 fetch.url = "https://github.com/dakra/ghostel/releases/latest/download/ghostel-module-aarch64-macos.dylib"

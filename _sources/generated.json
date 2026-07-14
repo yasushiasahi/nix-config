@@ -1,7 +1,7 @@
 {
     "emacs-astro-ts-mode": {
         "cargoLock": null,
-        "date": "2026-04-17",
+        "date": "2026-07-07",
         "extract": null,
         "name": "emacs-astro-ts-mode",
         "passthru": null,
@@ -11,17 +11,17 @@
             "fetchSubmodules": false,
             "leaveDotGit": false,
             "name": null,
-            "rev": "1d24c9d399dee4cfea6ed9b49d8e08891665e16c",
-            "sha256": "sha256-HN04hS5rS6wJ6XhN9sgVKtELFnw/teumIQM1cPD0pbI=",
+            "rev": "b9ba8559effbd0677838d1fda6599dece51499b8",
+            "sha256": "sha256-TTTfZN76x/wNuIXFttHwyDILHU9zjWaOKWIX2ODwtrI=",
             "sparseCheckout": [],
             "type": "git",
             "url": "https://git.isincredibly.gay/srxl/astro-ts-mode.git"
         },
-        "version": "1d24c9d399dee4cfea6ed9b49d8e08891665e16c"
+        "version": "b9ba8559effbd0677838d1fda6599dece51499b8"
     },
     "emacs-ghostel": {
         "cargoLock": null,
-        "date": "2026-06-24",
+        "date": "2026-07-13",
         "extract": null,
         "name": "emacs-ghostel",
         "passthru": null,
@@ -33,12 +33,12 @@
             "name": null,
             "owner": "dakra",
             "repo": "ghostel",
-            "rev": "78e9677cf599f8c073efccd8baae7dfe9bbb1948",
-            "sha256": "sha256-zm7mvHX4mpu1OThOwlTWQ9dU6ANkW6q7qLfA8VD3o1c=",
+            "rev": "2191afe3049fc785c6fd2b1ab6b826daf500ffbe",
+            "sha256": "sha256-vRGZoQtjsL42ga07fOfEjccKRidAhqgwHBoKs++62Ls=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "78e9677cf599f8c073efccd8baae7dfe9bbb1948"
+        "version": "2191afe3049fc785c6fd2b1ab6b826daf500ffbe"
     },
     "emacs-ghostel-module": {
         "cargoLock": null,
@@ -49,20 +49,20 @@
         "pinned": false,
         "src": {
             "name": null,
-            "sha256": "sha256-z7mTLgaf+c2hXWQrO8P1yUni6Yok6MRznXDwPS8j1qg=",
+            "sha256": "sha256-MTBW4wjQuy4m3uZcdgQO7Xh73Za3Ei9lPxPQBa7Zj9Q=",
             "type": "url",
             "url": "https://github.com/dakra/ghostel/releases/latest/download/ghostel-module-aarch64-macos.dylib"
         },
-        "version": "v0.38.0"
+        "version": "v0.44.0"
     },
     "emacs-lsp-proxy": {
         "cargoLock": {
             "Cargo.lock": [
-                "sha256-THqvoha_OCr3vI4neJCAGS674Mx7QJ6qfcv16F5EfJ0=/Cargo.lock",
+                "sha256-VmMwX+gs3zLSFoPLJZuEXBypVEfZRXSajX2HJaTDh9U=/Cargo.lock",
                 {}
             ]
         },
-        "date": "2026-06-18",
+        "date": "2026-07-04",
         "extract": null,
         "name": "emacs-lsp-proxy",
         "passthru": null,
@@ -74,12 +74,12 @@
             "name": null,
             "owner": "jadestrong",
             "repo": "lsp-proxy",
-            "rev": "bc536d920ab0cde0c3faf8f00d4c6c51655d1d9a",
-            "sha256": "sha256-THqvoha/OCr3vI4neJCAGS674Mx7QJ6qfcv16F5EfJ0=",
+            "rev": "45566dfe32ef31d71ac7d74fc18dd64a04cc82a5",
+            "sha256": "sha256-VmMwX+gs3zLSFoPLJZuEXBypVEfZRXSajX2HJaTDh9U=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "bc536d920ab0cde0c3faf8f00d4c6c51655d1d9a"
+        "version": "45566dfe32ef31d71ac7d74fc18dd64a04cc82a5"
     },
     "emacs-org-modern-indent": {
         "cargoLock": null,

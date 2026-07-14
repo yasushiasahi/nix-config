@@ -49,7 +49,6 @@ let
             epkgs.f
             epkgs.ht
             epkgs.dash
-            epkgs.yasnippet
           ];
         };
         ghostel = pkgs.emacsPackages.melpaBuild {
@@ -103,6 +102,7 @@ in
     #formatter & linter
     pkgs.nixfmt
     pkgs.prettier
+    pkgs.biome
 
     # shell-script-mode
     pkgs.shellcheck

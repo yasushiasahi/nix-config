@@ -88,6 +88,46 @@ let
         ];
       };
 
+      language-server.tailwindcss-ls = {
+        command = "tailwindcss-language-server";
+        args = [ "--stdio" ];
+        config.tailwindCSS = {
+          emmetCompletions = false;
+          showPixelEquivalents = true;
+          rootFontSize = 16;
+          validate = true;
+          hovers = true;
+          suggestions = true;
+          codeActions = true;
+          lint = {
+            invalidScreen = "error";
+            invalidVariant = "error";
+            invalidTailwindDirective = "error";
+            invalidApply = "error";
+            invalidConfigPath = "error";
+            cssConflict = "warning";
+            recommendedVariantOrder = "warning";
+          };
+          experimental = {
+            classRegex = [
+              [
+                "clsx\\(([^)]*)\\)"
+                "[\"'`]([^\"'`]*).*?[\"'`]"
+              ]
+              [
+                "twMerge\\(([^)]*)\\)"
+                "[\"'`]([^\"'`]*).*?[\"'`]"
+              ]
+            ];
+          };
+          classAttributes = [
+            "class"
+            "className"
+            "class:list"
+          ];
+        };
+      };
+
       language = [
         {
           name = "typescript";

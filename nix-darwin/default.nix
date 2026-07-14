@@ -28,10 +28,6 @@
       cleanup = "uninstall";
       extraFlags = [ "--force-cleanup" ];
     };
-    brews = [
-      # プロジェクトで一時的に必要
-      { name = "unixodbc"; }
-    ];
     casks = [
       # システム系
       "logi-options+"
@@ -55,7 +51,6 @@
       tailscale = 1475387142;
       yoink = 457622435;
       Xcode = 497799835;
-      times-up-visual-timer = 1550456653;
     };
   };
 

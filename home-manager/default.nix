@@ -37,7 +37,7 @@ let
       pkgs.jq # programs.jq.enableでもいけるけど、設定することないのでこっち
       pkgs.gnused
       pkgs.wget
-      pkgs.ripgrep-all
+      # pkgs.ripgrep-all
 
       # docker
       pkgs.colima
