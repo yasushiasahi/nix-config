@@ -21,7 +21,7 @@
     },
     "emacs-ghostel": {
         "cargoLock": null,
-        "date": "2026-07-13",
+        "date": "2026-07-14",
         "extract": null,
         "name": "emacs-ghostel",
         "passthru": null,
@@ -33,12 +33,12 @@
             "name": null,
             "owner": "dakra",
             "repo": "ghostel",
-            "rev": "2191afe3049fc785c6fd2b1ab6b826daf500ffbe",
-            "sha256": "sha256-vRGZoQtjsL42ga07fOfEjccKRidAhqgwHBoKs++62Ls=",
+            "rev": "1978b3ed6e3c8be0edc9835a1364a2305ac5f181",
+            "sha256": "sha256-NYgPKn1NtGIVeJn7fGdJYAFmWf5KKxzCnG56+FhBLUI=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "2191afe3049fc785c6fd2b1ab6b826daf500ffbe"
+        "version": "1978b3ed6e3c8be0edc9835a1364a2305ac5f181"
     },
     "emacs-ghostel-module": {
         "cargoLock": null,
