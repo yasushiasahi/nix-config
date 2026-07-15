@@ -1,7 +1,6 @@
 {
   pkgs,
   home-manager,
-  mac-app-util,
 }:
 let
   mkAlias = sets: {
@@ -94,7 +93,6 @@ home-manager.lib.homeManagerConfiguration {
   # Specify your home configuration modules here, for example,
   # the path to your home.nix.
   modules = [
-    mac-app-util.homeManagerModules.default
     miscModule
     optionModule
     ./emacs

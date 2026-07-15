@@ -15,8 +15,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    mac-app-util.url = "github:hraban/mac-app-util";
-
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -32,7 +30,6 @@
       home-manager,
       emacs-overlay,
       org-babel,
-      mac-app-util,
       self,
       ...
     }:
@@ -61,7 +58,6 @@
         inherit
           pkgs
           home-manager
-          mac-app-util
           ;
       };
 
