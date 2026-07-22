@@ -45,7 +45,7 @@ let
       pkgs.docker-buildx
 
       # node tools
-      pkgs.nodejs_24
+      # pkgs.nodejs_24
 
       # rust
       # pkgs.rustup

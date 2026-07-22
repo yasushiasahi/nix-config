@@ -33,12 +33,12 @@
             "name": null,
             "owner": "dakra",
             "repo": "ghostel",
-            "rev": "1978b3ed6e3c8be0edc9835a1364a2305ac5f181",
-            "sha256": "sha256-NYgPKn1NtGIVeJn7fGdJYAFmWf5KKxzCnG56+FhBLUI=",
+            "rev": "f00d73563524dec28c458b1b22eb1b7ae721e822",
+            "sha256": "sha256-Bjp6xSAm2x4Soqk4CkKf18vyB6xhpM24ux3iQIjrUwQ=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "1978b3ed6e3c8be0edc9835a1364a2305ac5f181"
+        "version": "f00d73563524dec28c458b1b22eb1b7ae721e822"
     },
     "emacs-ghostel-module": {
         "cargoLock": null,
