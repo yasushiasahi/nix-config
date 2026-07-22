@@ -21,7 +21,7 @@
     },
     "emacs-ghostel": {
         "cargoLock": null,
-        "date": "2026-07-14",
+        "date": "2026-07-22",
         "extract": null,
         "name": "emacs-ghostel",
         "passthru": null,
@@ -33,12 +33,12 @@
             "name": null,
             "owner": "dakra",
             "repo": "ghostel",
-            "rev": "f00d73563524dec28c458b1b22eb1b7ae721e822",
-            "sha256": "sha256-Bjp6xSAm2x4Soqk4CkKf18vyB6xhpM24ux3iQIjrUwQ=",
+            "rev": "14c399002f47405a623604170314e27d260efb30",
+            "sha256": "sha256-PPeEJV97LU+CSgpqEwJXavm9BCbejvMEy4S+Pik2KpQ=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "f00d73563524dec28c458b1b22eb1b7ae721e822"
+        "version": "14c399002f47405a623604170314e27d260efb30"
     },
     "emacs-ghostel-module": {
         "cargoLock": null,
@@ -83,7 +83,7 @@
     },
     "emacs-org-modern-indent": {
         "cargoLock": null,
-        "date": "2026-01-02",
+        "date": "2026-07-21",
         "extract": null,
         "name": "emacs-org-modern-indent",
         "passthru": null,
@@ -95,11 +95,11 @@
             "name": null,
             "owner": "jdtsmith",
             "repo": "org-modern-indent",
-            "rev": "ebf9a8e571db523dc6e4cd9ed80d0e0626983ae4",
-            "sha256": "sha256-+q7KmbU8A+uR61BSa528vYbdFSj2WGsFWYW/5q7J9Kw=",
+            "rev": "86bd83ee1ad95f123810eb3b116beb543db1960a",
+            "sha256": "sha256-vQzYk5qejCBehpbxkMceOMsmeLyjnAstpezZw/ZR1jQ=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "ebf9a8e571db523dc6e4cd9ed80d0e0626983ae4"
+        "version": "86bd83ee1ad95f123810eb3b116beb543db1960a"
     }
 }

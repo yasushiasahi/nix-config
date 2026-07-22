@@ -22,15 +22,15 @@
   };
   emacs-ghostel = {
     pname = "emacs-ghostel";
-    version = "f00d73563524dec28c458b1b22eb1b7ae721e822";
+    version = "14c399002f47405a623604170314e27d260efb30";
     src = fetchFromGitHub {
       owner = "dakra";
       repo = "ghostel";
-      rev = "f00d73563524dec28c458b1b22eb1b7ae721e822";
+      rev = "14c399002f47405a623604170314e27d260efb30";
       fetchSubmodules = false;
-      sha256 = "sha256-Bjp6xSAm2x4Soqk4CkKf18vyB6xhpM24ux3iQIjrUwQ=";
+      sha256 = "sha256-PPeEJV97LU+CSgpqEwJXavm9BCbejvMEy4S+Pik2KpQ=";
     };
-    date = "2026-07-14";
+    date = "2026-07-22";
   };
   emacs-ghostel-module = {
     pname = "emacs-ghostel-module";
@@ -60,14 +60,14 @@
   };
   emacs-org-modern-indent = {
     pname = "emacs-org-modern-indent";
-    version = "ebf9a8e571db523dc6e4cd9ed80d0e0626983ae4";
+    version = "86bd83ee1ad95f123810eb3b116beb543db1960a";
     src = fetchFromGitHub {
       owner = "jdtsmith";
       repo = "org-modern-indent";
-      rev = "ebf9a8e571db523dc6e4cd9ed80d0e0626983ae4";
+      rev = "86bd83ee1ad95f123810eb3b116beb543db1960a";
       fetchSubmodules = false;
-      sha256 = "sha256-+q7KmbU8A+uR61BSa528vYbdFSj2WGsFWYW/5q7J9Kw=";
+      sha256 = "sha256-vQzYk5qejCBehpbxkMceOMsmeLyjnAstpezZw/ZR1jQ=";
     };
-    date = "2026-01-02";
+    date = "2026-07-21";
   };
 }
