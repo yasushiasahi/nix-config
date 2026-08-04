@@ -143,9 +143,4 @@ in
     "emacs/early-init.el".text = tangle (builtins.readFile ./early-init.org);
     "emacs/lsp-proxy/languages.toml".source = import ./languages.nix { inherit pkgs lib; };
   };
-
-  # TODO emacs demon? client? service
-  # 設定するべきなのか？するとして何を設定するべきなのか不明。
-  # https://apribase.net/2024/06/21/emacs-as-daemon-for-mac/ Mac に正しくフレーム管理される Emacs as Daemon を起動する
-  # https://github.com/takeokunn/nixos-configuration/blob/main/home-manager/services/emacs/default.nix takeokunn/nixos-configuration
 }

@@ -25,7 +25,7 @@ let
   frontend =
     let
       typescriptLs = {
-        name = "typescript-language-server";
+        name = "typescript-go";
         support-workspace = [ "package.json" ];
         except-features = [ "format" ];
       };
@@ -67,8 +67,9 @@ let
     in
     {
       language-server.astro-ls = {
+        # command = "npx";
+        # args = [ "@astrojs/language-server" "--stdio" ];
         command = lib.getExe pkgs.astro-language-server;
-        args = [ "--stdio" ];
         config.typescript.tsdk = "${pkgs.typescript}/lib/node_modules/typescript/lib/";
       };
 
@@ -162,7 +163,10 @@ let
           file-types = [ "astro" ];
           roots = [ "package.json" ];
           language-servers = [
-            "astro-ls"
+            {
+              name = "astro-ls";
+              except-features = [ "format" ];
+            }
             eslintLs
             biomeLs
             tailwindLs

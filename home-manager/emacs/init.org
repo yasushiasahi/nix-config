@@ -30,7 +30,7 @@
     ;; https://github.com/purcell/exec-path-from-shell?tab=readme-ov-file#making-exec-path-from-shell-faster
     (exec-path-from-shell-arguments nil)
     ;; どの環境変数を取り込むか
-    (exec-path-from-shell-variables '("PATH" "TYPE_SCRIPT_LIB"))
+    (exec-path-from-shell-variables '("PATH"))
 
     :config
     (exec-path-from-shell-initialize))
@@ -267,7 +267,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 #+end_src
 
 * 見た目
-** [[https://github.com/bbatsov/solarized-emacs][solarized-theme]] 定番のカラーテーマ
+** [[https://github.com/bbatsov/solarized-emacs][solarized-theme]] - 定番のカラーテーマ
 #+begin_src emacs-lisp :tangle yes
   (use-package solarized-theme
     :ensure t
@@ -279,7 +279,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :init
     (load-theme 'solarized-dark t))
 #+end_src
-** [[https://github.com/eki3z/mini-echo.el][mini-echo]] モードラインを非表示にして、echoエリアで最低限の情報表示をする
+** [[https://github.com/eki3z/mini-echo.el][mini-echo]] - モードラインを非表示にして、echoエリアで最低限の情報表示をする
 #+begin_src emacs-lisp :tangle yes
   (use-package mini-echo
     :ensure t
@@ -287,7 +287,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :config
     (mini-echo-mode))
 #+end_src
-** [[https://github.com/protesilaos/pulsar][pulsar]] バッファが書き換わった場所を強調表示する
+** [[https://github.com/protesilaos/pulsar][pulsar]] - バッファが書き換わった場所を強調表示する
 #+begin_src emacs-lisp :tangle yes
   (use-package pulsar
     :ensure t
@@ -302,7 +302,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (add-hook 'imenu-after-jump-hook #'pulsar-recenter-top)
     (add-hook 'imenu-after-jump-hook #'pulsar-reveal-entry))
 #+end_src
-** [[https://github.com/rainstormstudio/nerd-icons.el?tab=readme-ov-file#installing-fonts][nerd-icons]] Nerdアイコンを扱いやすくする
+** [[https://github.com/rainstormstudio/nerd-icons.el?tab=readme-ov-file#installing-fonts][nerd-icons]] - Nerdアイコンを扱いやすくする
 #+begin_src emacs-lisp :tangle yes
   (use-package nerd-icons
     :ensure t
@@ -313,7 +313,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     ;; https://github.com/rainstormstudio/nerd-icons.el?tab=readme-ov-file#installing-fonts
     (nerd-icons-font-family "Symbols Nerd Font Mono"))
 #+end_src
-** [[https://github.com/rainstormstudio/nerd-icons-dired][nerd-icons-dired]] DiredにNerdアイコンを表示する
+** [[https://github.com/rainstormstudio/nerd-icons-dired][nerd-icons-dired]] - DiredにNerdアイコンを表示する
 #+begin_src emacs-lisp :tangle yes
   (use-package nerd-icons-dired
     :ensure t
@@ -321,7 +321,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :hook
     (dired-mode . nerd-icons-dired-mode))
 #+end_src
-** [[https://github.com/mickeynp/ligature.el][ligature]] Maple Monoフォントのリガチャを設定する
+** [[https://github.com/mickeynp/ligature.el][ligature]] - Maple Monoフォントのリガチャを設定する
 #+begin_src emacs-lisp :tangle yes
   (use-package ligature
     :ensure t
@@ -392,7 +392,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 #+end_src
 
 * ユーティリティー
-** [[https://codeberg.org/ideasman42/emacs-undo-fu][undo-fu]] Undo/Redoの改善
+** [[https://codeberg.org/ideasman42/emacs-undo-fu][undo-fu]] - Undo/Redoの改善
 何やら[[https://qiita.com/nobuyuki86/items/e392b642189d755dd113#undo-%E3%82%A2%E3%83%B3%E3%83%89%E3%82%A5%E9%96%A2%E9%80%A3][Emacs組み込みのUndoが改善されたらしい]]ので一旦向こうか
 #+begin_src emacs-lisp :tangle yes
   (use-package undo-fu
@@ -408,7 +408,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (global-set-key (kbd "C-/")   'undo-fu-only-undo)
     (global-set-key (kbd "C-?") 'undo-fu-only-redo))
 #+end_src
-** [[https://github.com/casouri/vundo][vando]] キルリングのツリー操作
+** [[https://github.com/casouri/vundo][vando]] - キルリングのツリー操作
 #+begin_src emacs-lisp :tangle yes
   (use-package vundo
     :ensure t
@@ -419,7 +419,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 
     :bind ("C-M-/" . vundo))
 #+end_src
-** [[https://github.com/Wilfred/helpful][Helpful]] より見や すい*help*
+** [[https://github.com/Wilfred/helpful][Helpful]] - より見や すい*help*
 #+begin_src emacs-lisp :tangle yes
   (use-package helpful
     :ensure t
@@ -431,7 +431,8 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
            ([remap Info-goto-emacs-command-node] . helpful-function)
            ("C-c C-d" . helpful-at-point)))
 #+end_src
-*** describe-*した時*HELP*バッファのウィンドウにフォーカスする。
+
+describe-*した時*HELP*バッファのウィンドウにフォーカスする。
 こうしておくとqですぐに閉じられる。
 この設定をまではわざわざ*HELP*のウィンドウまで移動しないと閉じられなくて、気軽にdescribe-*できなかった。
 #+begin_src emacs-lisp :tangle yes
@@ -483,7 +484,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :config
     (which-key-mode))
 #+end_src
-** [[http://github.com/szermatt/visual-replace][visual-replace]] 置換インターフェイス
+** [[http://github.com/szermatt/visual-replace][visual-replace]] - 置換インターフェイス
 #+begin_src emacs-lisp :tangle yes
   (use-package visual-replace
     :ensure t
@@ -491,14 +492,13 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     :config
     (visual-replace-global-mode 1))
 #+end_src
-** 括弧
-*** 対応する括弧を自動挿入
+** elec-pair 対応する括弧を自動挿入
 #+begin_src emacs-lisp :tangle yes
   (use-package elec-pair
     :config
     (electric-pair-mode))
 #+end_src
-*** [[https://github.com/AmaiKinono/puni][puni]] 括弧を賢く扱う
+** [[https://github.com/AmaiKinono/puni][puni]] - 括弧を賢く扱う
 #+begin_src emacs-lisp :tangle yes
   (use-package puni
     :ensure t
@@ -506,8 +506,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
 
     :hook ((prog-mode eval-expression-minibuffer-setup) . puni-mode))
 #+end_src
-** eldoc
-*** [[https://github.com/casouri/eldoc-box][eldoc-box]] eldocの内容をchild frameに表示する
+** [[https://github.com/casouri/eldoc-box][eldoc-box]] - eldocの内容をchild frameに表示する
 #+begin_src emacs-lisp :tangle yes
   (use-package eldoc-box
     :ensure t
@@ -569,7 +568,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
                ("j" "cycle" string-inflection-java-style-cycle)
                ("r" "cycle" string-inflection-ruby-style-cycle)]]))
 #+end_src
-** [[http://github.com/joaotavora/yasnippet][yasnippet]] 略語展開
+** [[http://github.com/joaotavora/yasnippet][yasnippet]] - 略語展開
 #+begin_src emacs-lisp :tangle yes
   (use-package yasnippet
     :ensure t
@@ -585,13 +584,13 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
   (use-package flymake
     :hook (prog-mode conf-mode))
 #+end_src
-** [[https://github.com/fritzgrabo/flymake-cspell][flymake-cspell]] flymakeのCSpell統合
+** [[https://github.com/fritzgrabo/flymake-cspell][flymake-cspell]] - flymakeのCSpell統合
 #+begin_src emacs-lisp :tangle yes
   (use-package flymake-cspell
     :ensure
     :commands flymake-cspell-setup)
 #+end_src
-** [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]] 矩形編集
+** [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]] - 矩形編集
 #+begin_src emacs-lisp :tangle yes
   (use-package multiple-cursors
     :ensure t
@@ -601,7 +600,7 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
            ("C-c C-<" . mc/mark-all-like-this))
     )
 #+end_src
-** grepの結果を編集する [[https://github.com/mhayashi1120/Emacs-wgrep][wgrep]]
+** [[https://github.com/mhayashi1120/Emacs-wgrep][wgrep]] - grepの結果を編集する
 #+begin_src emacs-lisp :tangle no
   (use-package wgrep
     :ensure t)
@@ -911,7 +910,7 @@ corfuに同梱されてる
 
     :bind ("C-c p" . cape-prefix-map))
 #+end_src
-** [[https://github.com/axelf4/hotfuzz][hotfuzz]] flexスタイルの高速ソートアルゴリズム
+** [[https://github.com/axelf4/hotfuzz][hotfuzz]] - flexスタイルの高速ソートアルゴリズム
 [[https://github.com/axelf4/emacs-completion-bench][こちらのベンチマーク]]によるとかなり早い。
 cで書かれた動的モジュールが別途必要だがnix経由だと勝手に入る。 (featurep 'hotfuzz-module)でモジュールが読み込まれているか確認できる。
 [[https://github.com/minad/corfu#buffer-localcorfu-only-completion-styles][corfuのREADME]]に書かれてるやり方でcorfuのみ適用する。
@@ -934,7 +933,7 @@ READMEの通りに設定
     (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 #+end_src
 * git
-** [[https://magit.vc/][magit]] gitクライアント
+** [[https://magit.vc/][magit]] - gitクライアント
 #+begin_src emacs-lisp :tangle yes
   (use-package magit
     :ensure t
@@ -943,7 +942,7 @@ READMEの通りに設定
     (require 'magit-extras)
     (require 'transient))
 #+end_src
-** [[https://github.com/dgutov/diff-hl][diff-hl]] 行頭にgitのステータスを表示する
+** [[https://github.com/dgutov/diff-hl][diff-hl]] - 行頭にgitのステータスを表示する
 #+begin_src emacs-lisp :tangle yes
   (use-package diff-hl
     :ensure t
@@ -955,17 +954,17 @@ READMEの通りに設定
     (global-diff-hl-mode)
     (global-diff-hl-show-hunk-mouse-mode))
 #+end_src
-** [[https://github.com/sshaw/git-link][git-link]] 現在開いているブランチ/ファイル/行のgithubのを作る
+** [[https://github.com/sshaw/git-link][git-link]] - 現在開いているブランチ/ファイル/行のgithubのを作る
 #+begin_src emacs-lisp :tangle yes
   (use-package git-link
     :ensure t)
 #+end_src
-** [[https://github.com/redguardtoo/vc-msg][vc-msg]] 現在行の直近のコミットを表示する
+** [[https://github.com/redguardtoo/vc-msg][vc-msg]] - 現在行の直近のコミットを表示する
 #+begin_src emacs-lisp :tangle yes
   (use-package vc-msg
     :ensure t)
 #+end_src
-** [[https://github.com/dandavison/magit-delta][magit-delta]] diffを見やすくする
+** [[https://github.com/dandavison/magit-delta][magit-delta]] - diffを見やすくする
 #+begin_src emacs-lisp :tangle yes
   (use-package magit-delta
     :ensure t
@@ -977,7 +976,7 @@ READMEの通りに設定
 #+end_src
 
 * マイナーモード
-** [[https://github.com/casouri/expreg][expreg]] リージョンを段階的に広げる
+** [[https://github.com/casouri/expreg][expreg]] - リージョンを段階的に広げる
 現在のポイントを中心にリージョン(選択範囲)を広げていく。
 個人的Emacsのキラープラグインの一つ。コピペエンジニアとしてはこれがないとまともに編集できない。
 #+begin_src emacs-lisp :tangle yes
@@ -987,21 +986,21 @@ READMEの通りに設定
     :bind (("C-z" . expreg-expand)
            ("C-M-z" . expreg-contract)))
 #+end_src
-** [[https://github.com/magnars/tagedit][tagedit]] htmlタグを扱う
+** [[https://github.com/magnars/tagedit][tagedit]] - htmlタグを扱う
 #+begin_src emacs-lisp :tangle yes
   (use-package tagedit
     :ensure t
 
     :bind (("C-c k" . tagedit-kill)))
 #+end_src
-** [[https://github.com/purcell/envrc][envrc.el]] direnvインテグレーション
+** [[https://github.com/purcell/envrc][envrc.el]] - direnvインテグレーション
 #+begin_src emacs-lisp :tangle yes
   (use-package envrc
     :ensure t
 
     :hook (after-init . envrc-global-mode))
 #+end_src
-** [[https://github.com/smihica/emmet-mode][emmet-mode]] emmetインテグレーション
+** [[https://github.com/smihica/emmet-mode][emmet-mode]] - emmetインテグレーション
 #+begin_src emacs-lisp :tangle yes
   (use-package emmet-mode
     :ensure t
@@ -1194,19 +1193,15 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
     :mode ("\\.env\\..*\\'" . dotenv-mode))
 #+end_src
 * LSP
-** [[https://github.com/jadestrong/lsp-proxy][lsp-proxy]] Rust製 LSPクランアント
+** [[https://github.com/jadestrong/lsp-proxy][lsp-proxy]] - Rust製 LSPクランアント
 #+begin_src emacs-lisp :tangle yes
   (use-package lsp-proxy
     :ensure t
 
     :init
-    ;; corfuのwikiにあるeglot用の設定を参考にしている。
-    ;; https://github.com/minad/corfu/wiki#configuring-corfu-for-eglot
-    (advice-add 'lsp-proxy-completion-at-point :around #'cape-wrap-buster)
-
-    :custom
-    (lsp-proxy-log-buffer-max nil)
-    (lsp-proxy-diagnostics-provider :flymake)
+    (setopt lsp-proxy-log-buffer-max nil)
+    (setopt lsp-proxy-diagnostics-provider :flymake)
+    (setopt lsp-proxy-max-completion-item 60)
 
     :hook ((tsx-ts-mode
             js-ts-mode
@@ -1238,6 +1233,10 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
                 ("s" . lsp-proxy-signature-activate))
 
     :config
+    ;; corfuのwikiにあるeglot用の設定を参考にしている
+    ;; https://github.com/minad/corfu/wiki#configuring-corfu-for-eglot
+    (advice-add 'lsp-proxy-completion-at-point :around #'cape-wrap-buster)
+    
     (defun my/lsp-proxy-rename (newname)
       "lsp-proxy-renameをデフォルト値付きで呼び出す"
       (interactive
@@ -1253,7 +1252,7 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
 #+end_src
 
 * 言語ユーティリティー
-** [[https://github.com/radian-software/apheleia][apheleia]] いろんな言語のフォーマッター
+** [[https://github.com/radian-software/apheleia][apheleia]] - いろんな言語のフォーマッター
 #+begin_src emacs-lisp :tangle yes
   (use-package apheleia
     :ensure t
@@ -1372,7 +1371,7 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
     ;; 常にインデントする
     (setopt org-startup-indented t))
 #+end_src
-** [[https://github.com/org-roam/org-roam][org-roam]] 第二の脳
+** [[https://github.com/org-roam/org-roam][org-roam]] - 第二の脳
 - complation-at-pointでlinkを挿入できるらしいけどうまくいかない
 #+begin_src emacs-lisp :tangle yes
   (use-package org-roam
@@ -1393,7 +1392,7 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
     :config
     (org-roam-setup))
 #+end_src
-** [[https://github.com/minad/org-modern/tree/main][org-modern]] かっこいい見た目にする
+** [[https://github.com/minad/org-modern/tree/main][org-modern]] - かっこいい見た目にする
 #+begin_src emacs-lisp :tangle yes
   (use-package org-modern
     :ensure t
@@ -1412,7 +1411,7 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
     (org-pretty-entities t)
     (org-agenda-tags-column 0))
 #+end_src
-** [[https://github.com/jdtsmith/org-modern-indent][org-modern-indent ]] org-modernをindentに対応させる
+** [[https://github.com/jdtsmith/org-modern-indent][org-modern-indent ]] - org-modernをindentに対応させる
 #+begin_src emacs-lisp :tangle yes
   (use-package org-modern-indent
     :ensure t
@@ -1429,7 +1428,7 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
 #+end_src
 
 * ターミナル
-** [[https://github.com/dakra/ghostel][ghostel]] Ghostty in Emacs
+** [[https://github.com/dakra/ghostel][ghostel]] - Ghostty in Emacs
 #+begin_src emacs-lisp :tangle yes
   (use-package ghostel
     :ensure t
@@ -1450,7 +1449,7 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
       (format "*👻: %s*"
               (abbreviate-file-name (directory-file-name default-directory)))))
 #+end_src
-** [[https://github.com/karthink/popper][popper]] バッファをポップアップ表示する
+** [[https://github.com/karthink/popper][popper]] - バッファをポップアップ表示する
 #+begin_src emacs-lisp :tangle yes
   (use-package popper
     :ensure t

@@ -50,6 +50,7 @@
       amazon-kindle = 302584613;
       tailscale = 1475387142;
       yoink = 457622435;
+      super-easy-timer = 1353137878;
       Xcode = 497799835;
     };
   };
