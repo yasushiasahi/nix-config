@@ -25,7 +25,7 @@ let
   frontend =
     let
       typescriptLs = {
-        name = "typescript-go";
+        name = "typescript-language-server";
         support-workspace = [ "package.json" ];
         except-features = [ "format" ];
       };
@@ -70,6 +70,7 @@ let
         # command = "npx";
         # args = [ "@astrojs/language-server" "--stdio" ];
         command = lib.getExe pkgs.astro-language-server;
+        args = [ "--stdio" ];
         config.typescript.tsdk = "${pkgs.typescript}/lib/node_modules/typescript/lib/";
       };
 
