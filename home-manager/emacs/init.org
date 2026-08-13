@@ -950,7 +950,7 @@ READMEの通りに設定
     :hook ((magit-post-refresh . diff-hl-magit-post-refresh)
            (dired-mode . diff-hl-dired-mode))
 
-    :config
+    :init
     (global-diff-hl-mode)
     (global-diff-hl-show-hunk-mouse-mode))
 #+end_src
@@ -1195,6 +1195,9 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
 * LSP
 ** [[https://github.com/jadestrong/lsp-proxy][lsp-proxy]] - Rust製 LSPクランアント
 #+begin_src emacs-lisp :tangle yes
+  (use-package eglot
+    :ensure t)
+
   (use-package lsp-proxy
     :ensure t
 

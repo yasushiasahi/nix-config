@@ -22,15 +22,15 @@
   };
   emacs-ghostel = {
     pname = "emacs-ghostel";
-    version = "37a82caa25c41fa4fda768ddb727b1cbe117ceba";
+    version = "fd53e45e098e6efd8ce0dac29f23ddd1819b9695";
     src = fetchFromGitHub {
       owner = "dakra";
       repo = "ghostel";
-      rev = "37a82caa25c41fa4fda768ddb727b1cbe117ceba";
+      rev = "fd53e45e098e6efd8ce0dac29f23ddd1819b9695";
       fetchSubmodules = false;
-      sha256 = "sha256-KC0sWgEcfFdZMJPPQqc7I3rCNQ3LH1a0qAUvX4oEd/I=";
+      sha256 = "sha256-8SsW9viV/adnw85ZAqlHD6iJWNMPP+9idR8PF6Sv7Ak=";
     };
-    date = "2026-08-03";
+    date = "2026-08-12";
   };
   emacs-ghostel-module = {
     pname = "emacs-ghostel-module";
