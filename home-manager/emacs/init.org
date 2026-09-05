@@ -1099,7 +1099,18 @@ READMEの通りに設定
   (use-package astro-ts-mode
     :ensure t
 
-    :mode "\\.astro\\'")
+    :mode "\\.astro\\'"
+
+    :config
+    ;; astro-ts-modeはhtml-mode派生なのでsgml-modeのsyntax-tableを継承しており、
+    ;; `.'がsymbol構成文字(`_')になっている。
+    ;; lsp-proxyは(bounds-of-thing-at-point 'symbol)で補完prefixを決めるため、
+    ;; `foo.'と打つとprefixが"foo."になってしまい、サーバーが返した候補が
+    ;; Rust側のファジーフィルタで全て落とされて補完候補が0件になる。
+    ;; `.'をpunctuationに戻してprefixが正しく計算されるようにする。
+    ;; なお`-'はsymbolのままにしておく。Tailwindのクラス名やHTMLの属性名の
+    ;; prefixを正しく取るにはsymbolの方が都合が良いため。
+    (modify-syntax-entry ?. "." astro-ts-mode-syntax-table))
 #+end_src
 
 astroのgrammarがなければインストール。本当はnixで入れたいけどやり方がよく分からん。
