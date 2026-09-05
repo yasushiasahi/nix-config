@@ -204,6 +204,31 @@ let
             tailwindLs
           ];
         }
+        {
+          name = "html";
+          file-types = [
+            "html"
+            "htm"
+            "shtml"
+            "xhtml"
+            "xht"
+            "jsp"
+            "asp"
+            "aspx"
+            "jshtm"
+            "volt"
+            "rhtml"
+            "cshtml"
+            "njk"
+          ];
+          language-servers = [
+            {
+              name = "vscode-html-language-server";
+              except-features = [ "format" ];
+            }
+            tailwindLs
+          ];
+        }
       ];
     };
 
@@ -241,8 +266,7 @@ let
           "nomad"
         ];
         roots = [
-          "*.tf"
-          "*.tfvars"
+          ".terraform.lock.hcl"
         ];
         language-servers = [
           {

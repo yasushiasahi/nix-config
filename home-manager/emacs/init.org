@@ -971,8 +971,8 @@ READMEの通りに設定
 
     :hook ((magit-mode . magit-delta-mode))
 
-    :custom
-    (magit-delta-default-dark-theme "Solarized (dark)"))
+    :init
+    (setopt magit-delta-default-dark-theme "Solarized (dark)"))
 #+end_src
 
 * マイナーモード
@@ -1102,7 +1102,7 @@ astroのgrammarがなければインストール。本当はnixで入れたい�
 ** HTML
 #+begin_src emacs-lisp :tangle yes
   (use-package html-ts-mode
-    :mode ("\\.html\\'"))
+    :mode ("\\.html\\'" "\\.njk\\'"))
 #+end_src
 ** CSS
 #+begin_src emacs-lisp :tangle yes
@@ -1439,18 +1439,18 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
 
     :bind
     ("C-c g" . ghostel)
-
-    :custom
-    (ghostel-shell "/run/current-system/sw/bin/fish")
-    (ghostel-keymap-exceptions '("C-x" "C-u" "M-x" "C-c" "M-s" "C-t"))
-    (ghostel-buffer-name "*👻*")
-    (ghostel-buffer-name-function #'my/ghostel-buffer-name-by-directory)
-
+    
     :init
+    (setopt ghostel-shell "/run/current-system/sw/bin/fish")
+    (setopt ghostel-keymap-exceptions '("C-x" "C-u" "M-x" "C-c" "M-s" "C-t"))
+    (setopt ghostel-buffer-name "*👻*")
+    (setopt ghostel-buffer-name-function #'my/ghostel-buffer-name-by-directory)
+    
     (defun my/ghostel-buffer-name-by-directory (_title)
       "バッファ名を決める。オリジナルとほぼ同じ"
       (format "*👻: %s*"
-              (abbreviate-file-name (directory-file-name default-directory)))))
+              (abbreviate-file-name (directory-file-name default-directory))))
+    )
 #+end_src
 ** [[https://github.com/karthink/popper][popper]] - バッファをポップアップ表示する
 #+begin_src emacs-lisp :tangle yes

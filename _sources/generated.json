@@ -21,7 +21,7 @@
     },
     "emacs-ghostel": {
         "cargoLock": null,
-        "date": "2026-08-12",
+        "date": "2026-08-17",
         "extract": null,
         "name": "emacs-ghostel",
         "passthru": null,
@@ -33,12 +33,12 @@
             "name": null,
             "owner": "dakra",
             "repo": "ghostel",
-            "rev": "fd53e45e098e6efd8ce0dac29f23ddd1819b9695",
-            "sha256": "sha256-8SsW9viV/adnw85ZAqlHD6iJWNMPP+9idR8PF6Sv7Ak=",
+            "rev": "b4b82f4ebe415aa62ef35509047c49b0a482bebb",
+            "sha256": "sha256-k/pyRHTt9sJzAvEPiqSWfNpq6Omtx9pc8MP+BeSZj5M=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "fd53e45e098e6efd8ce0dac29f23ddd1819b9695"
+        "version": "b4b82f4ebe415aa62ef35509047c49b0a482bebb"
     },
     "emacs-ghostel-module": {
         "cargoLock": null,
@@ -53,7 +53,7 @@
             "type": "url",
             "url": "https://github.com/dakra/ghostel/releases/latest/download/ghostel-module-aarch64-macos.dylib"
         },
-        "version": "v0.49.0"
+        "version": "v0.50.0"
     },
     "emacs-lsp-proxy": {
         "cargoLock": {
