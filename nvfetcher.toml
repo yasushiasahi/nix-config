@@ -7,7 +7,7 @@ fetch.github = "jdtsmith/org-modern-indent"
 
 [emacs-astro-ts-mode]
 src.git = "https://git.isincredibly.gay/srxl/astro-ts-mode.git"
-src.branch = "master"
+src.branch = "main"
 fetch.git = "https://git.isincredibly.gay/srxl/astro-ts-mode.git"
 
 [emacs-lsp-proxy]
@@ -24,4 +24,4 @@ fetch.github = "dakra/ghostel"
 [emacs-ghostel-module]
 src.github = "dakra/ghostel"
 src.prerelase = true
-fetch.url = "https://github.com/dakra/ghostel/releases/latest/download/ghostel-module-aarch64-macos.dylib"
+fetch.url = "https://github.com/dakra/ghostel/releases/download/$ver/ghostel-module-aarch64-macos.dylib"

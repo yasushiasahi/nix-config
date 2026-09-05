@@ -8,36 +8,36 @@
 {
   emacs-astro-ts-mode = {
     pname = "emacs-astro-ts-mode";
-    version = "b9ba8559effbd0677838d1fda6599dece51499b8";
+    version = "fcc299a0b5aade4fd996cbbb5db136348958ebe3";
     src = fetchgit {
       url = "https://git.isincredibly.gay/srxl/astro-ts-mode.git";
-      rev = "b9ba8559effbd0677838d1fda6599dece51499b8";
+      rev = "fcc299a0b5aade4fd996cbbb5db136348958ebe3";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = false;
       sparseCheckout = [ ];
-      sha256 = "sha256-TTTfZN76x/wNuIXFttHwyDILHU9zjWaOKWIX2ODwtrI=";
+      sha256 = "sha256-bvJNpJPEfJEmzNzV5F7E0v0sssX+M8tbAXUUJrz/VGo=";
     };
-    date = "2026-07-07";
+    date = "2026-07-11";
   };
   emacs-ghostel = {
     pname = "emacs-ghostel";
-    version = "b4b82f4ebe415aa62ef35509047c49b0a482bebb";
+    version = "2bea18f3b52bf97d8222fea706da6fabdfc2cbb8";
     src = fetchFromGitHub {
       owner = "dakra";
       repo = "ghostel";
-      rev = "b4b82f4ebe415aa62ef35509047c49b0a482bebb";
+      rev = "2bea18f3b52bf97d8222fea706da6fabdfc2cbb8";
       fetchSubmodules = false;
-      sha256 = "sha256-k/pyRHTt9sJzAvEPiqSWfNpq6Omtx9pc8MP+BeSZj5M=";
+      sha256 = "sha256-ZzRf/3QoG499S2bJhA+wnphqX0KDiY+Pe7yENKh8AV4=";
     };
-    date = "2026-08-17";
+    date = "2026-09-02";
   };
   emacs-ghostel-module = {
     pname = "emacs-ghostel-module";
-    version = "v0.50.0";
+    version = "v0.53.0";
     src = fetchurl {
-      url = "https://github.com/dakra/ghostel/releases/latest/download/ghostel-module-aarch64-macos.dylib";
-      sha256 = "sha256-+4a1R5TGVV2RDoAoZC9KjVXozDcaehdwz1xs2uPGqFo=";
+      url = "https://github.com/dakra/ghostel/releases/download/v0.53.0/ghostel-module-aarch64-macos.dylib";
+      sha256 = "sha256-bkpQnCP+bDnpBhDdF8slQ2IkNomPhtr4D0fN5SMkC50=";
     };
   };
   emacs-lsp-proxy = {
@@ -53,7 +53,7 @@
     cargoLock."Cargo.lock" = {
       lockFile = ./. + "/sha256-VmMwX+gs3zLSFoPLJZuEXBypVEfZRXSajX2HJaTDh9U=/Cargo.lock";
       outputHashes = {
-
+        
       };
     };
     date = "2026-07-04";
