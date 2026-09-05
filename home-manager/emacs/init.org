@@ -862,7 +862,13 @@ consultインテグレーション
     (setopt corfu-auto-prefix 1)          ; capf（補完）が発火する文字数
     (setopt corfu-auto-delay 0.0)         ; {corfu-auto-prefix}文字入力してからcapfを発火させるまでの秒数
 
-    (global-corfu-mode))
+    (global-corfu-mode)
+
+    :hook ((corfu-mode . (lambda ()
+                           (setq-local completion-styles '(flex)
+                                       completion-category-overrides nil
+                                       completion-category-defaults nil))))
+    )
 #+end_src
 
 補完候補のドキュメント表示
@@ -911,10 +917,13 @@ corfuに同梱されてる
     :bind ("C-c p" . cape-prefix-map))
 #+end_src
 ** [[https://github.com/axelf4/hotfuzz][hotfuzz]] - flexスタイルの高速ソートアルゴリズム
+31.1になって動かんくなった。組み込みのflexがネイティブ化されてhotfuzzと同等の早さになったらしいのでしばらくはそれで行く。
+https://www.masteringemacs.org/article/whats-new-in-emacs-311
+
 [[https://github.com/axelf4/emacs-completion-bench][こちらのベンチマーク]]によるとかなり早い。
 cで書かれた動的モジュールが別途必要だがnix経由だと勝手に入る。 (featurep 'hotfuzz-module)でモジュールが読み込まれているか確認できる。
 [[https://github.com/minad/corfu#buffer-localcorfu-only-completion-styles][corfuのREADME]]に書かれてるやり方でcorfuのみ適用する。
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
   (use-package hotfuzz
     :ensure t
 
