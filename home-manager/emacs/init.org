@@ -862,13 +862,16 @@ consultインテグレーション
     (setopt corfu-auto-prefix 1)          ; capf（補完）が発火する文字数
     (setopt corfu-auto-delay 0.0)         ; {corfu-auto-prefix}文字入力してからcapfを発火させるまでの秒数
 
+    ;; minibuf.c
+    (setopt completion-ignore-case t)     ; 候補選択時に大文字小文字を区別しない
+
     (global-corfu-mode)
 
+    ;; ミニバッファ補完はordarlessなんだが、コード補完はflexにする。
     :hook ((corfu-mode . (lambda ()
                            (setq-local completion-styles '(flex)
                                        completion-category-overrides nil
-                                       completion-category-defaults nil))))
-    )
+                                       completion-category-defaults nil)))))
 #+end_src
 
 補完候補のドキュメント表示
