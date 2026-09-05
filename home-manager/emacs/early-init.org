@@ -7,9 +7,9 @@ early-init.elに何を書くべきかについて非常に参考になった。�
 [[https://apribase.net/2024/07/05/emacs-startup-sequence/][Emacs の31+3個の起動シーケンスに合わせて正しく GUI やフォントの設定をする]]
 ** Header
 #+begin_src emacs-lisp :tangle yes
-  ;;; early-init.el --- My early-init.el  -*- lexical-binding: t; -*-
-  ;;; Commentary:
-  ;;; Code:
+;;; early-init.el --- My early-init.el  -*- lexical-binding: t; -*-
+;;; Commentary:
+;;; Code:
 #+end_src
 ** 起動処理のデバッグ有効化
 early-init.elやinit.elを含む起動処理中のエラーのデバッグ情報を見れるようになる。

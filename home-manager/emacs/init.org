@@ -1346,9 +1346,9 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
     (and package-json-path
          (file-readable-p package-json-path)
          (let ((data (my/read-json-file package-json-path)))
-           (or (when-let ((deps (gethash "dependencies" data)))
+           (or (when-let* ((deps (gethash "dependencies" data)))
                  (and (gethash "prettier" deps) t))
-               (when-let ((dev-deps (gethash "devDependencies" data)))
+               (when-let* ((dev-deps (gethash "devDependencies" data)))
                  (and (gethash "prettier" dev-deps) t))))))
 
   (defun my/check-prettier-in-project (&optional dir)
