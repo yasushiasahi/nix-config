@@ -42,11 +42,16 @@
 
       # ターミナル
       "alacritty"
+
       # エディタ
       "visual-studio-code"
       "coteditor"
+
       # 人工知能
       "claude"
+
+      # マークダウンビューアー
+      "qlmarkdown"
     ];
     masApps = {
       LINE = 539883307;
