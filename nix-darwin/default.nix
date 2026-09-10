@@ -33,10 +33,13 @@
       "logi-options+"
       "1password"
       "cleanmymac"
+
       # ブラウザ
       "arc"
-      "brave-browser"
+      "vivaldi"
       "google-chrome"
+      "brave-browser"
+
       # ターミナル
       "alacritty"
       # エディタ

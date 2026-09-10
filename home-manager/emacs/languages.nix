@@ -74,14 +74,6 @@ let
         config.typescript.tsdk = "${pkgs.typescript}/lib/node_modules/typescript/lib/";
       };
 
-      language-server.typescript-go = {
-        command = lib.getExe' pkgs.typescript-go "tsgo";
-        args = [
-          "--lsp"
-          "--stdio"
-        ];
-      };
-
       language-server.biome = {
         command = "npx";
         args = [

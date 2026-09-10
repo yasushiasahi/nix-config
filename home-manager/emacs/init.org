@@ -1197,16 +1197,15 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
 #+end_src
 ** [[https://github.com/jrblevin/markdown-mode][markdown-mode]] Markdown
 #+begin_src emacs-lisp :tangle yes
-  (use-package markdown-mode
-    :ensure t
+  (use-package markdown-ts-mode
+    :ensure nil
 
-    :mode ("README\\.md\\'" . gfm-mode)
-
-    :bind (:map markdown-mode-map
-                ("C-c C-e" . markdown-do))
-
-    :custom
-    (markdown-command "multimarkdown"))
+    :commands markdown-ts-view-mode
+    
+    :mode ("\\.md\\'" "\\.mdx\\'" "\\.markdown\\'")
+    
+    :config
+    (require 'markdown-ts-mode-x))
 #+end_src
 ** [[https://github.com/preetpalS/emacs-dotenv-mode][dotenv-mode]]
 #+begin_src emacs-lisp :tangle yes
@@ -1219,7 +1218,9 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
 ** [[https://github.com/jadestrong/lsp-proxy][lsp-proxy]] - Rust製 LSPクランアント
 #+begin_src emacs-lisp :tangle yes
   (use-package eglot
-    :ensure t)
+    :ensure t
+    :init
+    (setopt eglot-documentation-renderer #'markdown-ts-view-mode))
 
   (use-package lsp-proxy
     :ensure t
