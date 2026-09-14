@@ -25,3 +25,15 @@ fetch.github = "dakra/ghostel"
 src.github = "dakra/ghostel"
 src.prerelase = true
 fetch.url = "https://github.com/dakra/ghostel/releases/download/$ver/ghostel-module-aarch64-macos.dylib"
+
+# typescript
+
+# nixpkgsのtypescriptは7系(Go実装のtsgo)になり、tsserverのJS実装
+# (typescript.js)を同梱しなくなった。astro-language-serverはVolarベースで
+# このJS APIをrequireするため、tsdkにpkgs.typescriptを渡すと初期化に失敗する。
+# そのためnpm版のtarballを直接取得してtsdk専用に使う。
+# src.manualでバージョンを固定している。GitHubの最新リリースを追うと
+# TS 7系を掴んで壊れるため、プロジェクト側に合わせて手動で上げること。
+[typescript-tsdk]
+src.manual = "6.0.3"
+fetch.url = "https://github.com/microsoft/TypeScript/releases/download/v$ver/typescript-$ver.tgz"
