@@ -21,7 +21,7 @@
     },
     "emacs-ghostel": {
         "cargoLock": null,
-        "date": "2026-09-02",
+        "date": "2026-09-13",
         "extract": null,
         "name": "emacs-ghostel",
         "passthru": null,
@@ -33,12 +33,12 @@
             "name": null,
             "owner": "dakra",
             "repo": "ghostel",
-            "rev": "2bea18f3b52bf97d8222fea706da6fabdfc2cbb8",
-            "sha256": "sha256-ZzRf/3QoG499S2bJhA+wnphqX0KDiY+Pe7yENKh8AV4=",
+            "rev": "9bf8c7a7f624eaba60d46b7b1123d29c39a2f4da",
+            "sha256": "sha256-n64BKVmRIkNMtVxIFsH/K7VrR9ll9EfmoKXxNPz2rss=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "2bea18f3b52bf97d8222fea706da6fabdfc2cbb8"
+        "version": "9bf8c7a7f624eaba60d46b7b1123d29c39a2f4da"
     },
     "emacs-ghostel-module": {
         "cargoLock": null,
@@ -58,11 +58,11 @@
     "emacs-lsp-proxy": {
         "cargoLock": {
             "Cargo.lock": [
-                "sha256-VmMwX+gs3zLSFoPLJZuEXBypVEfZRXSajX2HJaTDh9U=/Cargo.lock",
+                "sha256-IWTT12UOwqPkVxoZjCMVbdGP2gMkkX7NWr4VZ6IYEbU=/Cargo.lock",
                 {}
             ]
         },
-        "date": "2026-07-04",
+        "date": "2026-09-11",
         "extract": null,
         "name": "emacs-lsp-proxy",
         "passthru": null,
@@ -74,12 +74,12 @@
             "name": null,
             "owner": "jadestrong",
             "repo": "lsp-proxy",
-            "rev": "45566dfe32ef31d71ac7d74fc18dd64a04cc82a5",
-            "sha256": "sha256-VmMwX+gs3zLSFoPLJZuEXBypVEfZRXSajX2HJaTDh9U=",
+            "rev": "3e238995d6507d3517353b6332ab2701c1e2ab74",
+            "sha256": "sha256-IWTT12UOwqPkVxoZjCMVbdGP2gMkkX7NWr4VZ6IYEbU=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "45566dfe32ef31d71ac7d74fc18dd64a04cc82a5"
+        "version": "3e238995d6507d3517353b6332ab2701c1e2ab74"
     },
     "emacs-org-modern-indent": {
         "cargoLock": null,
@@ -101,5 +101,20 @@
             "type": "github"
         },
         "version": "86bd83ee1ad95f123810eb3b116beb543db1960a"
+    },
+    "typescript-tsdk": {
+        "cargoLock": null,
+        "date": null,
+        "extract": null,
+        "name": "typescript-tsdk",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "name": null,
+            "sha256": "sha256-M80O4b6qjJ6dFanag2xi3epMNKQtfC00nbyA2UFl0io=",
+            "type": "url",
+            "url": "https://github.com/microsoft/TypeScript/releases/download/v6.0.3/typescript-6.0.3.tgz"
+        },
+        "version": "6.0.3"
     }
 }

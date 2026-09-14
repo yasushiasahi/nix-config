@@ -22,15 +22,15 @@
   };
   emacs-ghostel = {
     pname = "emacs-ghostel";
-    version = "2bea18f3b52bf97d8222fea706da6fabdfc2cbb8";
+    version = "9bf8c7a7f624eaba60d46b7b1123d29c39a2f4da";
     src = fetchFromGitHub {
       owner = "dakra";
       repo = "ghostel";
-      rev = "2bea18f3b52bf97d8222fea706da6fabdfc2cbb8";
+      rev = "9bf8c7a7f624eaba60d46b7b1123d29c39a2f4da";
       fetchSubmodules = false;
-      sha256 = "sha256-ZzRf/3QoG499S2bJhA+wnphqX0KDiY+Pe7yENKh8AV4=";
+      sha256 = "sha256-n64BKVmRIkNMtVxIFsH/K7VrR9ll9EfmoKXxNPz2rss=";
     };
-    date = "2026-09-02";
+    date = "2026-09-13";
   };
   emacs-ghostel-module = {
     pname = "emacs-ghostel-module";
@@ -42,21 +42,21 @@
   };
   emacs-lsp-proxy = {
     pname = "emacs-lsp-proxy";
-    version = "45566dfe32ef31d71ac7d74fc18dd64a04cc82a5";
+    version = "3e238995d6507d3517353b6332ab2701c1e2ab74";
     src = fetchFromGitHub {
       owner = "jadestrong";
       repo = "lsp-proxy";
-      rev = "45566dfe32ef31d71ac7d74fc18dd64a04cc82a5";
+      rev = "3e238995d6507d3517353b6332ab2701c1e2ab74";
       fetchSubmodules = false;
-      sha256 = "sha256-VmMwX+gs3zLSFoPLJZuEXBypVEfZRXSajX2HJaTDh9U=";
+      sha256 = "sha256-IWTT12UOwqPkVxoZjCMVbdGP2gMkkX7NWr4VZ6IYEbU=";
     };
     cargoLock."Cargo.lock" = {
-      lockFile = ./. + "/sha256-VmMwX+gs3zLSFoPLJZuEXBypVEfZRXSajX2HJaTDh9U=/Cargo.lock";
+      lockFile = ./. + "/sha256-IWTT12UOwqPkVxoZjCMVbdGP2gMkkX7NWr4VZ6IYEbU=/Cargo.lock";
       outputHashes = {
         
       };
     };
-    date = "2026-07-04";
+    date = "2026-09-11";
   };
   emacs-org-modern-indent = {
     pname = "emacs-org-modern-indent";
@@ -69,5 +69,13 @@
       sha256 = "sha256-vQzYk5qejCBehpbxkMceOMsmeLyjnAstpezZw/ZR1jQ=";
     };
     date = "2026-07-21";
+  };
+  typescript-tsdk = {
+    pname = "typescript-tsdk";
+    version = "6.0.3";
+    src = fetchurl {
+      url = "https://github.com/microsoft/TypeScript/releases/download/v6.0.3/typescript-6.0.3.tgz";
+      sha256 = "sha256-M80O4b6qjJ6dFanag2xi3epMNKQtfC00nbyA2UFl0io=";
+    };
   };
 }
