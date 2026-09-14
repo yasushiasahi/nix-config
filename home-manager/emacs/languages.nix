@@ -1,4 +1,8 @@
-{ pkgs, lib }:
+{
+  pkgs,
+  lib,
+  typescript-tsdk,
+}:
 let
   deepMerge =
     lhs: rhs:
@@ -71,7 +75,7 @@ let
         # args = [ "@astrojs/language-server" "--stdio" ];
         command = lib.getExe pkgs.astro-language-server;
         args = [ "--stdio" ];
-        config.typescript.tsdk = "${pkgs.typescript}/lib/node_modules/typescript/lib/";
+        config.typescript.tsdk = "${typescript-tsdk}/lib";
       };
 
       language-server.biome = {

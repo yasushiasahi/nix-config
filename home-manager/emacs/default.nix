@@ -67,6 +67,16 @@ let
     ];
   };
 
+  # nixpkgsのtypescriptは7系(Go実装のtsgo)になり、tsserverのJS実装である
+  # typescript.jsを同梱しなくなった(中身はGoバイナリとlib.*.d.tsのみ)。
+  # astro-language-serverはVolarベースでこのJS APIをrequireするため、
+  # tsdkにpkgs.typescriptを渡すと初期化に失敗して補完もホバーも効かなくなる。
+  # そのためnvfetcherで取得したnpm版tarballを展開してtsdk専用に使う。
+  typescript-tsdk = pkgs.runCommand "typescript-tsdk-${sources.typescript-tsdk.version}" { } ''
+    mkdir -p $out
+    tar -xzf ${sources.typescript-tsdk.src} --strip-components=1 -C $out
+  '';
+
   tangle = pkgs.tangleOrgBabel { languages = [ "emacs-lisp" ]; };
 
   shellAlias = mkAlias {
@@ -120,6 +130,8 @@ in
   xdg.configFile = {
     "emacs/init.el".text = tangle (builtins.readFile ./init.org);
     "emacs/early-init.el".text = tangle (builtins.readFile ./early-init.org);
-    "emacs/lsp-proxy/languages.toml".source = import ./languages.nix { inherit pkgs lib; };
+    "emacs/lsp-proxy/languages.toml".source = import ./languages.nix {
+      inherit pkgs lib typescript-tsdk;
+    };
   };
 }
