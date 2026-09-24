@@ -1104,6 +1104,8 @@ READMEの通りに設定
 
     :mode "\\.astro\\'"
 
+    :hook ((astro-ts-mode . my/astro-ts-mode--setup-comment))
+
     :config
     ;; astro-ts-modeはhtml-mode派生なのでsgml-modeのsyntax-tableを継承しており、
     ;; `.'がsymbol構成文字(`_')になっている。
@@ -1113,7 +1115,56 @@ READMEの通りに設定
     ;; `.'をpunctuationに戻してprefixが正しく計算されるようにする。
     ;; なお`-'はsymbolのままにしておく。Tailwindのクラス名やHTMLの属性名の
     ;; prefixを正しく取るにはsymbolの方が都合が良いため。
-    (modify-syntax-entry ?. "." astro-ts-mode-syntax-table))
+    (modify-syntax-entry ?. "." astro-ts-mode-syntax-table)
+
+    ;; comment-dwimなどでブロックごとにコメント記法を切り替える。
+    ;; - フロントマター、<script>内: // (typescript)
+    ;; - <style>内: /* */ (css)
+    ;; - HTML部分: {/* */}
+    ;; `treesit-language-at'だと`{/* ... */}'がhtml_interpolationとして
+    ;; typescript扱いになりコメント解除できなくなるので、astroパーサーの
+    ;; ノードで判定する。
+    (defun my/astro-ts-mode--comment-lang ()
+      "コメント操作の対象言語を返す。リージョンの先頭か現在行のインデント位置で判定する。"
+      (save-excursion
+        (if (use-region-p)
+            (progn (goto-char (region-beginning))
+                   (skip-chars-forward " \t\n" (region-end)))
+          (skip-chars-backward " \t" (line-beginning-position))
+          (skip-chars-forward " \t" (line-end-position)))
+        (let ((node (treesit-node-at (point) 'astro)))
+          (pcase (treesit-node-type node)
+            ("frontmatter_js_block" 'typescript)
+            ("raw_text"
+             (if (equal (treesit-node-type (treesit-node-parent node)) "style_element")
+                 'css
+               'typescript))
+            (_ 'astro)))))
+
+    (defun my/astro-ts-mode--comment-setup ()
+      "`comment-setup-function'用。対象の言語に合わせてコメント記法を設定する。"
+      (pcase (my/astro-ts-mode--comment-lang)
+        ('typescript
+         (setq-local comment-start "// "
+                     comment-end ""
+                     comment-start-skip "//+[ \t]*"
+                     comment-end-skip "[ \t]*$"))
+        ('css
+         (setq-local comment-start "/* "
+                     comment-end " */"
+                     comment-start-skip "/\\*+[ \t]*"
+                     comment-end-skip "[ \t]*\\*+/"))
+        ('astro
+         (setq-local comment-start "{/* "
+                     comment-end " */}"
+                     comment-start-skip "{/\\*+[ \t]*"
+                     comment-end-skip "[ \t]*\\*+/}"))))
+
+    (defun my/astro-ts-mode--setup-comment ()
+      ;; 記法を切り替えるので構文表ではなく正規表現でコメントを判定させる
+      (setq-local comment-use-syntax nil
+                  comment-setup-function #'my/astro-ts-mode--comment-setup))
+    )
 #+end_src
 
 astroのgrammarがなければインストール。本当はnixで入れたいけどやり方がよく分からん。
