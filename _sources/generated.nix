@@ -22,41 +22,41 @@
   };
   emacs-ghostel = {
     pname = "emacs-ghostel";
-    version = "9bf8c7a7f624eaba60d46b7b1123d29c39a2f4da";
+    version = "c2c411f2b0051465a5f5e7826ebab4ed216d4c0e";
     src = fetchFromGitHub {
       owner = "dakra";
       repo = "ghostel";
-      rev = "9bf8c7a7f624eaba60d46b7b1123d29c39a2f4da";
+      rev = "c2c411f2b0051465a5f5e7826ebab4ed216d4c0e";
       fetchSubmodules = false;
-      sha256 = "sha256-n64BKVmRIkNMtVxIFsH/K7VrR9ll9EfmoKXxNPz2rss=";
+      sha256 = "sha256-IHcFxvkCKz/YANJrrHWFOiACfkHQJsN6YOnX8cLqi1A=";
     };
-    date = "2026-09-13";
+    date = "2026-09-21";
   };
   emacs-ghostel-module = {
     pname = "emacs-ghostel-module";
-    version = "v0.53.0";
+    version = "v0.56.0";
     src = fetchurl {
-      url = "https://github.com/dakra/ghostel/releases/download/v0.53.0/ghostel-module-aarch64-macos.dylib";
-      sha256 = "sha256-bkpQnCP+bDnpBhDdF8slQ2IkNomPhtr4D0fN5SMkC50=";
+      url = "https://github.com/dakra/ghostel/releases/download/v0.56.0/ghostel-module-aarch64-macos.dylib";
+      sha256 = "sha256-5pCuYs4grv0WqHDiOf6jLtJAap6lmmyQB5Y8cdsaF10=";
     };
   };
   emacs-lsp-proxy = {
     pname = "emacs-lsp-proxy";
-    version = "3e238995d6507d3517353b6332ab2701c1e2ab74";
+    version = "eef00d49f752b60a78ee3d91a8addb53a6701e37";
     src = fetchFromGitHub {
       owner = "jadestrong";
       repo = "lsp-proxy";
-      rev = "3e238995d6507d3517353b6332ab2701c1e2ab74";
+      rev = "eef00d49f752b60a78ee3d91a8addb53a6701e37";
       fetchSubmodules = false;
-      sha256 = "sha256-IWTT12UOwqPkVxoZjCMVbdGP2gMkkX7NWr4VZ6IYEbU=";
+      sha256 = "sha256-J9Qo4GjB8VDB+llYNdeLOWQFIx1pNOKwxBM3jx06Fs0=";
     };
     cargoLock."Cargo.lock" = {
-      lockFile = ./. + "/sha256-IWTT12UOwqPkVxoZjCMVbdGP2gMkkX7NWr4VZ6IYEbU=/Cargo.lock";
+      lockFile = ./. + "/sha256-J9Qo4GjB8VDB+llYNdeLOWQFIx1pNOKwxBM3jx06Fs0=/Cargo.lock";
       outputHashes = {
         
       };
     };
-    date = "2026-09-11";
+    date = "2026-09-18";
   };
   emacs-org-modern-indent = {
     pname = "emacs-org-modern-indent";

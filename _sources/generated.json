@@ -21,7 +21,7 @@
     },
     "emacs-ghostel": {
         "cargoLock": null,
-        "date": "2026-09-13",
+        "date": "2026-09-21",
         "extract": null,
         "name": "emacs-ghostel",
         "passthru": null,
@@ -33,12 +33,12 @@
             "name": null,
             "owner": "dakra",
             "repo": "ghostel",
-            "rev": "9bf8c7a7f624eaba60d46b7b1123d29c39a2f4da",
-            "sha256": "sha256-n64BKVmRIkNMtVxIFsH/K7VrR9ll9EfmoKXxNPz2rss=",
+            "rev": "c2c411f2b0051465a5f5e7826ebab4ed216d4c0e",
+            "sha256": "sha256-IHcFxvkCKz/YANJrrHWFOiACfkHQJsN6YOnX8cLqi1A=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "9bf8c7a7f624eaba60d46b7b1123d29c39a2f4da"
+        "version": "c2c411f2b0051465a5f5e7826ebab4ed216d4c0e"
     },
     "emacs-ghostel-module": {
         "cargoLock": null,
@@ -49,20 +49,20 @@
         "pinned": false,
         "src": {
             "name": null,
-            "sha256": "sha256-bkpQnCP+bDnpBhDdF8slQ2IkNomPhtr4D0fN5SMkC50=",
+            "sha256": "sha256-5pCuYs4grv0WqHDiOf6jLtJAap6lmmyQB5Y8cdsaF10=",
             "type": "url",
-            "url": "https://github.com/dakra/ghostel/releases/download/v0.53.0/ghostel-module-aarch64-macos.dylib"
+            "url": "https://github.com/dakra/ghostel/releases/download/v0.56.0/ghostel-module-aarch64-macos.dylib"
         },
-        "version": "v0.53.0"
+        "version": "v0.56.0"
     },
     "emacs-lsp-proxy": {
         "cargoLock": {
             "Cargo.lock": [
-                "sha256-IWTT12UOwqPkVxoZjCMVbdGP2gMkkX7NWr4VZ6IYEbU=/Cargo.lock",
+                "sha256-J9Qo4GjB8VDB+llYNdeLOWQFIx1pNOKwxBM3jx06Fs0=/Cargo.lock",
                 {}
             ]
         },
-        "date": "2026-09-11",
+        "date": "2026-09-18",
         "extract": null,
         "name": "emacs-lsp-proxy",
         "passthru": null,
@@ -74,12 +74,12 @@
             "name": null,
             "owner": "jadestrong",
             "repo": "lsp-proxy",
-            "rev": "3e238995d6507d3517353b6332ab2701c1e2ab74",
-            "sha256": "sha256-IWTT12UOwqPkVxoZjCMVbdGP2gMkkX7NWr4VZ6IYEbU=",
+            "rev": "eef00d49f752b60a78ee3d91a8addb53a6701e37",
+            "sha256": "sha256-J9Qo4GjB8VDB+llYNdeLOWQFIx1pNOKwxBM3jx06Fs0=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "3e238995d6507d3517353b6332ab2701c1e2ab74"
+        "version": "eef00d49f752b60a78ee3d91a8addb53a6701e37"
     },
     "emacs-org-modern-indent": {
         "cargoLock": null,
