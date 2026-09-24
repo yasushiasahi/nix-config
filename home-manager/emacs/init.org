@@ -1217,18 +1217,12 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
 * LSP
 ** [[https://github.com/jadestrong/lsp-proxy][lsp-proxy]] - Rust製 LSPクランアント
 #+begin_src emacs-lisp :tangle yes
-  (use-package eglot
-    :ensure t
-    :init
-    (setopt eglot-documentation-renderer #'markdown-ts-view-mode))
-
   (use-package lsp-proxy
     :ensure t
 
     :init
     (setopt lsp-proxy-log-buffer-max nil)
     (setopt lsp-proxy-diagnostics-provider :flymake)
-    (setopt lsp-proxy-max-completion-item 60)
 
     :hook ((tsx-ts-mode
             js-ts-mode
@@ -1276,6 +1270,14 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
                 (symbol-name (symbol-at-point))))))
       (lsp-proxy-rename newname))
     )
+#+end_src
+
+eldoc表示時にemacs組み込みのmarkdown-ts-modeを使用する
+#+begin_src emacs-lisp :tangle yes
+  (use-package eglot
+    :ensure t
+    :init
+    (setopt eglot-documentation-renderer #'markdown-ts-view-mode))
 #+end_src
 
 * 言語ユーティリティー
