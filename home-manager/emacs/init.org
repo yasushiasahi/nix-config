@@ -1117,6 +1117,30 @@ READMEの通りに設定
     ;; prefixを正しく取るにはsymbolの方が都合が良いため。
     (modify-syntax-entry ?. "." astro-ts-mode-syntax-table)
 
+    ;; 同じ理由で`/'もsymbol構成文字になっており、import文のパス補完で
+    ;; `"~/libs/'と打つとprefixが"/libs/"になり、サーバーが返した候補
+    ;; (date, errorなど)がcorfuのflexフィルタで全て落とされる。
+    ;; ただしHTML部分ではTailwindの`w-1/2'や`bg-black/50'のprefixを
+    ;; 取るためにsymbolのままにしておきたいので、TypeScript領域
+    ;; (フロントマター、<script>内)でだけ`/'をpunctuationとして
+    ;; prefixを計算する。
+    (defvar my/astro-ts-mode--ts-syntax-table
+      (let ((st (make-syntax-table astro-ts-mode-syntax-table)))
+        (modify-syntax-entry ?/ "." st)
+        st)
+      "TypeScript領域で補完prefixを計算するためのsyntax-table。")
+
+    (defun my/astro-ts-mode--capf-with-ts-syntax (orig &rest args)
+      "TypeScript領域では`/'をpunctuationとして補完prefixを計算する。"
+      (if (and (derived-mode-p 'astro-ts-mode)
+               (eq (treesit-language-at (point)) 'typescript))
+          (with-syntax-table my/astro-ts-mode--ts-syntax-table
+            (apply orig args))
+        (apply orig args)))
+
+    (advice-add 'lsp-proxy-completion-at-point :around
+                #'my/astro-ts-mode--capf-with-ts-syntax)
+
     ;; comment-dwimなどでブロックごとにコメント記法を切り替える。
     ;; - フロントマター、<script>内: // (typescript)
     ;; - <style>内: /* */ (css)
