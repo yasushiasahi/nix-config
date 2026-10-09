@@ -1276,9 +1276,9 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
     :ensure nil
 
     :commands markdown-ts-view-mode
-    
+
     :mode ("\\.md\\'" "\\.mdx\\'" "\\.markdown\\'")
-    
+
     :config
     (require 'markdown-ts-mode-x))
 #+end_src
@@ -1332,7 +1332,7 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
     ;; corfuのwikiにあるeglot用の設定を参考にしている
     ;; https://github.com/minad/corfu/wiki#configuring-corfu-for-eglot
     (advice-add 'lsp-proxy-completion-at-point :around #'cape-wrap-buster)
-    
+
     (defun my/lsp-proxy-rename (newname)
       "lsp-proxy-renameをデフォルト値付きで呼び出す"
       (interactive
@@ -1540,13 +1540,13 @@ eldoc表示時にemacs組み込みのmarkdown-ts-modeを使用する
 
     :bind
     ("C-c g" . ghostel)
-    
+
     :init
     (setopt ghostel-shell "/run/current-system/sw/bin/fish")
     (setopt ghostel-keymap-exceptions '("C-x" "C-u" "M-x" "C-c" "M-s" "C-t"))
     (setopt ghostel-buffer-name "*👻*")
     (setopt ghostel-buffer-name-function #'my/ghostel-buffer-name-by-directory)
-    
+
     (defun my/ghostel-buffer-name-by-directory (_title)
       "バッファ名を決める。オリジナルとほぼ同じ"
       (format "*👻: %s*"
@@ -1581,6 +1581,43 @@ eldoc表示時にemacs組み込みのmarkdown-ts-modeを使用する
 
   (global-set-key (kbd "s-r") 'my/reload-chrome)
 
+#+end_src
+** Claude Codeに渡すためにポイントの位置をコピーする
+=@path/to/file#L10= の形式でクリップボードに入れる。
+リージョンが有効な場合は =@path/to/file#L10-20= の形式で範囲を入れる。
+パスはプロジェクトルートからの相対パス（プロジェクト外なら絶対パス）。
+#+begin_src emacs-lisp :tangle yes
+  (defun my/copy-location-for-claude-code ()
+    "現在のポイント位置をClaude Code用の参照形式でクリップボードにコピーする"
+    (interactive)
+    (let ((file (buffer-file-name)))
+      (unless file
+        (user-error "ファイルを開いているバッファーではありません"))
+      (let* ((project (project-current))
+             (path (if project
+                       (file-relative-name file (project-root project))
+                     (abbreviate-file-name file)))
+             (lines (if (use-region-p)
+                        (let ((beg (line-number-at-pos (region-beginning)))
+                              ;; リージョンが行頭で終わる場合はその行を含めない
+                              (end (line-number-at-pos
+                                    (save-excursion
+                                      (goto-char (region-end))
+                                      (if (and (bolp) (> (point) (region-beginning)))
+                                          (1- (point))
+                                        (point))))))
+                          (if (= beg end)
+                              (format "L%d" beg)
+                            (format "L%d-%d" beg end)))
+                      (format "L%d" (line-number-at-pos))))
+             (location (format "@%s#%s" path lines)))
+        (kill-new location)
+        (deactivate-mark)
+        (message "Copied: %s" location))))
+
+  ;; s-t はmacOSでフォントパネルに割り当てられているので解除してプレフィックスにする
+  (global-unset-key (kbd "s-t"))
+  (global-set-key (kbd "s-t l") 'my/copy-location-for-claude-code)
 #+end_src
 
 * ユースケース
