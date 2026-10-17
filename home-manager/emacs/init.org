@@ -1566,6 +1566,7 @@ eldoc表示時にemacs組み込みのmarkdown-ts-modeを使用する
 
     :bind
     ("C-c g" . ghostel)
+    ("s-p" . ghostel-project)
 
     :init
     (setopt ghostel-shell "/run/current-system/sw/bin/fish")
