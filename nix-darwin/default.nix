@@ -36,7 +36,6 @@
 
       # ブラウザ
       "arc"
-      "vivaldi"
       "google-chrome"
       "brave-browser"
 
