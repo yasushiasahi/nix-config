@@ -823,7 +823,11 @@ partial-completionは ~/p/t/f~ が ~/path/to/file~ にマッチするスタイ�
     (defun my/consult-ghq-ghostel ()
       "ghq管理のリポジトリ一覧から選び、ghostelを開く"
       (interactive)
-      (let ((default-directory (my-consult-ghq--read)))
+      (let* ((default-directory (my-consult-ghq--read))
+             ;; ghostelは名前でバッファを再利用するため、リポジトリごとに名前を変えて別枠にする
+             (ghostel-buffer-name
+              (format "*👻: %s*"
+                      (abbreviate-file-name (directory-file-name default-directory)))))
         (ghostel)))
 
     (defun my-consult-switch-buffer-kill ()
@@ -1559,7 +1563,6 @@ eldoc表示時にemacs組み込みのmarkdown-ts-modeを使用する
 #+begin_src emacs-lisp :tangle yes
   (use-package ghostel
     :ensure t
-    :defer t
 
     :bind
     ("C-c g" . ghostel)
