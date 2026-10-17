@@ -20,6 +20,16 @@
     pkgs.nerd-fonts.symbols-only
   ];
 
+  # グローバルショートカット
+  # 初回のみ システム設定 > プライバシーとセキュリティ > アクセシビリティ でskhdを許可する必要がある
+  services.skhd = {
+    enable = true;
+    skhdConfig = ''
+      # Emacsで指示書き用Markdownを新規作成する(home-manager/emacs/default.nixのemacs-prompt-memo)
+      cmd + alt + ctrl - m : $HOME/.nix-profile/bin/emacs-prompt-memo
+    '';
+  };
+
   homebrew = {
     enable = true;
     onActivation = {

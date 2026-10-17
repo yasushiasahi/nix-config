@@ -83,6 +83,17 @@ let
     emacs = "${emacs-with-epkgs}/Applications/Emacs.app/Contents/MacOS/Emacs";
   };
 
+  # AIエージェントへの指示書き用のMarkdownをすぐ書き始めるためのランチャー。
+  # 日時名の新規.mdを開いた状態でEmacsを新規起動する(markdown-ts-modeは拡張子で有効になる)。
+  # 保存するまでファイルは作られないので、書かずに閉じてもゴミは残らない。
+  # skhdなどのlaunchdから呼ばれてもPATHに依存しないよう絶対パスで書く。
+  emacs-prompt-memo = pkgs.writeShellScriptBin "emacs-prompt-memo" ''
+    dir="$HOME/prompts"
+    ${pkgs.coreutils}/bin/mkdir -p "$dir"
+    file="$dir/$(${pkgs.coreutils}/bin/date +%Y%m%d-%H%M%S).md"
+    exec /usr/bin/open -n "${emacs-with-epkgs}/Applications/Emacs.app" --args "$file"
+  '';
+
 in
 {
   programs = {
@@ -95,6 +106,7 @@ in
 
   home.packages = [
     emacs-lsp-proxy
+    emacs-prompt-memo
 
     # gnuのlsを入れないと以下の警告が出る
     # ls does not support --dired; see ‘dired-use-ls-dired’ for more details.
