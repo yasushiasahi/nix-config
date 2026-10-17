@@ -823,6 +823,9 @@ partial-completionは ~/p/t/f~ が ~/path/to/file~ にマッチするスタイ�
     (defun my/consult-ghq-ghostel ()
       "ghq管理のリポジトリ一覧から選び、ghostelを開く"
       (interactive)
+      ;; ghostelのロード前にlet束縛すると字句変数になりdefcustomと衝突するため、先にロードしてspecial変数にする
+      (require 'ghostel)
+      (defvar ghostel-buffer-name)
       (let* ((default-directory (my-consult-ghq--read))
              ;; ghostelは名前でバッファを再利用するため、リポジトリごとに名前を変えて別枠にする
              (ghostel-buffer-name

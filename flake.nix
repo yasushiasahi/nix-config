@@ -66,6 +66,10 @@
           path = ./templates/dir-locals;
           description = "開発環境セットアップファイルのテンプレート";
         };
+        devenv-node = {
+          path = ./templates/devenv-node;
+          description = "devenv + direnv の Node.js 開発環境テンプレート";
+        };
       };
 
     };

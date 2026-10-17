@@ -2,6 +2,8 @@
 let
   abbr = mkAbbr {
     dgie = "echo '.dir-locals-2.el\\n.envrc\\nshell.nix' >> .git/info/exclude";
+    # 現在のフォルダに devenv の Node.js 環境を展開し、関連ファイルを .git/info/exclude に追加する
+    dvn = "nix flake init -t github:yasushiasahi/nix-config#devenv-node && printf '%s\\n' .envrc .direnv devenv.nix devenv.yaml devenv.lock .devenv .devenv.flake.nix >> .git/info/exclude";
   };
 in
 {
