@@ -442,8 +442,18 @@ describe-*した時*HELP*バッファのウィンドウにフォーカスする�
 #+end_src
 ** ウィンドウ操作を直感的に
 #+begin_src emacs-lisp :tangle yes
+  ;; transientのロードを初回利用まで遅らせるため、キーはtransientをrequireするだけの入口に割り当てる。
+  ;; 実体のmy/window-operationはtransientがロードされた時に下の:configで定義される。
+  (defun my/window-operation-entry ()
+    "transientをロードしてからmy/window-operationを呼ぶ"
+    (interactive)
+    (require 'transient)
+    (call-interactively #'my/window-operation))
+
+  (define-key global-map (kbd "C-t") #'my/window-operation-entry)
+
   (use-package window
-    :after magit
+    :after transient
 
     :config
     (transient-define-prefix my/window-operation ()
@@ -472,8 +482,6 @@ describe-*した時*HELP*バッファのウィンドウにフォーカスする�
                ("t" "maxmaiz" toggle-frame-maximized)]])
 
     (put 'my/window-operation 'interactive-only nil)
-
-    (define-key global-map (kbd "C-t") #'my/window-operation)
     )
 #+end_src
 ** which-key キーバインドの候補表示
@@ -542,11 +550,18 @@ describe-*した時*HELP*バッファのウィンドウにフォーカスする�
 #+end_src
 ** [[https://github.com/akicho8/string-inflection][string-inflection]] - Caseをいい感じに操作する
 #+begin_src emacs-lisp :tangle yes
+  ;; window同様、transientのロードを初回利用まで遅らせる入口。
+  (defun my/string-inflection-operation-entry ()
+    "transientをロードしてからmy/string-inflection-operationを呼ぶ"
+    (interactive)
+    (require 'transient)
+    (call-interactively #'my/string-inflection-operation))
+
+  (define-key global-map (kbd "M-i") #'my/string-inflection-operation-entry)
+
   (use-package string-inflection
     :ensure t
-    :after magit
-
-    :bind ("M-i" . my/string-inflection-operation)
+    :after transient
 
     :config
     (transient-define-prefix my/string-inflection-operation ()
@@ -570,14 +585,15 @@ describe-*した時*HELP*バッファのウィンドウにフォーカスする�
 #+end_src
 ** [[http://github.com/joaotavora/yasnippet][yasnippet]] - 略語展開
 #+begin_src emacs-lisp :tangle yes
+  ;; yas-global-mode相当を起動時ではなく、編集系モードを開いた時に有効化する
   (use-package yasnippet
     :ensure t
-
-    :config
-    (yas-global-mode 1))
+    :defer t
+    :hook ((prog-mode text-mode conf-mode) . yas-minor-mode))
 
   (use-package yasnippet-snippets
-    :ensure t)
+    :ensure t
+    :after yasnippet)
 #+end_src
 ** flymake シンタックスチェッカー
 #+begin_src emacs-lisp :tangle no
@@ -848,7 +864,8 @@ partial-completionは ~/p/t/f~ が ~/path/to/file~ にマッチするスタイ�
 consultインテグレーション
 #+begin_src emacs-lisp :tangle yes
   (use-package embark-consult
-    :ensure t)
+    :ensure t
+    :after embark)
 #+end_src
 * コード補完
 ** [[https://github.com/minad/corfu][corfu]] - コード補完UI
@@ -949,6 +966,7 @@ READMEの通りに設定
 #+begin_src emacs-lisp :tangle yes
   (use-package magit
     :ensure t
+    :defer t
 
     :config
     (require 'magit-extras)
@@ -1351,7 +1369,10 @@ eldoc表示時にemacs組み込みのmarkdown-ts-modeを使用する
 #+begin_src emacs-lisp :tangle yes
   (use-package eglot
     :ensure t
-    :init
+    :defer t
+
+    ;; :initでsetoptするとeglotが起動時にロードされてしまうので:configで設定する
+    :config
     (setopt eglot-documentation-renderer #'markdown-ts-view-mode))
 #+end_src
 
@@ -1456,8 +1477,10 @@ eldoc表示時にemacs組み込みのmarkdown-ts-modeを使用する
 #+begin_src emacs-lisp :tangle yes
   (use-package org
     :ensure t
+    :defer t
 
-    :init
+    ;; :initでsetoptするとorgが起動時にロードされてしまうので:configで設定する
+    :config
     ;; .orgファイルを格納するデフォルトディレクトリ
     ;; captureもagendaも使ってないから意味ないかも
     (setopt org-directory "~/ghq/github.com/yasushiasahi/org")
