@@ -30,6 +30,28 @@
     '';
   };
 
+  # スリープ復帰後にskhdがキー入力を受け取れなくなる(プロセスは生きたまま)ことがあったため、
+  # 復帰時にskhdを再起動する
+  launchd.user.agents.skhd-restart-on-wake = {
+    serviceConfig =
+      let
+        restartSkhd = pkgs.writeShellScript "restart-skhd" ''
+          /bin/launchctl kickstart -k "gui/$(/usr/bin/id -u)/org.nixos.skhd"
+        '';
+      in
+      {
+        ProgramArguments = [
+          "${pkgs.sleepwatcher}/bin/sleepwatcher"
+          "-w"
+          "${restartSkhd}"
+          "-W"
+          "${restartSkhd}"
+        ];
+        RunAtLoad = true;
+        KeepAlive = true;
+      };
+  };
+
   homebrew = {
     enable = true;
     onActivation = {
