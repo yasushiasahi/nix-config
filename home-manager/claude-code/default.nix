@@ -3,6 +3,8 @@
 {
   programs.claude-code = {
     enable = true;
+    # ~/.claude/CLAUDE.md として配置される
+    context = ./CLAUDE.md;
   };
 
   home.file = {
