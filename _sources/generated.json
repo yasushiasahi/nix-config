@@ -21,7 +21,7 @@
     },
     "emacs-ghostel": {
         "cargoLock": null,
-        "date": "2026-10-29",
+        "date": "2026-10-31",
         "extract": null,
         "name": "emacs-ghostel",
         "passthru": null,
@@ -33,12 +33,12 @@
             "name": null,
             "owner": "dakra",
             "repo": "ghostel",
-            "rev": "2c13feaa31da8a55a0471210cd26414d7265ee1e",
-            "sha256": "sha256-k10nzaIHKGvPJoI1KiiDBY6yDTKL2OAXZ1kxx91BB3E=",
+            "rev": "2ba2068422651031e32816d61025ea4b2065d64c",
+            "sha256": "sha256-8VZqeem+CPPwfkHloUZiNsV0M/XYItPtXI6zf0jDxW0=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "2c13feaa31da8a55a0471210cd26414d7265ee1e"
+        "version": "2ba2068422651031e32816d61025ea4b2065d64c"
     },
     "emacs-ghostel-module": {
         "cargoLock": null,
@@ -58,11 +58,11 @@
     "emacs-lsp-proxy": {
         "cargoLock": {
             "Cargo.lock": [
-                "sha256-J9Qo4GjB8VDB+llYNdeLOWQFIx1pNOKwxBM3jx06Fs0=/Cargo.lock",
+                "sha256-DJG8qGu90K3zOUmVgHVcj2udDLot5UgSjQI3rvsqfJ0=/Cargo.lock",
                 {}
             ]
         },
-        "date": "2026-09-18",
+        "date": "2026-10-31",
         "extract": null,
         "name": "emacs-lsp-proxy",
         "passthru": null,
@@ -74,12 +74,12 @@
             "name": null,
             "owner": "jadestrong",
             "repo": "lsp-proxy",
-            "rev": "eef00d49f752b60a78ee3d91a8addb53a6701e37",
-            "sha256": "sha256-J9Qo4GjB8VDB+llYNdeLOWQFIx1pNOKwxBM3jx06Fs0=",
+            "rev": "b8b32ac488880126e4f664d367d776613e1f2069",
+            "sha256": "sha256-DJG8qGu90K3zOUmVgHVcj2udDLot5UgSjQI3rvsqfJ0=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "eef00d49f752b60a78ee3d91a8addb53a6701e37"
+        "version": "b8b32ac488880126e4f664d367d776613e1f2069"
     },
     "emacs-org-modern-indent": {
         "cargoLock": null,
