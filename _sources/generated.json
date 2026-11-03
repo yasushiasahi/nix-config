@@ -21,7 +21,7 @@
     },
     "emacs-ghostel": {
         "cargoLock": null,
-        "date": "2026-10-31",
+        "date": "2026-11-02",
         "extract": null,
         "name": "emacs-ghostel",
         "passthru": null,
@@ -33,12 +33,12 @@
             "name": null,
             "owner": "dakra",
             "repo": "ghostel",
-            "rev": "2ba2068422651031e32816d61025ea4b2065d64c",
-            "sha256": "sha256-8VZqeem+CPPwfkHloUZiNsV0M/XYItPtXI6zf0jDxW0=",
+            "rev": "a63db707e0d71e49eb4de95b198e288788eb92f8",
+            "sha256": "sha256-w78B09HvNHRHHd06sFxuBDEuuHxLXqEhCBCVydgwaHc=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "2ba2068422651031e32816d61025ea4b2065d64c"
+        "version": "a63db707e0d71e49eb4de95b198e288788eb92f8"
     },
     "emacs-ghostel-module": {
         "cargoLock": null,
@@ -58,11 +58,11 @@
     "emacs-lsp-proxy": {
         "cargoLock": {
             "Cargo.lock": [
-                "sha256-DJG8qGu90K3zOUmVgHVcj2udDLot5UgSjQI3rvsqfJ0=/Cargo.lock",
+                "sha256-xmfcdSj1oxdJN7VKmS8PQY0y16ObLLZlWoM0uxFyrCI=/Cargo.lock",
                 {}
             ]
         },
-        "date": "2026-10-31",
+        "date": "2026-11-03",
         "extract": null,
         "name": "emacs-lsp-proxy",
         "passthru": null,
@@ -74,12 +74,33 @@
             "name": null,
             "owner": "jadestrong",
             "repo": "lsp-proxy",
-            "rev": "b8b32ac488880126e4f664d367d776613e1f2069",
-            "sha256": "sha256-DJG8qGu90K3zOUmVgHVcj2udDLot5UgSjQI3rvsqfJ0=",
+            "rev": "897e6f39ba9f4f239924dbafd540ea17221637ce",
+            "sha256": "sha256-xmfcdSj1oxdJN7VKmS8PQY0y16ObLLZlWoM0uxFyrCI=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "b8b32ac488880126e4f664d367d776613e1f2069"
+        "version": "897e6f39ba9f4f239924dbafd540ea17221637ce"
+    },
+    "emacs-mac-ime": {
+        "cargoLock": null,
+        "date": "2026-10-31",
+        "extract": null,
+        "name": "emacs-mac-ime",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "ma0001",
+            "repo": "mac-ime",
+            "rev": "bec58817ea55871e06e5d2d62bad0d18f8ec7efa",
+            "sha256": "sha256-0ts/ghwBSGw2wLTDRBGlRmkvHXTGi1wpFZk2LzhXdwk=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "bec58817ea55871e06e5d2d62bad0d18f8ec7efa"
     },
     "emacs-org-modern-indent": {
         "cargoLock": null,

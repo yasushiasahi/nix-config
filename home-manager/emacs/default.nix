@@ -60,6 +60,15 @@ let
             install ${sources.emacs-ghostel-module.src} ghostel-module.dylib
           '';
         };
+        mac-ime = epkgs.melpaBuild {
+          pname = "mac-ime";
+          version = "0.0.0-unstable-${sources.emacs-mac-ime.date}";
+          src = sources.emacs-mac-ime.src;
+          # mac-ime.elは自身と同じディレクトリからモジュールを探すため、
+          # リポジトリ同梱のビルド済みmac-ime-module.soも一緒にインストールする。
+          # (含めないと初回有効化時にcurlでダウンロードしようとする)
+          files = ''("*.el" "*.so")'';
+        };
       };
     extraEmacsPackages = epkgs: [
       epkgs.treesit-grammars.with-all-grammars

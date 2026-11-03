@@ -390,7 +390,17 @@ mouse-wheel-global-text-scale。 C-M-<wheel-up>, C-M-<wheel-down> でもサイ�
     (global-ligature-mode t))
 
 #+end_src
-
+* 基本動作系
+** [[https://github.com/ma0001/mac-ime][mac-ime コマンド入力時にIMEをオフにする]]
+#+begin_src emacs-lisp :tangle yes
+  (use-package mac-ime
+    :ensure t
+    :config
+    ;; input methodを"mac-ime"に設定
+    (setq default-input-method "mac-ime")
+    ;; モジュールの有効化 (イベント監視の開始)
+    (mac-ime-enable))
+#+end_src
 * ユーティリティー
 ** [[https://codeberg.org/ideasman42/emacs-undo-fu][undo-fu]] - Undo/Redoの改善
 何やら[[https://qiita.com/nobuyuki86/items/e392b642189d755dd113#undo-%E3%82%A2%E3%83%B3%E3%83%89%E3%82%A5%E9%96%A2%E9%80%A3][Emacs組み込みのUndoが改善されたらしい]]ので一旦向こうか

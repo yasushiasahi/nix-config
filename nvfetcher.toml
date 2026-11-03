@@ -25,6 +25,11 @@ fetch.github = "dakra/ghostel"
 src.github = "dakra/ghostel"
 fetch.url = "https://github.com/dakra/ghostel/releases/download/$ver/ghostel-module-aarch64-macos.dylib"
 
+[emacs-mac-ime]
+src.git = "https://github.com/ma0001/mac-ime"
+src.branch = "main"
+fetch.github = "ma0001/mac-ime"
+
 # typescript
 
 # nixpkgsのtypescriptは7系(Go実装のtsgo)になり、tsserverのJS実装

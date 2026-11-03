@@ -22,15 +22,15 @@
   };
   emacs-ghostel = {
     pname = "emacs-ghostel";
-    version = "2ba2068422651031e32816d61025ea4b2065d64c";
+    version = "a63db707e0d71e49eb4de95b198e288788eb92f8";
     src = fetchFromGitHub {
       owner = "dakra";
       repo = "ghostel";
-      rev = "2ba2068422651031e32816d61025ea4b2065d64c";
+      rev = "a63db707e0d71e49eb4de95b198e288788eb92f8";
       fetchSubmodules = false;
-      sha256 = "sha256-8VZqeem+CPPwfkHloUZiNsV0M/XYItPtXI6zf0jDxW0=";
+      sha256 = "sha256-w78B09HvNHRHHd06sFxuBDEuuHxLXqEhCBCVydgwaHc=";
     };
-    date = "2026-10-31";
+    date = "2026-11-02";
   };
   emacs-ghostel-module = {
     pname = "emacs-ghostel-module";
@@ -42,19 +42,31 @@
   };
   emacs-lsp-proxy = {
     pname = "emacs-lsp-proxy";
-    version = "b8b32ac488880126e4f664d367d776613e1f2069";
+    version = "897e6f39ba9f4f239924dbafd540ea17221637ce";
     src = fetchFromGitHub {
       owner = "jadestrong";
       repo = "lsp-proxy";
-      rev = "b8b32ac488880126e4f664d367d776613e1f2069";
+      rev = "897e6f39ba9f4f239924dbafd540ea17221637ce";
       fetchSubmodules = false;
-      sha256 = "sha256-DJG8qGu90K3zOUmVgHVcj2udDLot5UgSjQI3rvsqfJ0=";
+      sha256 = "sha256-xmfcdSj1oxdJN7VKmS8PQY0y16ObLLZlWoM0uxFyrCI=";
     };
     cargoLock."Cargo.lock" = {
-      lockFile = ./. + "/sha256-DJG8qGu90K3zOUmVgHVcj2udDLot5UgSjQI3rvsqfJ0=/Cargo.lock";
+      lockFile = ./. + "/sha256-xmfcdSj1oxdJN7VKmS8PQY0y16ObLLZlWoM0uxFyrCI=/Cargo.lock";
       outputHashes = {
         
       };
+    };
+    date = "2026-11-03";
+  };
+  emacs-mac-ime = {
+    pname = "emacs-mac-ime";
+    version = "bec58817ea55871e06e5d2d62bad0d18f8ec7efa";
+    src = fetchFromGitHub {
+      owner = "ma0001";
+      repo = "mac-ime";
+      rev = "bec58817ea55871e06e5d2d62bad0d18f8ec7efa";
+      fetchSubmodules = false;
+      sha256 = "sha256-0ts/ghwBSGw2wLTDRBGlRmkvHXTGi1wpFZk2LzhXdwk=";
     };
     date = "2026-10-31";
   };
