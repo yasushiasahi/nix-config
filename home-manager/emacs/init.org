@@ -766,7 +766,6 @@ partial-completionは ~/p/t/f~ が ~/path/to/file~ にマッチするスタイ�
            ("C-x b" . consult-buffer)
            ("C-x M-p" . consult-project-buffer)
            ("C-x C-g" . my/consult-ghq-magit-status)
-           ("s-m" . my/consult-ghq-ghostel)
            ;; Other custom bindings
            ("M-y" . consult-yank-pop)
            ;; M-g bindings in `goto-map'
@@ -829,19 +828,6 @@ partial-completionは ~/p/t/f~ が ~/path/to/file~ にマッチするスタイ�
       "ghq管理のリポジトリ一覧から選び、magit statusを開く"
       (interactive)
       (magit-status (my-consult-ghq--read)))
-
-    (defun my/consult-ghq-ghostel ()
-      "ghq管理のリポジトリ一覧から選び、ghostelを開く"
-      (interactive)
-      ;; ghostelのロード前にlet束縛すると字句変数になりdefcustomと衝突するため、先にロードしてspecial変数にする
-      (require 'ghostel)
-      (defvar ghostel-buffer-name)
-      (let* ((default-directory (my-consult-ghq--read))
-             ;; ghostelは名前でバッファを再利用するため、リポジトリごとに名前を変えて別枠にする
-             (ghostel-buffer-name
-              (format "*👻: %s*"
-                      (abbreviate-file-name (directory-file-name default-directory)))))
-        (ghostel)))
 
     (defun my-consult-switch-buffer-kill ()
       "Kill candidate buffer at point within the minibuffer completion."
@@ -1576,10 +1562,7 @@ eldoc表示時にemacs組み込みのmarkdown-ts-modeを使用する
 #+begin_src emacs-lisp :tangle yes
   (use-package ghostel
     :ensure t
-
-    :bind
-    ("C-c g" . ghostel)
-    ("s-p" . ghostel-project)
+    :defer t
 
     :init
     (setopt ghostel-shell "/run/current-system/sw/bin/fish")
@@ -1587,21 +1570,54 @@ eldoc表示時にemacs組み込みのmarkdown-ts-modeを使用する
     (setopt ghostel-buffer-name "*👻*")
     (setopt ghostel-buffer-name-function #'my/ghostel-buffer-name-by-directory)
 
+    (defun my/ghostel--buffer-name (dir)
+      "DIRからghostelのバッファ名を作る"
+      (format "*👻: %s*" (abbreviate-file-name (directory-file-name dir))))
+
     (defun my/ghostel-buffer-name-by-directory (_title)
       "バッファ名を決める。オリジナルとほぼ同じ"
-      (format "*👻: %s*"
-              (abbreviate-file-name (directory-file-name default-directory))))
-    )
+      (my/ghostel--buffer-name default-directory))
+
+    (defun my/consult-ghq-ghostel ()
+      "ghq管理のリポジトリ一覧から選び、ghostelを開く"
+      (interactive)
+      ;; my-consult-ghq--readはconsultの:configで定義しているので先にロードする
+      (require 'consult)
+      ;; ghostelのロード前にlet束縛すると字句変数になりdefcustomと衝突するため、先にロードしてspecial変数にする
+      (require 'ghostel)
+      (defvar ghostel-buffer-name)
+      (let* ((default-directory (my-consult-ghq--read))
+             ;; ghostelは名前でバッファを再利用するため、リポジトリごとに名前を変えて別枠にする
+             (ghostel-buffer-name (my/ghostel--buffer-name default-directory)))
+        (ghostel))))
+#+end_src
+*** キーバインド
+ghostel関連（起動・popperでの表示切替）は =s-g= プレフィックスにまとめる。
+| キー            | コマンド               | 内容                        |
+|-----------------+------------------------+-----------------------------|
+| =s-g s-g= / =s-g g= | popper-toggle          | ポップアップの表示/非表示   |
+| =s-g c=           | popper-cycle           | ポップアップを切り替える    |
+| =s-g d=           | ghostel                | カレントディレクトリで開く  |
+| =s-g p=           | ghostel-project        | プロジェクトルートで開く    |
+| =s-g m=           | my/consult-ghq-ghostel | ghqのリポジトリを選んで開く |
+#+begin_src emacs-lisp :tangle yes
+  (defvar-keymap my/ghostel-prefix-map
+    :doc "ghostel関連のコマンドをまとめたプレフィックスキーマップ"
+    "s-g" #'popper-toggle
+    "g"   #'popper-toggle
+    "c"   #'popper-cycle
+    "d"   #'ghostel
+    "p"   #'ghostel-project
+    "m"   #'my/consult-ghq-ghostel)
+
+  (keymap-global-set "s-g" my/ghostel-prefix-map)
 #+end_src
 ** [[https://github.com/karthink/popper][popper]] - バッファをポップアップ表示する
 #+begin_src emacs-lisp :tangle yes
   (use-package popper
     :ensure t
 
-    :bind
-    ("s-g" . popper-toggle)
-    ("s-M-g" . popper-cycle)
-
+    ;; キーバインドはghostelのセクションで s-g プレフィックスにまとめている
     :custom
     (popper-reference-buffers '("^\\*👻.*\\*$" ghostel-mode))
     (popper-mode-line nil)
@@ -1627,12 +1643,10 @@ eldoc表示時にemacs組み込みのmarkdown-ts-modeを使用する
 リージョンが有効な場合は =@path/to/file#L10-20= の形式で範囲を入れる。
 パスはプロジェクトルートからの相対パス（プロジェクト外なら絶対パス）。
 #+begin_src emacs-lisp :tangle yes
-  (defun my/copy-location-for-claude-code ()
-    "現在のポイント位置をClaude Code用の参照形式でクリップボードにコピーする"
-    (interactive)
-    (let ((file (buffer-file-name)))
-      (unless file
-        (user-error "ファイルを開いているバッファーではありません"))
+  (defun my/location-for-claude-code ()
+    "現在のポイント位置をClaude Code用の参照形式の文字列で返す。
+  ファイルを開いていないバッファーではnilを返す。"
+    (when-let* ((file (buffer-file-name)))
       (let* ((project (project-current))
              (path (if project
                        (file-relative-name file (project-root project))
@@ -1649,15 +1663,44 @@ eldoc表示時にemacs組み込みのmarkdown-ts-modeを使用する
                           (if (= beg end)
                               (format "L%d" beg)
                             (format "L%d-%d" beg end)))
-                      (format "L%d" (line-number-at-pos))))
-             (location (format "@%s#%s" path lines)))
-        (kill-new location)
-        (deactivate-mark)
-        (message "Copied: %s" location))))
+                      (format "L%d" (line-number-at-pos)))))
+        (format "@%s#%s" path lines))))
+
+  (defun my/copy-location-for-claude-code ()
+    "現在のポイント位置をClaude Code用の参照形式でクリップボードにコピーする"
+    (interactive)
+    (let ((location (or (my/location-for-claude-code)
+                        (user-error "ファイルを開いているバッファーではありません"))))
+      (kill-new location)
+      (deactivate-mark)
+      (message "Copied: %s" location)))
 
   ;; s-t はmacOSでフォントパネルに割り当てられているので解除してプレフィックスにする
   (global-unset-key (kbd "s-t"))
   (global-set-key (kbd "s-t l") 'my/copy-location-for-claude-code)
+#+end_src
+** Claude Codeに渡すプロンプトを書くファイルを開く
+=~/prompts/yyyyMMdd-HHmmss.md= を新規作成して新規フレームで開く。
+コマンド実行時の位置（ファイルを開いているバッファーの場合）を
+=@path/to/file#L10= 形式でバッファーの冒頭に入れておく。
+#+begin_src emacs-lisp :tangle yes
+  (defvar my/claude-code-prompt-directory "~/prompts/"
+    "Claude Codeに渡すプロンプトを書くファイルの置き場所")
+
+  (defun my/open-prompt-for-claude-code ()
+    "Claude Code用のプロンプトファイルを新規作成して新規フレームで開く"
+    (interactive)
+    (let ((location (my/location-for-claude-code))
+          (file (expand-file-name
+                 (format-time-string "%Y%m%d-%H%M%S.md")
+                 my/claude-code-prompt-directory)))
+      (deactivate-mark)
+      (make-directory my/claude-code-prompt-directory t)
+      (find-file-other-frame file)
+      (when location
+        (insert location "\n\n"))))
+
+  (global-set-key (kbd "s-t p") 'my/open-prompt-for-claude-code)
 #+end_src
 
 * ユースケース
