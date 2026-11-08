@@ -3,7 +3,8 @@ let
   abbr = mkAbbr {
     dgie = "echo '.dir-locals-2.el\\n.envrc\\nshell.nix' >> .git/info/exclude";
     # 現在のフォルダに devenv の Node.js 環境を展開し、関連ファイルを .git/info/exclude に追加し、direnv allow する
-    dvn = "nix flake init --refresh -t github:yasushiasahi/nix-config#devenv-node && printf '%s\\n' .envrc .direnv devenv.nix devenv.yaml devenv.lock .devenv .devenv.flake.nix >> .git/info/exclude && direnv allow";
+    # nix flake init は生成ファイルを git add --intent-to-add するため、git reset でインデックスから外す
+    dvn = "nix flake init --refresh -t github:yasushiasahi/nix-config#devenv-node && git reset -q -- .envrc devenv.nix devenv.yaml && printf '%s\\n' .envrc .direnv devenv.nix devenv.yaml devenv.lock .devenv .devenv.flake.nix >> .git/info/exclude && direnv allow";
   };
 in
 {
