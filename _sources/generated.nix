@@ -22,22 +22,22 @@
   };
   emacs-ghostel = {
     pname = "emacs-ghostel";
-    version = "a63db707e0d71e49eb4de95b198e288788eb92f8";
+    version = "0e220566fb33134e9fc6f74e663959a0c429b627";
     src = fetchFromGitHub {
       owner = "dakra";
       repo = "ghostel";
-      rev = "a63db707e0d71e49eb4de95b198e288788eb92f8";
+      rev = "0e220566fb33134e9fc6f74e663959a0c429b627";
       fetchSubmodules = false;
-      sha256 = "sha256-w78B09HvNHRHHd06sFxuBDEuuHxLXqEhCBCVydgwaHc=";
+      sha256 = "sha256-ClbL7qGU6ErsoMf1MigTvSQWGPGJhTALPEC803Om4QY=";
     };
-    date = "2026-11-02";
+    date = "2026-11-08";
   };
   emacs-ghostel-module = {
     pname = "emacs-ghostel-module";
-    version = "v0.60.0";
+    version = "v0.62.0";
     src = fetchurl {
-      url = "https://github.com/dakra/ghostel/releases/download/v0.60.0/ghostel-module-aarch64-macos.dylib";
-      sha256 = "sha256-7+FLPR75yQcohq4qtc97qW0FQUt2gxW/bmjq6i/jORY=";
+      url = "https://github.com/dakra/ghostel/releases/download/v0.62.0/ghostel-module-aarch64-macos.dylib";
+      sha256 = "sha256-URqt39b7z85sSrj3B+xSZ9qn0XON83nztZSJ7ihRzP4=";
     };
   };
   emacs-lsp-proxy = {
