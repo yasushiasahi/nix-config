@@ -1354,6 +1354,12 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
     ;; https://github.com/minad/corfu/wiki#configuring-corfu-for-eglot
     (advice-add 'lsp-proxy-completion-at-point :around #'cape-wrap-buster)
 
+    ;; flymake 1.4以降は`trusted-content'で信頼されていないバッファでは
+    ;; `flymake-always-safe'が付いていないバックエンドを無効化してしまう。
+    ;; lsp-proxyのバックエンドはLSPサーバーの診断結果を表示するだけで
+    ;; バッファの内容をEmacsで評価しないので、eglotと同様に安全扱いにする。
+    (put 'lsp-proxy-diagnostics--flymake-backend 'flymake-always-safe t)
+
     (defun my/lsp-proxy-rename (newname)
       "lsp-proxy-renameをデフォルト値付きで呼び出す"
       (interactive
