@@ -1360,6 +1360,25 @@ dockerfile-ts-mode.elでadd-to-listされているので設定いらなさそう
     ;; バッファの内容をEmacsで評価しないので、eglotと同様に安全扱いにする。
     (put 'lsp-proxy-diagnostics--flymake-backend 'flymake-always-safe t)
 
+    ;; eglot 1.25以降はコードアクション周りがRefactorライブラリに移行し、
+    ;; lsp-proxyが使っている内部関数が削除・改名された。lsp-proxy側が
+    ;; 追従するまでの互換シム。上流が対応したら削除する。
+    ;; - `eglot--apply-text-edits' → `eglot--apply-lsp-edits' (引数は同じ)
+    ;; - `eglot--confirm-server-edits' は削除。ワークスペース編集の適用は
+    ;;   `eglot--translate-workspace-edit' + `refactor-apply-changeset' で行う
+    (unless (fboundp 'eglot--apply-text-edits)
+      (defalias 'eglot--apply-text-edits #'eglot--apply-lsp-edits))
+    (unless (fboundp 'eglot--confirm-server-edits)
+      (defun my/lsp-proxy--apply-workspace-edit (wedit origin)
+        "Refactorライブラリ経由でワークスペース編集WEDITを適用する"
+        ;; URIのパス変換はeglotのサーバーではなくlsp-proxyのものを使う
+        (cl-letf (((symbol-function 'eglot-uri-to-path)
+                   #'lsp-proxy--uri-to-path))
+          (refactor-apply-changeset (eglot--translate-workspace-edit wedit)
+                                    :origin origin)))
+      (advice-add 'lsp-proxy--apply-workspace-edit
+                  :override #'my/lsp-proxy--apply-workspace-edit))
+
     (defun my/lsp-proxy-rename (newname)
       "lsp-proxy-renameをデフォルト値付きで呼び出す"
       (interactive
