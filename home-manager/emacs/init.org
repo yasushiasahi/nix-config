@@ -1125,7 +1125,8 @@ READMEの通りに設定
 
     :mode "\\.astro\\'"
 
-    :hook ((astro-ts-mode . my/astro-ts-mode--setup-comment))
+    :hook ((astro-ts-mode . my/astro-ts-mode--setup-comment)
+           (astro-ts-mode . my/astro-ts-mode--setup-yasnippet))
 
     :config
     ;; astro-ts-modeはhtml-mode派生なのでsgml-modeのsyntax-tableを継承しており、
@@ -1209,6 +1210,13 @@ READMEの通りに設定
       ;; 記法を切り替えるので構文表ではなく正規表現でコメントを判定させる
       (setq-local comment-use-syntax nil
                   comment-setup-function #'my/astro-ts-mode--comment-setup))
+
+    ;; astro-ts-modeはhtml-mode派生なのでhtml-modeのスニペットしか使えない。
+    ;; フロントマターや<script>内でも書けるように、tsx-ts-modeのスニペット
+    ;; (親のtypescript-mode、js-modeのものも含む)を追加で有効化する。
+    (defun my/astro-ts-mode--setup-yasnippet ()
+      (require 'yasnippet)
+      (yas-activate-extra-mode 'tsx-ts-mode))
     )
 #+end_src
 
