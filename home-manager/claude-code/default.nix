@@ -1,4 +1,9 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  # home-manager/default.nix の extraSpecialArgs で定義(emacsと共用)
+  typescript-tsdk,
+  ...
+}:
 
 {
   programs.claude-code = {
@@ -8,57 +13,9 @@
   };
 
   home.file = {
-    # ".claude/my-marketplace/.claude-plugin/marketplace.json" = {
-    #   text = builtins.toJSON {
-    #     name = "astro-marketplace";
-    #     owner = {
-    #       name = "zero_asahi";
-    #     };
-    #     plugins = [
-    #       {
-    #         name = "astro-lsp";
-    #         source = "./plugins/astro-lsp";
-    #         version = "1.0.0";
-    #         description = "Astro language server for enhanced code intelligence";
-    #         category = "development";
-    #       }
-    #     ];
-    #   };
-    # };
-    # ".claude/my-marketplace/plugins/astro-lsp/.lsp.json" = {
-    #   text = builtins.toJSON {
-    #     astro = {
-    #       command = lib.getExe pkgs.astro-language-server;
-    #       args = [ "--stdio" ];
-    #       transport = "stdio";
-    #       extensionToLanguage = {
-    #         ".astro" = "astro";
-    #       };
-    #       initializationOptions = {
-    #         typescript = {
-    #           tsdk = "${pkgs.typescript}/lib/node_modules/typescript/lib/";
-    #         };
-    #       };
-    #     };
-    #   };
-    # };
-    # ".claude/my-marketplace/plugins/astro-lsp/.claude-plugin/plugin.json" = {
-    #   text = builtins.toJSON {
-    #     name = "astro-lsp";
-    #     description = "Astro language server for enhanced code intelligence";
-    #     version = "1.0.0";
-    #     author = {
-    #       name = "zero_asahi";
-    #     };
-    #     license = "MIT";
-    #     keywords = [
-    #       "astro"
-    #       "lsp"
-    #       "language-server"
-    #     ];
-    #   };
-    # };
-
+    # 自作プラグイン用のローカルマーケットプレイス。
+    # ~/.claude/settings.json の extraKnownMarketplaces に登録済みで、
+    # プラグインは `claude plugin install astro-lsp@my-marketplace` で有効化する。
     ".claude/my-marketplace/.claude-plugin/marketplace.json" = {
       text = builtins.toJSON {
         name = "my-marketplace";
@@ -69,13 +26,6 @@
         plugins = [
           {
             name = "astro-lsp";
-            source = "./plugins/astro-lsp";
-            version = "1.0.0";
-            description = "Astro language server for enhanced code intelligence";
-            category = "development";
-          }
-          {
-            name = "astro-lsp";
             description = "Astro language server for enhanced code intelligence";
             version = "1.0.0";
             author = {
@@ -84,17 +34,19 @@
             };
             source = "./plugins/astro-lsp";
             category = "development";
+            # plugin.json を置かず、プラグイン定義をこのエントリだけで完結させる
             strict = false;
             lspServers = {
               astro = {
-                command = "astro-ls";
+                # GUIから起動されてもPATHに依存しないよう絶対パスで書く
+                command = "${pkgs.astro-language-server}/bin/astro-ls";
                 args = [ "--stdio" ];
                 extensionToLanguage = {
                   ".astro" = "astro";
                 };
                 initializationOptions = {
                   typescript = {
-                    tsdk = "${pkgs.typescript}/lib/node_modules/typescript/lib/";
+                    tsdk = "${typescript-tsdk}/lib";
                   };
                 };
               };
@@ -104,7 +56,8 @@
       };
     };
 
-    ".claude/self-marketplace/plugins/astro-lsp/README.md" = {
+    # source の参照先ディレクトリ(中身はこのREADMEのみ)
+    ".claude/my-marketplace/plugins/astro-lsp/README.md" = {
       text = ''
         # astro-lsp
 

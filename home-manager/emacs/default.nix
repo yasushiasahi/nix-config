@@ -3,6 +3,8 @@
   mkAlias,
   sources,
   lib,
+  # home-manager/default.nix の extraSpecialArgs で定義(claude-codeと共用)
+  typescript-tsdk,
   ...
 }:
 let
@@ -75,16 +77,6 @@ let
       pkgs.tree-sitter-grammars.tree-sitter-astro
     ];
   };
-
-  # nixpkgsのtypescriptは7系(Go実装のtsgo)になり、tsserverのJS実装である
-  # typescript.jsを同梱しなくなった(中身はGoバイナリとlib.*.d.tsのみ)。
-  # astro-language-serverはVolarベースでこのJS APIをrequireするため、
-  # tsdkにpkgs.typescriptを渡すと初期化に失敗して補完もホバーも効かなくなる。
-  # そのためnvfetcherで取得したnpm版tarballを展開してtsdk専用に使う。
-  typescript-tsdk = pkgs.runCommand "typescript-tsdk-${sources.typescript-tsdk.version}" { } ''
-    mkdir -p $out
-    tar -xzf ${sources.typescript-tsdk.src} --strip-components=1 -C $out
-  '';
 
   tangle = pkgs.tangleOrgBabel { languages = [ "emacs-lisp" ]; };
 
