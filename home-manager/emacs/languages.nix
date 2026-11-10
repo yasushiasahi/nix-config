@@ -28,8 +28,9 @@ let
 
   frontend =
     let
-      typescriptLs = {
-        name = "typescript-language-server";
+      # TypeScript 7 (Go実装のtsgo) 組み込みのLSP。.ts / .tsx / .js / .jsx で使う。
+      tsgoLs = {
+        name = "tsgo";
         support-workspace = [ "package.json" ];
         except-features = [ "format" ];
       };
@@ -76,6 +77,15 @@ let
         command = lib.getExe pkgs.astro-language-server;
         args = [ "--stdio" ];
         config.typescript.tsdk = "${typescript-tsdk}/lib";
+      };
+
+      # nixpkgsのtypescriptは7系(tsgo)で、`tsc --lsp --stdio` でLSPサーバーとして起動する。
+      language-server.tsgo = {
+        command = lib.getExe pkgs.typescript;
+        args = [
+          "--lsp"
+          "--stdio"
+        ];
       };
 
       language-server.biome = {
@@ -137,7 +147,7 @@ let
           ];
           roots = [ "package.json" ];
           language-servers = [
-            typescriptLs
+            tsgoLs
             eslintLs
             biomeLs
           ];
@@ -148,7 +158,7 @@ let
           file-types = [ "tsx" ];
           roots = [ "package.json" ];
           language-servers = [
-            typescriptLs
+            tsgoLs
             eslintLs
             biomeLs
             tailwindLs
@@ -183,7 +193,7 @@ let
           ];
           roots = [ "package.json" ];
           language-servers = [
-            typescriptLs
+            tsgoLs
             eslintLs
             biomeLs
           ];
@@ -194,7 +204,7 @@ let
           file-types = [ "jsx" ];
           roots = [ "package.json" ];
           language-servers = [
-            typescriptLs
+            tsgoLs
             eslintLs
             biomeLs
             tailwindLs

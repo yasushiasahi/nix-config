@@ -115,7 +115,6 @@ in
 
     # lsp
     pkgs.typescript
-    pkgs.typescript-language-server
     pkgs.tailwindcss-language-server
     pkgs.vscode-langservers-extracted # html css json
     pkgs.vale-ls # markdown
